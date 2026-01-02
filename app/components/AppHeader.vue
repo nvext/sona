@@ -1,11 +1,12 @@
 <template>
     <header
         :class="[
-            'h-30 w-dvw sticky top-0 left-0',
-            'bg-dark-bg px-25 flex items-center justify-between',
-            'text-fg text-[1.25rem]',
+            'h-30 w-dvw sticky top-0 left-0 px-25 flex items-center justify-between text-[1.25rem]',
+            isMainPage
+                ? 'bg-white text-dark-fg'
+                : 'bg-dark-bg text-fg',
         ]">
-        <img src="/logo.svg" alt="logo" />
+        <img :src="isMainPage ? '/logo.svg' : '/logo-dark.svg'" alt="logo" />
 
         <nav>
             <ul class="flex gap-5">
@@ -20,6 +21,10 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
+
+const isMainPage = computed(() => route.path === "/");
+
 type NavItem = {
     label: string;
     to: string;
