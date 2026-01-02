@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+        "strings": "on"
+    },
+    "prettier.tabWidth": 4,
+    "editor.detectIndentation": false
+}

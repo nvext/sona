@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "HelveticaNeueCyr";
+    src: url("~/assets/fonts/helveticaneuecyr_roman.woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+html {
+    font-family: "HelveticaNeueCyr";
+}
+
+@theme {
+    --font-sans: "HelveticaNeueCyr";
+}
+
+@theme {
+    --color-dark-bg: #1a1a1a;
+    --color-bg: #fbfbfb;
+    --color-fg: #f2f2f2;
+}
