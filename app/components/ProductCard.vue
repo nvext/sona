@@ -1,7 +1,7 @@
 <template>
     <article class="h-137.5 px-12.5 pb-8 bg-bg-1 grid grid-rows-[1fr]">
         <div class="flex items-center justify-center">
-            <img :src="variants[0]?.img" alt="product-image" />
+            <img :src="$config.app.baseURL + variants[0]?.img" alt="product-image" />
         </div>
 
         <div class="flex justify-between mb-7 text-[15px]">
@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+const {$config} = useNuxtApp()
+
 const { category, nm, price, variants } = defineProps<{
     category: string;
     nm: string;

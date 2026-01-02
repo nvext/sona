@@ -2,11 +2,14 @@
     <header
         :class="[
             'h-30 w-dvw sticky top-0 left-0 px-25 flex items-center justify-between text-[1.25rem]',
-            isMainPage
-                ? 'bg-white text-dark-fg'
-                : 'bg-dark-bg text-fg',
+            isMainPage ? 'bg-white text-dark-fg' : 'bg-dark-bg text-fg',
         ]">
-        <img :src="isMainPage ? '/logo.svg' : '/logo-dark.svg'" alt="logo" />
+        <img
+            :src="
+                $config.app.baseURL +
+                (isMainPage ? '/logo.svg' : '/logo-dark.svg')
+            "
+            alt="logo" />
 
         <nav>
             <ul class="flex gap-5">
@@ -21,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+const { $config } = useNuxtApp();
+
 const route = useRoute();
 
 const isMainPage = computed(() => route.path === "/");
