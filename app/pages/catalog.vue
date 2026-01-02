@@ -1,13 +1,21 @@
 <template>
     <div
         :class="[
-            '*:bg-bg-1 *:py-2.5 *:px-4.5 *:rounded-3xl',
+            '*:bg-bg-1 *:py-2.5 *:px-4.5 *:rounded-3xl *:flex **:[img]:w-3.25 **:[img]:mr-2',
             'w-full flex justify-center gap-3.75 py-8.75',
         ]">
-        <button type="button">Тип</button>
-        <button type="button">Цвет</button>
-        <button type="button">Размер</button>
-        <button type="button">Цена</button>
+        <button type="button">
+            <img src="/icons/chevron-down.svg" alt="" />Тип
+        </button>
+        <button type="button">
+            <img src="/icons/chevron-down.svg" alt="" />Цвет
+        </button>
+        <button type="button">
+            <img src="/icons/chevron-down.svg" alt="" />Размер
+        </button>
+        <button type="button">
+            <img src="/icons/chevron-down.svg" alt="" />Цена
+        </button>
     </div>
 
     <div class="flex flex-wrap px-25 gap-5 mb-15">
