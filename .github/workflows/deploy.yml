@@ -1,18 +1,22 @@
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [ master ] # ваш branch
-  workflow_dispatch: # manual run
+    branches: [ master ]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1 # Bun action
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      - run: bun install # вместо npm ci
-      - run: bun run build # или bun run generate для static
+      - run: bun install
+      - run: bun run build
+      - name: Debug output
+        run: |
+          ls -la .output/public
+          ls -la .output/public/_nuxt/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .output/public
@@ -29,3 +33,5 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v4
         id: deployment
+      - name: Show deployment URL
+        run: echo "Pages deployed to ${{ steps.deployment.outputs.page_url }}"
