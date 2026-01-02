@@ -1,7 +1,7 @@
 <template>
     <header
         :class="[
-            'h-30 w-dvw sticky top-0 left-0 px-25 flex items-center justify-between text-[1.25rem]',
+            'h-30 w-dvw sticky top-0 left-0 px-25 text-[1.25rem] grid grid-cols-3 items-center',
             isMainPage ? 'bg-white text-dark-fg' : 'bg-dark-bg text-fg',
         ]">
         <img
@@ -11,7 +11,7 @@
             "
             alt="logo" />
 
-        <nav>
+        <nav class="justify-self-center">
             <ul class="flex gap-5">
                 <li v-for="item in navItems">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
@@ -19,7 +19,7 @@
             </ul>
         </nav>
 
-        <NuxtLink>Корзина</NuxtLink>
+        <NuxtLink class="justify-self-end">Корзина</NuxtLink>
     </header>
 </template>
 
