@@ -42,7 +42,7 @@ const navItems: NavItem[] = [
     },
     {
         label: "Товары",
-        to: "/",
+        to: "/catalog",
     },
     {
         label: "О компании",

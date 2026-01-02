@@ -4,7 +4,7 @@
             <img :src="$config.app.baseURL + variants[0]?.img" alt="product-image" />
         </div>
 
-        <div class="flex justify-between mb-7 text-[15px]">
+        <div class="flex justify-between mb-7 text-[15px] min-w-64">
             <h2>{{ category }}<br />{{ nm }}</h2>
             <p>{{ price.rub }}₽</p>
         </div>
