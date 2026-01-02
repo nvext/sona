@@ -1,20 +1,21 @@
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [ master ]
+    branches: [ master ] # ваш branch
+  workflow_dispatch: # manual run
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v1 # Bun action
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build # или npx nuxt build
+          bun-version: latest
+      - run: bun install # вместо npm ci
+      - run: bun run build # или bun run generate для static
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public # для Nuxt nitro github-pages
+          path: .output/public
 
   deploy:
     needs: build
@@ -24,7 +25,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }} # теперь ок
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/deploy-pages@v4
-        id: deployment # добавьте это!
+        id: deployment
