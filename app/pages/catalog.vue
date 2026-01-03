@@ -1,12 +1,21 @@
 <template>
     <div
         :class="[
-            '*:bg-bg-1 *:py-2.5 *:px-4.5 *:rounded-3xl *:flex **:[img]:w-3.25 **:[img]:mr-2',
+            '**:[button]:bg-bg-1 **:[button]:py-2.5 **:[button]:px-4.5 **:[button]:rounded-3xl **:[button]:flex **:[img]:w-3.25 **:[img]:mr-2',
             'w-full flex justify-center gap-3.75 py-8.75',
         ]">
-        <button type="button">
-            <img src="/icons/chevron-down.svg" alt="" />Тип
-        </button>
+        <Dropdown>
+            <template #trigger="{ isOpen, toggle }">
+                <button type="button" @click="toggle" :aria-expanded="isOpen">
+                    <img src="/icons/chevron-down.svg" alt="" />Тип
+                </button>
+            </template>
+            <template #content>
+                <div class="h-30 rounded-3xl bg-dark-bg text-fg flex items-center justify-center p-5">
+                    Тут менюшка с выбором
+                </div>
+            </template>
+        </Dropdown>
         <button type="button">
             <img src="/icons/chevron-down.svg" alt="" />Цвет
         </button>
