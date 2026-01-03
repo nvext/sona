@@ -1,8 +1,7 @@
 <template>
     <div
         id="overlay"
-        class="absolute inset-0"
-        :class="isOpen ? 'pointer-events-auto' : 'pointer-events-none'"></div>
+        class="absolute inset-0 pointer-events-none **:pointer-events-auto"></div>
 </template>
 
 <script setup lang="ts">

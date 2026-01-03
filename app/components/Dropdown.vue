@@ -32,10 +32,24 @@ const close = () => {
 watch(isOpen, (value) => {
     if (value) {
         nextTick(updatePosition);
-        nextTick(() => document.addEventListener("click", handleClickOutside));
+        nextTick(() => {
+            document.addEventListener("click", handleClickOutside);
+            document.addEventListener("wheel", handleScrollWheel, {
+                passive: true,
+            });
+            document.addEventListener("scroll", handleScrollWheel, {
+                passive: true,
+            });
+            window.addEventListener("scroll", handleScrollWheel, {
+                passive: true,
+            });
+        });
         overlay.open();
     } else {
         document.removeEventListener("click", handleClickOutside);
+        document.removeEventListener("wheel", handleScrollWheel);
+        document.removeEventListener("scroll", handleScrollWheel);
+        window.removeEventListener("scroll", handleScrollWheel);
         overlay.close();
     }
 });
@@ -48,6 +62,19 @@ const handleClickOutside = (event: MouseEvent) => {
     )
         close();
 };
+
+const handleScrollWheel = (event: WheelEvent | Event) => {
+    // event.target для wheel/UIEvent — Node
+    const target = event.target as Node;
+    if (
+        isOpen.value &&
+        !contentRef.value?.contains(target) &&
+        !dropdownRef.value?.contains(target)
+    ) {
+        close();
+    }
+};
+
 
 const updatePosition = async () => {
     if (!dropdownRef.value || !contentRef.value) return;
