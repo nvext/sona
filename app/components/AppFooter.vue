@@ -27,8 +27,8 @@
         </div>
 
         <div class="flex gap-5 items-end">
-            <img class="w-170" src="/footer-logo-0.svg" alt="">
-            <img class="w-135" src="/footer-logo-1.svg" alt="">
+            <img class="w-170" src="/icons/footer-logo-0.svg" alt="">
+            <img class="w-135" src="/icons/footer-logo-1.svg" alt="">
         </div>
     </footer>
 </template>

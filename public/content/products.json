@@ -1,0 +1,2282 @@
+[
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Basic",
+        "description": "Базовая акустическая панель Sona с рамой",
+        "variants": [
+            {
+                "name": "Frame White",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#FFFFFF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Black",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#000000",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#28282A",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#545454",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Grey Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#AFAFAF",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Beige Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#C9BFAE",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Light",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#917E6C",
+                "price": { "rub": 3000 }
+            },
+            {
+                "name": "Frame Brown Dark",
+                "images": ["panel-exmpl-0.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 24,
+                "color": "#564B41",
+                "price": { "rub": 3000 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Lite",
+        "description": "Легкая акустическая панель Sona Lite без рамы",
+        "variants": [
+            {
+                "name": "Lite White",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#FFFFFF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Black",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#000000",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#28282A",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#545454",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Grey Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#AFAFAF",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Beige Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#C9BFAE",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Light",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#917E6C",
+                "price": { "rub": 2500 }
+            },
+            {
+                "name": "Lite Brown Dark",
+                "images": ["/panel-exmpl-1.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 20,
+                "color": "#564B41",
+                "price": { "rub": 2500 }
+            }
+        ]
+    },
+    {
+        "category": "Акустическая панель Sona",
+        "series": "Classic",
+        "description": "Классическая акустическая панель Sona премиум",
+        "variants": [
+            {
+                "name": "Classic White",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#FFFFFF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Black",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#000000",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#28282A",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#545454",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Grey Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#AFAFAF",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Beige Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#C9BFAE",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Light",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#917E6C",
+                "price": { "rub": 3500 }
+            },
+            {
+                "name": "Classic Brown Dark",
+                "images": ["/panel-exmpl-2.png"],
+                "size": {
+                    "width": 60,
+                    "height": 120
+                },
+                "thickness": 30,
+                "color": "#564B41",
+                "price": { "rub": 3500 }
+            }
+        ]
+    }
+]

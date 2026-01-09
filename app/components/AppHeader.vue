@@ -7,13 +7,13 @@
         <img
             :src="
                 $config.app.baseURL +
-                (isMainPage ? '/logo.svg' : '/logo-dark.svg')
+                (isMainPage ? '/icons/logo.svg' : '/icons/logo-dark.svg')
             "
             alt="logo" />
 
         <nav class="justify-self-center">
             <ul class="flex gap-5">
-                <li v-for="item in navItems">
+                <li v-for="item in navItems" class="whitespace-nowrap">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                 </li>
             </ul>
