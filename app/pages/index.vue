@@ -1,5 +1,9 @@
 <template>
-    <section class="h-195 bg-bg-1"></section>
+    <section class="h-195 bg-bg-1 relative">
+        <video autoplay muted loop class="w-full h-full object-cover absolute z-0 bottom-0">
+            <source src="/images/hero.mp4" type="video/mp4" />
+        </video>
+    </section>
 
     <section class="px-25">
         <h2 class="text-5xl my-7">Акустические панели</h2>
@@ -18,36 +22,32 @@
         <div class="relative z-10 pb-152.5 pt-12.5">
             <h2 class="text-[4rem] mb-2.5">Технология создания</h2>
             <p class="max-w-240 font-thin text-xl mb-5">
-                Выбор конфигурации / Создание каркаса / Укладка акустического
-                ядра / Крепление мембраны / Обтяжка акустической тканью / Монтаж
-                крепежа или платформы / Отделка дерева / Контроль качества /
-                Упаковка / Доставка.
+                Выбор конфигурации / Создание каркаса / Укладка акустического ядра / Крепление
+                мембраны / Обтяжка акустической тканью / Монтаж крепежа или платформы / Отделка
+                дерева / Контроль качества / Упаковка / Доставка.
             </p>
-            <button
-                type="button"
-                class="bg-bg text-dark-fg px-28 py-7 rounded-3xl text-2xl">
+            <button type="button" class="bg-bg text-dark-fg px-28 py-7 rounded-3xl text-2xl">
                 Подробнее
             </button>
         </div>
     </section>
 
-    <section class="bg-bg text-dark-fg px-25 relative flex justify-center">
-        <NuxtImg
-            src="images/panels-showcase-green.png"
-            class="w-310 h-86.25 absolute z-0 bottom-0" />
-        <div
-            class="relative z-10 pb-95.5 pt-12.5 flex-1 flex flex-col items-center">
+    <section class="bg-bg text-dark-fg overflow-hidden relative flex justify-center">
+        <!-- <NuxtImg
+            src="images/panels-showcase.mp4"
+            class="w-full top-40 object-cover absolute z-0 bottom-0" /> -->
+        <video autoplay muted loop class="w-full top-40 object-cover absolute z-0 bottom-0">
+            <source src="/images/panels-showcase.mp4" type="video/mp4" />
+        </video>
+        <div class="relative z-10 pb-95.5 pt-12.5 flex-1 flex flex-col items-center">
             <h2 class="text-[4rem] mb-2.5">Возможность кастомизации</h2>
             <p class="max-w-240 font-thin text-xl mb-5 text-center">
-                Выберите готовую конфигурацию SONA или соберите панель под себя:
-                меняйте габариты, форму, материалы, цветовую палитру тканей и
-                отделку дерева. Соберём комплект под задачу и бюджет, согласуем
-                макеты и запустим производство. Готовые вариации тоже можно
-                настраивать.
+                Выберите готовую конфигурацию SONA или соберите панель под себя: меняйте габариты,
+                форму, материалы, цветовую палитру тканей и отделку дерева. Соберём комплект под
+                задачу и бюджет, согласуем макеты и запустим производство. Готовые вариации тоже
+                можно настраивать.
             </p>
-            <button
-                type="button"
-                class="bg-dark-bg text-fg px-28 py-7 rounded-3xl text-2xl">
+            <button type="button" class="bg-dark-bg text-fg px-28 py-7 rounded-3xl text-2xl">
                 Подробнее
             </button>
         </div>
