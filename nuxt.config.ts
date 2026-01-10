@@ -6,9 +6,9 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     css: ["./app/assets/css/main.css"],
 
-    // app: {
-    //     baseURL: "/sona/",
-    // },
+    app: {
+        baseURL: "/sona/",
+    },
 
     // vite: { plugins: [tailwindcss()] },
     nitro: { preset: "github-pages" },
