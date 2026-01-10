@@ -4,7 +4,7 @@
             'h-168 px-25 pt-13 pb-8 bg-dark-bg text-fg text-[1.25rem]',
             'flex flex-col justify-between',
         ]">
-        <div class="flex">
+        <div class="flex justify-between">
             <nav>
                 <ul class="flex flex-col gap-8">
                     <li v-for="item in navItems">
@@ -13,13 +13,13 @@
                 </ul>
             </nav>
 
-            <ul class="flex flex-col gap-8 ml-42">
+            <ul class="flex flex-col gap-8">
                 <li v-for="item in legalItems">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                 </li>
             </ul>
 
-            <ul class="flex flex-col gap-8 ml-100">
+            <ul class="flex flex-col gap-8">
                 <li v-for="item in socialItems">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                 </li>
@@ -27,8 +27,8 @@
         </div>
 
         <div class="flex gap-5 items-end">
-            <img class="w-170" src="/icons/footer-logo-0.svg" alt="">
-            <img class="w-135" src="/icons/footer-logo-1.svg" alt="">
+            <img class="w-1/2" src="/icons/footer-logo-0.svg" alt="">
+            <img class="flex-1" src="/icons/footer-logo-1.svg" alt="">
         </div>
     </footer>
 </template>

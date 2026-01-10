@@ -36,7 +36,7 @@
         <!-- <NuxtImg
             src="images/panels-showcase.mp4"
             class="w-full top-40 object-cover absolute z-0 bottom-0" /> -->
-        <video autoplay muted loop class="w-full top-40 object-cover absolute z-0 bottom-0">
+        <video autoplay muted loop class="w-full -bottom-40 object-cover absolute z-0">
             <source src="/images/panels-showcase.mp4" type="video/mp4" />
         </video>
         <div class="relative z-10 pb-95.5 pt-12.5 flex-1 flex flex-col items-center">

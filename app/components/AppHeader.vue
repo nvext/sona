@@ -4,11 +4,8 @@
             'h-30 w-dvw sticky top-0 left-0 px-25 text-[1.25rem] grid grid-cols-3 items-center',
             isMainPage ? 'bg-white text-dark-fg' : 'bg-dark-bg text-fg',
         ]">
-        <img
-            :src="
-                $config.app.baseURL +
-                (isMainPage ? '/icons/logo.svg' : '/icons/logo-dark.svg')
-            "
+        <UIcon
+            :name="IconsLogo"
             alt="logo" />
 
         <nav class="justify-self-center">
@@ -24,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-const { $config } = useNuxtApp();
+import IconsLogo from './icons/Logo.vue';
 
 const route = useRoute();
 

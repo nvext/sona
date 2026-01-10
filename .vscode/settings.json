@@ -5,6 +5,11 @@
     "editor.quickSuggestions": {
         "strings": "on"
     },
+    "tailwindCSS.classAttributes": ["class", "ui"],
+    "tailwindCSS.experimental.classRegex": [
+        ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+
     "prettier.tabWidth": 4,
     "editor.detectIndentation": false
 }
