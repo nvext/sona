@@ -7,5 +7,6 @@ export interface Session {
 	revokedAt: Date | null
 	refreshTokenHash: string
 	refreshTokenFamilyId: string
+    refreshTokenFingerprint: string
 	version: number
 }

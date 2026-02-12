@@ -8,6 +8,8 @@ export interface BaseRepo<TEntity> {
         sorting?: Sorting<TEntity>;
         pagination?: Pagination;
     }): Promise<RepoResponse<TEntity[], { pagination: Pagination; total: number }>>;
-    update(parameters: { updatedEntity: TEntity }): Promise<RepoResponse<null>>
-    delete(parameters: {id: string}): Promise<RepoResponse<null>>
+    update(parameters: {
+        patch: Partial<TEntity> & { id: string };
+    }): Promise<RepoResponse<TEntity | null>>;
+    delete(parameters: { id: string }): Promise<RepoResponse<TEntity | null>>;
 }
