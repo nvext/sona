@@ -1,9 +1,11 @@
 import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
+import { OrderRequest } from "~~/server/domain/order-request/entity";
+import { NotFoundError } from "~~/server/shared/errors";
 
 export class SubmitOrderRequest {
     constructor(private readonly orderRequestRepo: OrderRequestRepo) {}
 
-    async execute(input: SubmitOrderRequestInput) {
+    async execute(input: SubmitOrderRequestInput): Promise<SubmitOrderRequestOutput> {
         const now = new Date();
 
         const { data: orderRequest } = await this.orderRequestRepo.update({
@@ -21,6 +23,14 @@ export class SubmitOrderRequest {
                 status: "submitted",
             },
         });
+
+        if (orderRequest === null) {
+            throw new NotFoundError("Order request not found");
+        }
+
+        return {
+            orderRequest,
+        };
     }
 }
 
@@ -31,4 +41,8 @@ type SubmitOrderRequestInput = {
     contactPhone: string;
     contactEmail: string | null;
     contactTelegram: string | null;
+};
+
+type SubmitOrderRequestOutput = {
+    orderRequest: OrderRequest;
 };
