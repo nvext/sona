@@ -3,6 +3,9 @@ import { NotFoundError } from "~~/server/shared/errors";
 import { CaptureCartSnapshotQuery } from "../queries/capture-cart-snapshot";
 import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import { EntityIdGenerator } from "~~/server/shared/id";
+import { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
+import { OrderRequest } from "~~/server/domain/order-request/entity";
+import { SnapshotCaptureError } from "~~/server/shared/errors/SnapshotCaptureError";
 
 export class CreateOrderRequestDraft {
     constructor(
@@ -12,7 +15,7 @@ export class CreateOrderRequestDraft {
         private readonly entityIdGenerator: EntityIdGenerator,
     ) {}
 
-    async execute(input: CreateOrderRequestDraftInput) {
+    async execute(input: CreateOrderRequestDraftInput): Promise<CreateOrderRequestDraftOutput> {
         const now = new Date();
 
         const { data: cart } = await this.cartRepo.getById({ id: input.cartId });
@@ -32,14 +35,28 @@ export class CreateOrderRequestDraft {
             },
         });
 
-        const { data: snapshots } = await this.captureCartSnapshotQuery.execute({
-            cartId: cart.id,
-            orderRequestId: orderRequest.id,
-        });
+        try {
+            const { data: snapshots } = await this.captureCartSnapshotQuery.execute({
+                cartId: cart.id,
+                orderRequestId: orderRequest.id,
+            });
+
+            return {
+                orderRequest,
+                snapshots,
+            };
+        } catch {
+            throw new SnapshotCaptureError();
+        }
     }
 }
 
 type CreateOrderRequestDraftInput = {
     cartId: string;
     idempotencyKey: string;
+};
+
+export type CreateOrderRequestDraftOutput = {
+    orderRequest: OrderRequest;
+    snapshots: ProductSnapshot[];
 };
