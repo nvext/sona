@@ -27,6 +27,7 @@ export class Login {
 
         if (
             user === null ||
+            user.status !== "active" ||
             !(await this.passwordHasher.verify(user.passwordHash, input.password))
         ) {
             throw new InvalidCredentialsError();
