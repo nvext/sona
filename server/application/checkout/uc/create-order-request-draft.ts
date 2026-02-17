@@ -5,7 +5,7 @@ import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import { EntityIdGenerator } from "~~/server/shared/id";
 import { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
-import { SnapshotCaptureError } from "~~/server/shared/errors/SnapshotCaptureError";
+import { OperationFailedError } from "~~/server/shared/errors/OperationFailedError";
 
 export class CreateOrderRequestDraft {
     constructor(
@@ -46,7 +46,7 @@ export class CreateOrderRequestDraft {
                 snapshots,
             };
         } catch {
-            throw new SnapshotCaptureError();
+            throw new OperationFailedError("Failed to capture cart snapshot");
         }
     }
 }

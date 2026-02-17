@@ -6,7 +6,7 @@ import type { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import type { CaptureCartSnapshotQuery } from "~~/server/application/checkout/queries/capture-cart-snapshot";
 import type { EntityIdGenerator } from "~~/server/shared/id";
 import { NotFoundError } from "~~/server/shared/errors";
-import { SnapshotCaptureError } from "~~/server/shared/errors/SnapshotCaptureError";
+import { OperationFailedError } from "~~/server/shared/errors/OperationFailedError";
 import type { Cart } from "~~/server/domain/cart/entity";
 import type { OrderRequest } from "~~/server/domain/order-request/entity";
 import type { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
@@ -133,7 +133,7 @@ describe("CreateOrderRequestDraft", () => {
         );
     });
 
-    test("throws SnapshotCaptureError when snapshot query fails", async () => {
+    test("throws OperationFailedError when snapshot query fails", async () => {
         const { uc } = makeSut({
             cart: baseCart,
             snapshotError: new Error("db failure"),
@@ -141,7 +141,9 @@ describe("CreateOrderRequestDraft", () => {
 
         await assert.rejects(
             uc.execute({ cartId: baseCart.id, idempotencyKey: "idem-1" }),
-            SnapshotCaptureError,
+            (error) =>
+                error instanceof OperationFailedError &&
+                error.message === "Failed to capture cart snapshot",
         );
     });
 });
