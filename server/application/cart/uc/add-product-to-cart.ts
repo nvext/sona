@@ -3,7 +3,7 @@ import { CartRepo } from "~~/server/domain/cart/repo";
 import { ProductCardRepo } from "~~/server/domain/product-card/repo";
 import { ProductColorRepo } from "~~/server/domain/product-color/repo";
 import { ProductRepo } from "~~/server/domain/product/repo";
-import { NotFoundError } from "~~/server/shared/errors";
+import { NotFoundError, ValidationError } from "~~/server/shared/errors";
 import { EntityIdGenerator } from "~~/server/shared/id";
 
 export class AddItemToCart {
@@ -31,6 +31,13 @@ export class AddItemToCart {
 
         if (card === null) {
             throw new NotFoundError();
+        }
+
+        const colorMatchesProduct = product.productColorId === color.id;
+        const colorBelongsToCard = color.productCardId === card.id;
+
+        if (!colorMatchesProduct || !colorBelongsToCard) {
+            throw new ValidationError("Product and color mismatch");
         }
 
         const { data: cartItem } = await this.cartItemRepo.getByKey({
