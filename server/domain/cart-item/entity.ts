@@ -1,10 +1,16 @@
 import { CartItemSnapshot } from "./types";
 
 export interface CartItem {
-    id: string;
-    cartId: string;
-    productId: string;
-    quantity: number;
+  id: string;
+  cartId: string;
 
-    snapshot: CartItemSnapshot
+  productCardId: string;
+  productId: string;
+  productColorId: string;
+
+  quantity: number;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
+

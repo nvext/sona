@@ -1,8 +1,15 @@
+import { ProductType } from "./types";
+
 export interface ProductCard {
-	id: string
-	slug: string
-	title: string
-	description: string
-	createdAt: Date
-	updatedAt: Date | null
+    id: string;
+    type: ProductType;
+
+    slug: string;
+    title: string;
+    description: string;
+
+    isActive: boolean;
+
+    createdAt: Date;
+    updatedAt: Date;
 }
