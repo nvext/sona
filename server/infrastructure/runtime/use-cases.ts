@@ -74,6 +74,7 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
         ),
         submitOrderRequest: new SubmitOrderRequest(
             container.repos.orderRequestRepo,
+            container.repos.productSnapshotRepo,
             container.services.orderRequestDeliveryService,
             {
                 maxAttempts: deliveryRetryConfig.maxAttempts,

@@ -5,17 +5,60 @@ export class TelegramOrderRequestDeliveryService implements OrderRequestDelivery
     constructor(private readonly config: TelegramDeliveryConfig) {}
 
     async send(input: Parameters<OrderRequestDeliveryService["send"]>[0]): Promise<void> {
-        const { orderRequest } = input;
-        const message = [
-            "New order request submitted",
-            `Order ID: ${orderRequest.id}`,
-            `User ID: ${orderRequest.userId}`,
-            `Contact name: ${orderRequest.contactName ?? "-"}`,
-            `Contact phone: ${orderRequest.contactPhone ?? "-"}`,
-            `Contact email: ${orderRequest.contactEmail ?? "-"}`,
-            `Contact telegram: ${orderRequest.contactTelegram ?? "-"}`,
-            `Submitted at: ${orderRequest.submittedAt?.toISOString() ?? "-"}`,
-        ].join("\n");
+        const { orderRequest, snapshots } = input;
+        const totalPrice = snapshots.reduce((sum, snapshot) => sum + snapshot.price, 0);
+        const currency = snapshots[0]?.currency ?? "RUB";
+        const submittedAt = orderRequest.submittedAt
+            ? orderRequest.submittedAt.toISOString()
+            : "не указано";
+
+        const header = [
+            "Новая заявка",
+            "",
+            "Общая информация:",
+            `- ID заявки: ${orderRequest.id}`,
+            `- ID пользователя: ${orderRequest.userId}`,
+            `- Статус: ${orderRequest.status}`,
+            `- Время отправки: ${submittedAt}`,
+            "",
+            "Контакты клиента:",
+            `- Имя: ${orderRequest.contactName ?? "не указано"}`,
+            `- Телефон: ${orderRequest.contactPhone ?? "не указано"}`,
+            `- Email: ${orderRequest.contactEmail ?? "не указано"}`,
+            `- Telegram: ${orderRequest.contactTelegram ?? "не указано"}`,
+            "",
+            "Состав заявки:",
+        ];
+
+        const lines =
+            snapshots.length === 0
+                ? ["- Позиции не найдены"]
+                : snapshots.flatMap((snapshot, index) => {
+                      const imageLinks =
+                          snapshot.imageIds.length === 0
+                              ? "нет"
+                              : snapshot.imageIds.join(", ");
+
+                      return [
+                          `${index + 1}. ${snapshot.title}`,
+                          `   - Описание: ${snapshot.description}`,
+                          `   - Размер: ${snapshot.width}x${snapshot.height} мм, толщина ${snapshot.thickness} мм`,
+                          `   - Цвет: ${snapshot.colorName} (${snapshot.colorHex})`,
+                          `   - ID товара: ${snapshot.productId}`,
+                          `   - ID цвета: ${snapshot.colorId}`,
+                          `   - Цена: ${snapshot.price} ${snapshot.currency}`,
+                          `   - Изображения: ${imageLinks}`,
+                      ];
+                  });
+
+        const footer = [
+            "",
+            "Итого:",
+            `- Позиций: ${snapshots.length}`,
+            `- Сумма: ${totalPrice} ${currency}`,
+        ];
+
+        const message = [...header, ...lines, ...footer].join("\n");
 
         const response = await fetch(
             `https://api.telegram.org/bot${this.config.botToken}/sendMessage`,
@@ -27,6 +70,7 @@ export class TelegramOrderRequestDeliveryService implements OrderRequestDelivery
                 body: JSON.stringify({
                     chat_id: this.config.managerChatId,
                     text: message,
+                    disable_web_page_preview: true,
                 }),
             },
         );

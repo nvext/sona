@@ -24,6 +24,6 @@ const orderRequest: OrderRequest = {
 describe("NoopOrderRequestDeliveryService", () => {
     test("resolves without side effects", async () => {
         const service = new NoopOrderRequestDeliveryService();
-        await assert.doesNotReject(service.send({ orderRequest }));
+        await assert.doesNotReject(service.send({ orderRequest, snapshots: [] }));
     });
 });

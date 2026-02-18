@@ -41,6 +41,7 @@ import {
 } from "~~/server/infrastructure/db/repos/tests/helpers";
 import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
 import { resetSecurityStateForTests } from "~~/server/infrastructure/api/shared/security";
+import type { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
 
 setupDbTestHooks();
 
@@ -49,7 +50,7 @@ class ScriptedDeliveryService implements OrderRequestDeliveryService {
 
     constructor(private readonly outcomes: boolean[]) {}
 
-    async send(input: { orderRequest: { id: string } }): Promise<void> {
+    async send(input: { orderRequest: { id: string }; snapshots: ProductSnapshot[] }): Promise<void> {
         this.sentOrderRequestIds.push(input.orderRequest.id);
         const outcome = this.outcomes.length > 0 ? this.outcomes.shift()! : true;
         if (!outcome) {

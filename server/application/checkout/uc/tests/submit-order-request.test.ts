@@ -6,6 +6,8 @@ import type { OrderRequest } from "~~/server/domain/order-request/entity";
 import type { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
 import { NotFoundError, OperationFailedError } from "~~/server/shared/errors";
 import { DeliveryRetryPolicy } from "~~/server/application/checkout/services/delivery-retry-policy";
+import type { ProductSnapshotRepo } from "~~/server/domain/product-snapshot/repo";
+import type { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
 
 const baseOrderRequest: OrderRequest = {
     id: "order-request-1",
@@ -29,6 +31,25 @@ const retryPolicy: DeliveryRetryPolicy = {
     baseDelayMs: 1_000,
     maxDelayMs: 60_000,
 };
+const baseSnapshots: ProductSnapshot[] = [
+    {
+        id: "snapshot-1",
+        orderRequestId: "order-request-1",
+        productId: "product-1",
+        title: "Panel A",
+        description: "desc",
+        colorId: "color-1",
+        colorName: "Black",
+        colorHex: "#000000",
+        imageIds: ["img-1"],
+        width: 1000,
+        height: 500,
+        thickness: 30,
+        price: 1000,
+        currency: "RUB",
+        capturedAt: new Date(),
+    },
+];
 
 function makeSut(options: {
     existingOrderRequest: OrderRequest | null;
@@ -57,16 +78,30 @@ function makeSut(options: {
             };
         },
     } as unknown as OrderRequestRepo;
+    const productSnapshotRepo = {
+        async getByOrderRequestId() {
+            return {
+                data: baseSnapshots,
+                meta: undefined,
+            };
+        },
+    } as unknown as ProductSnapshotRepo;
     const orderRequestDeliveryService = {
-        async send(input: { orderRequest: OrderRequest }) {
+        async send(input: { orderRequest: OrderRequest; snapshots: ProductSnapshot[] }) {
             if (options.deliveryError) {
                 throw options.deliveryError;
             }
+            assert.equal(input.snapshots.length, 1);
             deliveredOrderRequests.push(input.orderRequest);
         },
     } as unknown as OrderRequestDeliveryService;
 
-    const uc = new SubmitOrderRequest(orderRequestRepo, orderRequestDeliveryService, retryPolicy);
+    const uc = new SubmitOrderRequest(
+        orderRequestRepo,
+        productSnapshotRepo,
+        orderRequestDeliveryService,
+        retryPolicy,
+    );
 
     return { uc, getPatchInputs: () => patchInputs, getDelivered: () => deliveredOrderRequests };
 }

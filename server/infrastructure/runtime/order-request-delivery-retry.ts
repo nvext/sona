@@ -43,7 +43,10 @@ export async function processFailedOrderRequestsOnce(
 
     for (const orderRequest of failedRequests) {
         try {
-            await container.services.orderRequestDeliveryService.send({ orderRequest });
+            const { data: snapshots } = await container.repos.productSnapshotRepo.getByOrderRequestId({
+                orderRequestId: orderRequest.id,
+            });
+            await container.services.orderRequestDeliveryService.send({ orderRequest, snapshots });
             const now = new Date();
             await container.repos.orderRequestRepo.update({
                 patch: {

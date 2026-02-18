@@ -6,7 +6,7 @@ import { FIXED_NOW, seedUser, setupDbTestHooks } from "./helpers";
 setupDbTestHooks();
 
 describe("PgProductSnapshotRepo", () => {
-    test("add/getById", async () => {
+    test("add/getById/getByOrderRequestId", async () => {
         await seedUser();
         const orderRequestRepo = new PgOrderRequestRepo();
         const productSnapshotRepo = new PgProductSnapshotRepo();
@@ -43,5 +43,11 @@ describe("PgProductSnapshotRepo", () => {
 
         const snapshot = await productSnapshotRepo.getById({ id: "snapshot-1" });
         assert.equal(snapshot.data?.id, "snapshot-1");
+
+        const byOrderRequest = await productSnapshotRepo.getByOrderRequestId({
+            orderRequestId: upsertedDraft.data.id,
+        });
+        assert.equal(byOrderRequest.data.length, 1);
+        assert.equal(byOrderRequest.data[0].id, "snapshot-1");
     });
 });

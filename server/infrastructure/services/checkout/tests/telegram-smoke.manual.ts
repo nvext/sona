@@ -39,6 +39,25 @@ describe("telegram integration smoke", () => {
                             lastDeliveryError: null,
                             updatedAt: new Date(),
                         },
+                        snapshots: [
+                            {
+                                id: `snapshot-${suffix}`,
+                                orderRequestId: `smoke-${suffix}`,
+                                productId: "smoke-product",
+                                title: "Smoke Panel",
+                                description: "Smoke description",
+                                colorId: "smoke-color",
+                                colorName: "Smoke",
+                                colorHex: "#123456",
+                                imageIds: ["img-smoke-1"],
+                                width: 1000,
+                                height: 500,
+                                thickness: 30,
+                                price: 1000,
+                                currency: "RUB",
+                                capturedAt: new Date(),
+                            },
+                        ],
                     }),
                 );
             } finally {

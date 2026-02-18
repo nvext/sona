@@ -2,6 +2,7 @@ import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
 import { NotFoundError, OperationFailedError } from "~~/server/shared/errors";
 import { OrderRequestDeliveryService } from "../services/order-request-delivery";
+import { ProductSnapshotRepo } from "~~/server/domain/product-snapshot/repo";
 import {
     calculateNextDeliveryRetryAt,
     DeliveryRetryPolicy,
@@ -10,6 +11,7 @@ import {
 export class SubmitOrderRequest {
     constructor(
         private readonly orderRequestRepo: OrderRequestRepo,
+        private readonly productSnapshotRepo: ProductSnapshotRepo,
         private readonly orderRequestDeliveryService: OrderRequestDeliveryService,
         private readonly retryPolicy: DeliveryRetryPolicy,
     ) {}
@@ -47,8 +49,12 @@ export class SubmitOrderRequest {
             throw new NotFoundError("Order request not found");
         }
 
+        const { data: snapshots } = await this.productSnapshotRepo.getByOrderRequestId({
+            orderRequestId: orderRequest.id,
+        });
+
         try {
-            await this.orderRequestDeliveryService.send({ orderRequest });
+            await this.orderRequestDeliveryService.send({ orderRequest, snapshots });
         } catch (error) {
             const attempts = orderRequest.deliveryAttempts + 1;
             const retryAt = calculateNextDeliveryRetryAt({

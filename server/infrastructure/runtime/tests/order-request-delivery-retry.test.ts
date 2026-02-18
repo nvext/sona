@@ -38,6 +38,11 @@ function makeContainer(options: {
                     return { data: null, meta: undefined };
                 },
             },
+            productSnapshotRepo: {
+                async getByOrderRequestId() {
+                    return { data: [], meta: undefined };
+                },
+            },
         },
         services: {
             orderRequestDeliveryService: {
