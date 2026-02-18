@@ -1,4 +1,5 @@
 import { calculateNextDeliveryRetryAt } from "~~/server/application/checkout/services/delivery-retry-policy";
+import { recordRetryCycle, recordRetryDelivered, recordRetryFailed } from "./metrics";
 import type { RuntimeContainer } from "./container";
 
 export type DeliveryRetryConfig = {
@@ -29,6 +30,8 @@ export async function processFailedOrderRequestsOnce(
     container: RuntimeContainer,
     config: DeliveryRetryConfig,
 ): Promise<void> {
+    recordRetryCycle();
+
     const { data: failedRequests } = await container.repos.orderRequestRepo.getFailedForDelivery({
         limit: config.batchSize,
         now: new Date(),
@@ -49,6 +52,7 @@ export async function processFailedOrderRequestsOnce(
                     updatedAt: now,
                 },
             });
+            recordRetryDelivered();
         } catch (error) {
             const attempts = orderRequest.deliveryAttempts + 1;
             const retryAt = calculateNextDeliveryRetryAt({
@@ -71,6 +75,7 @@ export async function processFailedOrderRequestsOnce(
                     updatedAt: new Date(),
                 },
             });
+            recordRetryFailed();
         }
     }
 }
