@@ -2,16 +2,31 @@ type LogLevel = "info" | "error";
 
 type RuntimeLogLevel = "silent" | "error" | "info";
 
-function resolveRuntimeLogLevel(): RuntimeLogLevel {
-    const configured = (process.env.LOG_LEVEL ?? "").trim().toLowerCase();
+function parseLogLevel(value: string | undefined): RuntimeLogLevel | null {
+    const configured = (value ?? "").trim().toLowerCase();
     if (configured === "silent" || configured === "error" || configured === "info") {
         return configured;
     }
+    return null;
+}
 
+function resolveRuntimeLogLevel(): RuntimeLogLevel {
     const isTestRun =
         process.env.NODE_ENV === "test" ||
         process.argv.includes("test") ||
         process.argv.some((arg) => arg.includes("bun:test"));
+
+    if (isTestRun) {
+        const testLevel = parseLogLevel(process.env.TEST_LOG_LEVEL);
+        if (testLevel !== null) {
+            return testLevel;
+        }
+    }
+
+    const defaultLevel = parseLogLevel(process.env.LOG_LEVEL);
+    if (defaultLevel !== null) {
+        return defaultLevel;
+    }
 
     return isTestRun ? "silent" : "info";
 }

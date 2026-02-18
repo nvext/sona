@@ -1,15 +1,9 @@
-import { config as loadEnv } from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
+import { readRuntimeEnv } from "~~/server/infrastructure/runtime/env";
 
-loadEnv();
-
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-    throw new Error("DATABASE_URL is required");
-}
+const connectionString = readRuntimeEnv().databaseUrl;
 
 const pool = new Pool({
     connectionString,

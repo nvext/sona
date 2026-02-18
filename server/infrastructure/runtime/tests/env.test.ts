@@ -5,6 +5,7 @@ import { readRuntimeEnv, resetRuntimeEnvCacheForTests } from "~~/server/infrastr
 describe("runtime env", () => {
     const originalNodeEnv = process.env.NODE_ENV;
     const originalDatabaseUrl = process.env.DATABASE_URL;
+    const originalTestDatabaseUrl = process.env.TEST_DATABASE_URL;
     const originalSecret = process.env.AUTH_ACCESS_SECRET;
     const originalProvider = process.env.ORDER_DELIVERY_PROVIDER;
     const originalBotToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -13,6 +14,7 @@ describe("runtime env", () => {
     const restoreEnv = () => {
         process.env.NODE_ENV = originalNodeEnv;
         process.env.DATABASE_URL = originalDatabaseUrl;
+        process.env.TEST_DATABASE_URL = originalTestDatabaseUrl;
         process.env.AUTH_ACCESS_SECRET = originalSecret;
         process.env.ORDER_DELIVERY_PROVIDER = originalProvider;
         process.env.TELEGRAM_BOT_TOKEN = originalBotToken;
@@ -41,5 +43,16 @@ describe("runtime env", () => {
         resetRuntimeEnvCacheForTests();
 
         assert.throws(() => readRuntimeEnv(), /TELEGRAM_BOT_TOKEN/);
+    });
+
+    test("uses TEST_DATABASE_URL in test runtime", () => {
+        process.env.NODE_ENV = "test";
+        process.env.DATABASE_URL = "postgresql://u:p@localhost:5432/main_db";
+        process.env.TEST_DATABASE_URL = "postgresql://u:p@localhost:5432/test_db";
+        process.env.AUTH_ACCESS_SECRET = "secret";
+        resetRuntimeEnvCacheForTests();
+
+        const env = readRuntimeEnv();
+        assert.equal(env.databaseUrl, "postgresql://u:p@localhost:5432/test_db");
     });
 });

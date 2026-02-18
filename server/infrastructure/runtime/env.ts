@@ -5,7 +5,8 @@ loadEnv();
 
 const envSchema = z.object({
     NODE_ENV: z.string().optional(),
-    DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+    DATABASE_URL: z.string().optional(),
+    TEST_DATABASE_URL: z.string().optional(),
     AUTH_SESSION_TTL: z.coerce.number().int().positive().default(30 * 24 * 60 * 60 * 1000),
     AUTH_ACCESS_TTL: z.coerce.number().int().positive().default(15 * 60 * 1000),
     AUTH_ACCESS_SECRET: z.string().min(1).default("dev-access-secret-change-me"),
@@ -55,6 +56,14 @@ export type RuntimeEnv = {
 
 let cachedEnv: RuntimeEnv | null = null;
 
+function isTestRuntime(nodeEnv: string): boolean {
+    return (
+        nodeEnv === "test" ||
+        process.argv.includes("test") ||
+        process.argv.some((arg) => arg.includes("bun:test"))
+    );
+}
+
 export function readRuntimeEnv(): RuntimeEnv {
     if (cachedEnv) {
         return cachedEnv;
@@ -62,6 +71,20 @@ export function readRuntimeEnv(): RuntimeEnv {
 
     const parsed = envSchema.parse(process.env);
     const nodeEnv = parsed.NODE_ENV ?? "development";
+    const runtimeIsTest = isTestRuntime(nodeEnv);
+    const mainDatabaseUrl = parsed.DATABASE_URL?.trim() ?? "";
+    const testDatabaseUrl = parsed.TEST_DATABASE_URL?.trim() ?? "";
+    const databaseUrl = runtimeIsTest
+        ? testDatabaseUrl || mainDatabaseUrl
+        : mainDatabaseUrl;
+
+    if (!databaseUrl) {
+        throw new Error(
+            runtimeIsTest
+                ? "DATABASE_URL or TEST_DATABASE_URL is required in test runtime"
+                : "DATABASE_URL is required",
+        );
+    }
     const telegramBotToken = parsed.TELEGRAM_BOT_TOKEN?.trim() ?? "";
     const telegramManagerChatId = parsed.TELEGRAM_MANAGER_CHAT_ID?.trim() ?? "";
 
@@ -79,7 +102,7 @@ export function readRuntimeEnv(): RuntimeEnv {
 
     cachedEnv = {
         nodeEnv,
-        databaseUrl: parsed.DATABASE_URL,
+        databaseUrl,
         auth: {
             sessionTtl: parsed.AUTH_SESSION_TTL,
             accessTtlMs: parsed.AUTH_ACCESS_TTL,

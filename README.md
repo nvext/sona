@@ -64,6 +64,7 @@ bun run dev
 - `ORDER_DELIVERY_RETRY_BASE_DELAY`
 - `ORDER_DELIVERY_RETRY_MAX_DELAY`
 - `LOG_LEVEL` (`info`, `error`, `silent`)
+- `TEST_LOG_LEVEL` (`info`, `error`, `silent`)
 
 ## Скрипты
 

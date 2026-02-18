@@ -6,11 +6,13 @@
     "build": "nuxt build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:migrate:test": "DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} drizzle-kit migrate",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test:db": "bun test server/infrastructure/db/repos/tests"
+    "test:db": "bun test server/infrastructure/db/repos/tests",
+    "test:db:test": "NODE_ENV=test bun test server/infrastructure/db/repos/tests"
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
