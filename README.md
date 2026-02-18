@@ -1,75 +1,115 @@
-# Nuxt Minimal Starter
+# Sona
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Интернет-магазин звуковых панелей.
 
-## Setup
+## Что реализовано
 
-Make sure to install dependencies:
+Система покрывает ключевой путь клиента от выбора панели до отправки заявки менеджеру:
+
+- Регистрация и авторизация пользователя
+- Просмотр каталога и карточек звуковых панелей
+- Работа с корзиной (добавление и удаление позиций)
+- Оформление заявки:
+  - создание черновика (`draft`)
+  - отправка заявки
+  - доставка заявки менеджеру в Telegram
+  - автоматические ретраи при ошибках доставки
+- Техническая эксплуатация:
+  - `GET /health`
+  - `GET /ready`
+  - `GET /metrics`
+- Базовая защита API:
+  - авторизация защищенных операций
+  - CORS
+  - rate limit для auth и отправки заявки
+  - `x-request-id` и структурные логи
+
+## Требования
+
+- `bun`
+- `PostgreSQL`
+
+## Быстрый старт
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
 bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
+bun run db:migrate
 bun run dev
 ```
 
-## Production
+## Переменные окружения
 
-Build the application for production:
+Пример см. в `.env.example`.
+
+Обязательные:
+
+- `DATABASE_URL`
+- `AUTH_ACCESS_SECRET`
+- `ORDER_DELIVERY_PROVIDER` (`noop` или `telegram`)
+
+Если `ORDER_DELIVERY_PROVIDER=telegram`, обязательны:
+
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_MANAGER_CHAT_ID`
+
+Рекомендуемые:
+
+- `CORS_ALLOWED_ORIGINS`
+- `RATE_LIMIT_WINDOW_MS`
+- `RATE_LIMIT_AUTH_MAX`
+- `RATE_LIMIT_SUBMIT_MAX`
+- `ORDER_DELIVERY_RETRY_INTERVAL`
+- `ORDER_DELIVERY_RETRY_BATCH_SIZE`
+- `ORDER_DELIVERY_MAX_ATTEMPTS`
+- `ORDER_DELIVERY_RETRY_BASE_DELAY`
+- `ORDER_DELIVERY_RETRY_MAX_DELAY`
+- `LOG_LEVEL` (`info`, `error`, `silent`)
+
+## Скрипты
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
+bun run dev
 bun run build
+bun run preview
+
+bun run db:generate
+bun run db:migrate
+
+bun run test:db
 ```
 
-Locally preview production build:
+## Runbook (Сервер)
+
+### Проверка после запуска
+
+- `GET /health` -> сервис запущен
+- `GET /ready` -> сервис готов принимать трафик (есть доступ к БД)
+- `GET /metrics` -> метрики отправки и ретраев заявок
+
+### Ключевые метрики
+
+- `sona_delivery_submit_attempts_total`
+- `sona_delivery_submit_delivered_total`
+- `sona_delivery_submit_failed_total`
+- `sona_delivery_retry_cycles_total`
+- `sona_delivery_retry_delivered_total`
+- `sona_delivery_retry_failed_total`
+- `sona_delivery_retry_last_cycle_timestamp_seconds`
+
+### Если заявки не доставляются
+
+1. Проверить `GET /ready`.
+2. Проверить `ORDER_DELIVERY_PROVIDER` и `TELEGRAM_*`.
+3. Проверить структурные логи по `requestId` и `orderRequestId`.
+4. Проверить в БД поля `status`, `deliveryAttempts`, `nextDeliveryRetryAt`, `lastDeliveryError` в `order_requests`.
+5. Если достигнут лимит попыток (`deliveryAttempts >= ORDER_DELIVERY_MAX_ATTEMPTS`), после исправления причины сбросить попытки/`nextDeliveryRetryAt` вручную и дать воркеру повторить доставку.
+
+### Release-checklist
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+bunx tsc -b --pretty false
+bun test server/infrastructure/api/tests
+bun test server/infrastructure/runtime/tests
+bun test server/infrastructure/db/repos/tests
+bun test server/application
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
