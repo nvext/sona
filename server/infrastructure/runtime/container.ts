@@ -3,6 +3,7 @@ import {
     DbGetCatalogPageQuery,
     PgCartItemRepo,
     PgCartRepo,
+    PgFileRepo,
     PgOrderRequestRepo,
     PgProductCardRepo,
     PgProductColorRepo,
@@ -35,6 +36,7 @@ export type RuntimeContainer = {
         productRepo: PgProductRepo;
         productCardRepo: PgProductCardRepo;
         productColorRepo: PgProductColorRepo;
+        fileRepo: PgFileRepo;
         orderRequestRepo: PgOrderRequestRepo;
         productSnapshotRepo: PgProductSnapshotRepo;
     };
@@ -72,6 +74,7 @@ export function getRuntimeContainer(): RuntimeContainer {
     const productRepo = new PgProductRepo();
     const productCardRepo = new PgProductCardRepo();
     const productColorRepo = new PgProductColorRepo();
+    const fileRepo = new PgFileRepo();
     const orderRequestRepo = new PgOrderRequestRepo();
     const productSnapshotRepo = new PgProductSnapshotRepo();
 
@@ -100,6 +103,7 @@ export function getRuntimeContainer(): RuntimeContainer {
             productRepo,
             productCardRepo,
             productColorRepo,
+            fileRepo,
             orderRequestRepo,
             productSnapshotRepo,
         },

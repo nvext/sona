@@ -1,5 +1,6 @@
 import { pgTable, text, integer, boolean, timestamp, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 import { cartStatuses } from "~~/server/domain/cart/const";
+import { fileStorageProviders } from "~~/server/domain/file/const";
 import { orderRequestStatuses } from "~~/server/domain/order-request/const";
 import { productTypes } from "~~/server/domain/product-card/const";
 import { currencies } from "~~/server/shared/const";
@@ -76,6 +77,21 @@ export const productColors = pgTable("product_colors", {
     hex: text("hex").notNull(),
     imageIds: jsonb("image_ids").$type<string[]>().notNull(),
     isActive: boolean("is_active").notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+});
+
+export const files = pgTable("files", {
+    id: text("id").primaryKey(),
+    url: text("url").notNull(),
+    storageProvider: text("storage_provider").$type<(typeof fileStorageProviders)[number]>(),
+    storageBucket: text("storage_bucket"),
+    storageKey: text("storage_key"),
+    originalName: text("original_name").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    width: integer("width"),
+    height: integer("height"),
     createdAt: timestamp("created_at", { mode: "date" }).notNull(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
 });

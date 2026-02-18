@@ -15,6 +15,34 @@
       "when": 1771406510815,
       "tag": "0001_polite_odin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771410777581,
+      "tag": "0002_steep_aqueduct",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771412000000,
+      "tag": "0003_fancy_veda",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771411452733,
+      "tag": "0004_mushy_professor_monster",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771413000000,
+      "tag": "0005_hot_komodo",
+      "breakpoints": true
     }
   ]
 }

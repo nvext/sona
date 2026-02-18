@@ -1,3 +1,4 @@
+import { FileRepo } from "~~/server/domain/file/repo";
 import { ProductCardRepo } from "~~/server/domain/product-card/repo";
 import { ProductColorRepo } from "~~/server/domain/product-color/repo";
 import { ProductRepo } from "~~/server/domain/product/repo";
@@ -8,6 +9,7 @@ export class GetProductCardDetails {
         private readonly productCardRepo: ProductCardRepo,
         private readonly productColorRepo: ProductColorRepo,
         private readonly productRepo: ProductRepo,
+        private readonly fileRepo: FileRepo,
     ) {}
 
     async execute(input: GetProductCardDetailsInput) {
@@ -25,9 +27,22 @@ export class GetProductCardDetails {
             productCardId: card.id,
         });
 
+        const imageIds = Array.from(new Set(colors.flatMap((color) => color.imageIds)));
+        const { data: files } = await this.fileRepo.getByIds({ ids: imageIds });
+        const filesById = new Map(files.map((file) => [file.id, file]));
+
         return {
             card,
-            colors,
+            colors: colors.map((color) => {
+                const { imageIds, ...colorWithoutImageIds } = color;
+                return {
+                    ...colorWithoutImageIds,
+                    images: imageIds.flatMap((imageId) => {
+                    const file = filesById.get(imageId);
+                    return file ? [{ id: file.id, url: file.url }] : [];
+                }),
+                };
+            }),
             products,
         };
     }

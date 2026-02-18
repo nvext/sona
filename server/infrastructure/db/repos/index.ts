@@ -7,3 +7,4 @@ export { PgProductColorRepo } from "./product-color-repo";
 export { PgProductRepo } from "./product-repo";
 export { PgOrderRequestRepo } from "./order-request-repo";
 export { PgProductSnapshotRepo } from "./product-snapshot-repo";
+export { PgFileRepo } from "./file-repo";

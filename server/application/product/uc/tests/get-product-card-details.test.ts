@@ -4,9 +4,11 @@ import { GetProductCardDetails } from "~~/server/application/product/uc/get-prod
 import type { ProductCardRepo } from "~~/server/domain/product-card/repo";
 import type { ProductColorRepo } from "~~/server/domain/product-color/repo";
 import type { ProductRepo } from "~~/server/domain/product/repo";
+import type { FileRepo } from "~~/server/domain/file/repo";
 import type { ProductCard } from "~~/server/domain/product-card/entity";
 import type { ProductColor } from "~~/server/domain/product-color/entity";
 import type { Product } from "~~/server/domain/product/entity";
+import type { File } from "~~/server/domain/file/entity";
 import { NotFoundError } from "~~/server/shared/errors";
 
 const baseCard: ProductCard = {
@@ -45,6 +47,21 @@ const baseProduct: Product = {
     updatedAt: new Date(),
 };
 
+const baseFile: File = {
+    id: "img-1",
+    url: "https://cdn.example.com/img-1.jpg",
+    storageProvider: null,
+    storageBucket: null,
+    storageKey: null,
+    originalName: "img-1.jpg",
+    mimeType: "image/jpeg",
+    sizeBytes: 123,
+    width: 1000,
+    height: 1000,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+};
+
 describe("GetProductCardDetails", () => {
     test("returns card details with colors and products", async () => {
         const productCardRepo = {
@@ -65,11 +82,20 @@ describe("GetProductCardDetails", () => {
             },
         } as unknown as ProductRepo;
 
-        const uc = new GetProductCardDetails(productCardRepo, productColorRepo, productRepo);
+        const fileRepo = {
+            async getByIds() {
+                return { data: [baseFile], meta: undefined };
+            },
+        } as unknown as FileRepo;
+
+        const uc = new GetProductCardDetails(productCardRepo, productColorRepo, productRepo, fileRepo);
         const result = await uc.execute({ cardId: "card-1" });
 
         assert.equal(result.card.id, "card-1");
         assert.equal(result.colors.length, 1);
+        assert.equal(result.colors[0].images.length, 1);
+        assert.equal(result.colors[0].images[0].url, baseFile.url);
+        assert.equal("imageIds" in result.colors[0], false);
         assert.equal(result.products.length, 1);
     });
 
@@ -82,8 +108,9 @@ describe("GetProductCardDetails", () => {
 
         const productColorRepo = {} as ProductColorRepo;
         const productRepo = {} as ProductRepo;
+        const fileRepo = {} as FileRepo;
 
-        const uc = new GetProductCardDetails(productCardRepo, productColorRepo, productRepo);
+        const uc = new GetProductCardDetails(productCardRepo, productColorRepo, productRepo, fileRepo);
         await assert.rejects(uc.execute({ cardId: "missing-card" }), NotFoundError);
     });
 });

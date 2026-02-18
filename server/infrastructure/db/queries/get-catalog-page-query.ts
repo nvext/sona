@@ -3,7 +3,7 @@ import { GetCatalogPageQuery } from "~~/server/application/product/queries";
 import { RepoResponse } from "~~/server/domain/base/types";
 import { Pagination } from "~~/server/shared/types";
 import { db } from "../connection";
-import { productCards, productColors, products } from "../schema";
+import { files, productCards, productColors, products } from "../schema";
 
 export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
     async execute(parameters: {
@@ -18,7 +18,7 @@ export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
                 type: "panel";
                 minPrice: number;
                 currency: "RUB";
-                colors: Array<{ colorId: string; previewImageId: string | null }>;
+                colors: Array<{ colorId: string; images: Array<{ id: string; url: string }> }>;
             }>,
             { pagination: Pagination; total: number }
         >
@@ -54,6 +54,13 @@ export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
                 .where(and(eq(productColors.isActive, true), inArray(productColors.productCardId, cardIds))),
         ]);
 
+        const imageIds = Array.from(new Set(colorRows.flatMap((row) => row.imageIds)));
+        const fileRows =
+            imageIds.length === 0
+                ? []
+                : await db.select({ id: files.id, url: files.url }).from(files).where(inArray(files.id, imageIds));
+        const filesById = new Map(fileRows.map((row) => [row.id, row]));
+
         const pricesByCard = new Map<string, number[]>();
         for (const row of priceRows) {
             const current = pricesByCard.get(row.cardId) ?? [];
@@ -61,12 +68,18 @@ export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
             pricesByCard.set(row.cardId, current);
         }
 
-        const colorsByCard = new Map<string, Array<{ colorId: string; previewImageId: string | null }>>();
+        const colorsByCard = new Map<
+            string,
+            Array<{ colorId: string; images: Array<{ id: string; url: string }> }>
+        >();
         for (const row of colorRows) {
             const current = colorsByCard.get(row.productCardId) ?? [];
             current.push({
                 colorId: row.id,
-                previewImageId: row.imageIds[0] ?? null,
+                images: row.imageIds.flatMap((imageId) => {
+                    const file = filesById.get(imageId);
+                    return file ? [{ id: file.id, url: file.url }] : [];
+                }),
             });
             colorsByCard.set(row.productCardId, current);
         }

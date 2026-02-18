@@ -1,10 +1,19 @@
 import { before, beforeEach } from "node:test";
 import { sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { db, PgCartRepo, PgProductCardRepo, PgProductColorRepo, PgProductRepo, PgUserRepo } from "~~/server/infrastructure/db";
+import {
+    db,
+    PgCartRepo,
+    PgFileRepo,
+    PgProductCardRepo,
+    PgProductColorRepo,
+    PgProductRepo,
+    PgUserRepo,
+} from "~~/server/infrastructure/db";
 
 const TABLES = [
     "product_snapshots",
+    "files",
     "cart_items",
     "products",
     "product_colors",
@@ -49,9 +58,27 @@ export async function seedUser() {
 }
 
 export async function seedCatalog() {
+    const fileRepo = new PgFileRepo();
     const productCardRepo = new PgProductCardRepo();
     const productColorRepo = new PgProductColorRepo();
     const productRepo = new PgProductRepo();
+
+    await fileRepo.add({
+        entity: {
+            id: "img-1",
+            url: "https://cdn.example.com/products/panel-1-black-1.jpg",
+            storageProvider: null,
+            storageBucket: null,
+            storageKey: null,
+            originalName: "panel-1-black-1.jpg",
+            mimeType: "image/jpeg",
+            sizeBytes: 1024,
+            width: 1200,
+            height: 800,
+            createdAt: FIXED_NOW,
+            updatedAt: FIXED_NOW,
+        },
+    });
 
     await productCardRepo.add({
         entity: {

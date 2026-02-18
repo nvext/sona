@@ -23,5 +23,8 @@ type CatalogItem = {
 
 type CatalogItemColor = {
     colorId: string;
-    previewImageId: string | null;
+    images: Array<{
+        id: string;
+        url: string;
+    }>;
 };

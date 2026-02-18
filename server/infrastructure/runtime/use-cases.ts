@@ -87,6 +87,7 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
             container.repos.productCardRepo,
             container.repos.productColorRepo,
             container.repos.productRepo,
+            container.repos.fileRepo,
         ),
     };
 }

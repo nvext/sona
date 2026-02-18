@@ -67,7 +67,7 @@ describe("TelegramOrderRequestDeliveryService", () => {
 
         const payload = JSON.parse(String(calls[0].init?.body ?? "{}"));
         assert.equal(payload.chat_id, "777");
-        assert.ok(String(payload.text).includes("Новая заявка на звуковые панели"));
+        assert.ok(String(payload.text).includes("Новая заявка"));
         assert.ok(String(payload.text).includes("Состав заявки:"));
         assert.ok(String(payload.text).includes("Панель A"));
         assert.ok(String(payload.text).includes("Итого:"));

@@ -13,6 +13,7 @@ import {
     DbGetCatalogPageQuery,
     PgCartItemRepo,
     PgCartRepo,
+    PgFileRepo,
     PgOrderRequestRepo,
     PgProductCardRepo,
     PgProductColorRepo,
@@ -70,6 +71,7 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
     const productRepo = new PgProductRepo();
     const productCardRepo = new PgProductCardRepo();
     const productColorRepo = new PgProductColorRepo();
+    const fileRepo = new PgFileRepo();
     const orderRequestRepo = new PgOrderRequestRepo();
     const productSnapshotRepo = new PgProductSnapshotRepo();
 
@@ -94,6 +96,7 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
             productRepo,
             productCardRepo,
             productColorRepo,
+            fileRepo,
             orderRequestRepo,
             productSnapshotRepo,
         },
@@ -192,6 +195,11 @@ describe("infra checkout e2e", () => {
         assert.equal(catalogResponse.status, 200);
         assert.ok(Array.isArray(catalogResponse.body.data));
         assert.equal(catalogResponse.body.data.length, 1);
+        assert.equal(catalogResponse.body.data[0].colors[0].images[0].id, "img-1");
+        assert.equal(
+            catalogResponse.body.data[0].colors[0].images[0].url,
+            "https://cdn.example.com/products/panel-1-black-1.jpg",
+        );
 
         const detailsResponse = await callApi({
             route: "/products/:cardId",
@@ -202,6 +210,12 @@ describe("infra checkout e2e", () => {
         });
         assert.equal(detailsResponse.status, 200);
         assert.equal(detailsResponse.body.card.id, "card-1");
+        assert.equal("imageIds" in detailsResponse.body.colors[0], false);
+        assert.equal(detailsResponse.body.colors[0].images[0].id, "img-1");
+        assert.equal(
+            detailsResponse.body.colors[0].images[0].url,
+            "https://cdn.example.com/products/panel-1-black-1.jpg",
+        );
 
         const addResponse = await callApi({
             route: "/cart/items",
