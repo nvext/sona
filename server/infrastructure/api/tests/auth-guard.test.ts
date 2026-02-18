@@ -2,7 +2,7 @@ import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import addItemHandler from "~~/server/infrastructure/api/cart/items.post";
 import { HmacAccessTokenIssuer } from "~~/server/infrastructure/services/token/HmacAccessTokenIssuer";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 
 const issuer = new HmacAccessTokenIssuer({
     secret: "test-access-secret",

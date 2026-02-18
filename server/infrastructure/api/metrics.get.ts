@@ -1,5 +1,5 @@
 import { setHeader } from "h3";
-import { defineApiHandler } from "./_shared/handler";
+import { defineApiHandler } from "./shared/handler";
 import { getDeliveryMetricsSnapshot } from "~~/server/infrastructure/runtime";
 
 export default defineApiHandler((event) => {

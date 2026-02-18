@@ -2,7 +2,7 @@ import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import healthHandler from "~~/server/infrastructure/api/health.get";
 import loginHandler from "~~/server/infrastructure/api/auth/login.post";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 
 describe("infra request-id api", () => {
     test("sets x-request-id header when absent", async () => {

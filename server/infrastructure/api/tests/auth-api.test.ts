@@ -5,7 +5,7 @@ import loginHandler from "~~/server/infrastructure/api/auth/login.post";
 import refreshHandler from "~~/server/infrastructure/api/auth/refresh.post";
 import logoutHandler from "~~/server/infrastructure/api/auth/logout.post";
 import { InvalidCredentialsError } from "~~/server/shared/errors/InvalidCredentialsError";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 
 describe("infra auth api", () => {
     test("POST /auth/register returns sanitized user", async () => {

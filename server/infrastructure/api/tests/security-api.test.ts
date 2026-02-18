@@ -4,8 +4,8 @@ import healthHandler from "~~/server/infrastructure/api/health.get";
 import loginHandler from "~~/server/infrastructure/api/auth/login.post";
 import submitHandler from "~~/server/infrastructure/api/checkout/submit.post";
 import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
-import { resetSecurityStateForTests } from "~~/server/infrastructure/api/_shared/security";
-import { callApi } from "./_helpers";
+import { resetSecurityStateForTests } from "~~/server/infrastructure/api/shared/security";
+import { callApi } from "./helpers";
 
 describe("infra api security", () => {
     const originalAllowedOrigins = process.env.CORS_ALLOWED_ORIGINS;

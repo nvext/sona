@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import healthHandler from "~~/server/infrastructure/api/health.get";
 import readyHandler from "~~/server/infrastructure/api/ready.get";
 import metricsHandler from "~~/server/infrastructure/api/metrics.get";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 
 describe("infra system api", () => {
     test("GET /health returns ok", async () => {

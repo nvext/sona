@@ -1,7 +1,7 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { PgProductRepo } from "~~/server/infrastructure/db";
-import { seedCatalog, setupDbTestHooks } from "./_helpers";
+import { seedCatalog, setupDbTestHooks } from "./helpers";
 
 setupDbTestHooks();
 

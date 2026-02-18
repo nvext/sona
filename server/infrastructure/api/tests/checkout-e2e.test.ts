@@ -7,7 +7,7 @@ import createDraftHandler from "~~/server/infrastructure/api/checkout/drafts.pos
 import submitHandler from "~~/server/infrastructure/api/checkout/submit.post";
 import catalogHandler from "~~/server/infrastructure/api/products/catalog.get";
 import productDetailsHandler from "~~/server/infrastructure/api/products/[cardId].get";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 import {
     DbCaptureCartSnapshotQuery,
     DbGetCatalogPageQuery,
@@ -38,9 +38,9 @@ import {
     FIXED_NOW,
     seedCatalog,
     setupDbTestHooks,
-} from "~~/server/infrastructure/db/repos/tests/_helpers";
+} from "~~/server/infrastructure/db/repos/tests/helpers";
 import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
-import { resetSecurityStateForTests } from "~~/server/infrastructure/api/_shared/security";
+import { resetSecurityStateForTests } from "~~/server/infrastructure/api/shared/security";
 
 setupDbTestHooks();
 

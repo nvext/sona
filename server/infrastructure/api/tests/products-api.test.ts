@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import catalogHandler from "~~/server/infrastructure/api/products/catalog.get";
 import productCardHandler from "~~/server/infrastructure/api/products/[cardId].get";
 import { NotFoundError } from "~~/server/shared/errors/NotFoundError";
-import { callApi } from "./_helpers";
+import { callApi } from "./helpers";
 
 describe("infra products api", () => {
     test("GET /products/catalog parses pagination", async () => {

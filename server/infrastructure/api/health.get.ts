@@ -1,4 +1,4 @@
-import { defineApiHandler } from "./_shared/handler";
+import { defineApiHandler } from "./shared/handler";
 
 export default defineApiHandler(() => {
     return {

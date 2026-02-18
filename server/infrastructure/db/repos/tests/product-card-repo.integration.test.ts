@@ -1,7 +1,7 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { PgProductCardRepo } from "~~/server/infrastructure/db";
-import { FIXED_NOW, setupDbTestHooks } from "./_helpers";
+import { FIXED_NOW, setupDbTestHooks } from "./helpers";
 
 setupDbTestHooks();
 
