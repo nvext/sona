@@ -11,7 +11,10 @@ export default defineNuxtConfig({
   },
 
   // vite: { plugins: [tailwindcss()] },
-  nitro: { preset: "github-pages" },
+  nitro: {
+    preset: "node-server",
+    scanDirs: ["server/infrastructure"],
+  },
   modules: ["@nuxt/image", "@nuxt/ui"],
   ui: {
     colorMode: false,
