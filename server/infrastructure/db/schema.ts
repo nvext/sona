@@ -129,6 +129,9 @@ export const orderRequests = pgTable(
         createdAt: timestamp("created_at", { mode: "date" }).notNull(),
         submittedAt: timestamp("submitted_at", { mode: "date" }),
         sentAt: timestamp("sent_at", { mode: "date" }),
+        deliveryAttempts: integer("delivery_attempts").notNull(),
+        nextDeliveryRetryAt: timestamp("next_delivery_retry_at", { mode: "date" }),
+        lastDeliveryError: text("last_delivery_error"),
         updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
     },
     (table) => ({

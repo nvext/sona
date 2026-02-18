@@ -16,5 +16,8 @@ export interface OrderRequest {
     createdAt: Date;
     submittedAt: Date | null;
     sentAt: Date | null;
+    deliveryAttempts: number;
+    nextDeliveryRetryAt: Date | null;
+    lastDeliveryError: string | null;
     updatedAt: Date;
 }

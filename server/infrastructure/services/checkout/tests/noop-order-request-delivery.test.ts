@@ -15,6 +15,9 @@ const orderRequest: OrderRequest = {
     createdAt: new Date(),
     submittedAt: new Date(),
     sentAt: null,
+    deliveryAttempts: 0,
+    nextDeliveryRetryAt: null,
+    lastDeliveryError: null,
     updatedAt: new Date(),
 };
 

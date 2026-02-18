@@ -31,6 +31,9 @@ const baseOrderRequest: OrderRequest = {
     createdAt: new Date(),
     submittedAt: null,
     sentAt: null,
+    deliveryAttempts: 0,
+    nextDeliveryRetryAt: null,
+    lastDeliveryError: null,
     updatedAt: new Date(),
 };
 

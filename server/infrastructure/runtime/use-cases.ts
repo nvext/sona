@@ -9,6 +9,7 @@ import { SubmitOrderRequest } from "~~/server/application/checkout/uc/submit-ord
 import { GetCatalogPage } from "~~/server/application/product/uc/get-catalog-page";
 import { GetProductCardDetails } from "~~/server/application/product/uc/get-product-card-details";
 import { RuntimeContainer, getRuntimeContainer } from "./container";
+import { readDeliveryRetryConfigFromEnv } from "./order-request-delivery-retry";
 
 export type RuntimeUseCases = {
     login: Login;
@@ -24,6 +25,8 @@ export type RuntimeUseCases = {
 };
 
 export function createUseCases(container: RuntimeContainer = getRuntimeContainer()): RuntimeUseCases {
+    const deliveryRetryConfig = readDeliveryRetryConfigFromEnv();
+
     return {
         login: new Login(
             container.repos.userRepo,
@@ -72,6 +75,11 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
         submitOrderRequest: new SubmitOrderRequest(
             container.repos.orderRequestRepo,
             container.services.orderRequestDeliveryService,
+            {
+                maxAttempts: deliveryRetryConfig.maxAttempts,
+                baseDelayMs: deliveryRetryConfig.baseDelayMs,
+                maxDelayMs: deliveryRetryConfig.maxDelayMs,
+            },
         ),
         getCatalogPage: new GetCatalogPage(container.queries.getCatalogPageQuery),
         getProductCardDetails: new GetProductCardDetails(

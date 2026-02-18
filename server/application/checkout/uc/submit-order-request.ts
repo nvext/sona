@@ -2,11 +2,16 @@ import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
 import { NotFoundError, OperationFailedError } from "~~/server/shared/errors";
 import { OrderRequestDeliveryService } from "../services/order-request-delivery";
+import {
+    calculateNextDeliveryRetryAt,
+    DeliveryRetryPolicy,
+} from "../services/delivery-retry-policy";
 
 export class SubmitOrderRequest {
     constructor(
         private readonly orderRequestRepo: OrderRequestRepo,
         private readonly orderRequestDeliveryService: OrderRequestDeliveryService,
+        private readonly retryPolicy: DeliveryRetryPolicy,
     ) {}
 
     async execute(input: SubmitOrderRequestInput): Promise<SubmitOrderRequestOutput> {
@@ -32,6 +37,9 @@ export class SubmitOrderRequest {
                 submittedAt: now,
 
                 status: "submitted",
+                deliveryAttempts: 0,
+                nextDeliveryRetryAt: null,
+                lastDeliveryError: null,
             },
         });
 
@@ -41,11 +49,20 @@ export class SubmitOrderRequest {
 
         try {
             await this.orderRequestDeliveryService.send({ orderRequest });
-        } catch {
+        } catch (error) {
+            const attempts = orderRequest.deliveryAttempts + 1;
+            const retryAt = calculateNextDeliveryRetryAt({
+                attempts,
+                policy: this.retryPolicy,
+                now: new Date(),
+            });
             await this.orderRequestRepo.update({
                 patch: {
                     id: orderRequest.id,
                     status: "failed",
+                    deliveryAttempts: attempts,
+                    nextDeliveryRetryAt: retryAt,
+                    lastDeliveryError: error instanceof Error ? error.message : "Delivery failed",
                     updatedAt: new Date(),
                 },
             });
@@ -56,6 +73,9 @@ export class SubmitOrderRequest {
             patch: {
                 id: orderRequest.id,
                 status: "sent",
+                deliveryAttempts: orderRequest.deliveryAttempts,
+                nextDeliveryRetryAt: null,
+                lastDeliveryError: null,
                 updatedAt: new Date(),
                 sentAt: new Date(),
             },

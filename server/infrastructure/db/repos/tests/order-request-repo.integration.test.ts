@@ -42,6 +42,9 @@ describe("PgOrderRequestRepo", () => {
                 createdAt: FIXED_NOW,
                 submittedAt: FIXED_NOW,
                 sentAt: null,
+                deliveryAttempts: 0,
+                nextDeliveryRetryAt: FIXED_NOW,
+                lastDeliveryError: "failed",
                 updatedAt: new Date(FIXED_NOW.getTime() - 1000),
             },
         });
@@ -58,11 +61,18 @@ describe("PgOrderRequestRepo", () => {
                 createdAt: FIXED_NOW,
                 submittedAt: FIXED_NOW,
                 sentAt: FIXED_NOW,
+                deliveryAttempts: 0,
+                nextDeliveryRetryAt: null,
+                lastDeliveryError: null,
                 updatedAt: FIXED_NOW,
             },
         });
 
-        const failed = await orderRequestRepo.getFailedForDelivery({ limit: 10 });
+        const failed = await orderRequestRepo.getFailedForDelivery({
+            limit: 10,
+            now: new Date(FIXED_NOW.getTime() + 1),
+            maxAttempts: 5,
+        });
         assert.equal(failed.data.length, 1);
         assert.equal(failed.data[0].id, "order-failed-1");
     });

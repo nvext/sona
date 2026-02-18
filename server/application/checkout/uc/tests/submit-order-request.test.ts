@@ -5,6 +5,7 @@ import type { OrderRequestRepo } from "~~/server/domain/order-request/repo";
 import type { OrderRequest } from "~~/server/domain/order-request/entity";
 import type { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
 import { NotFoundError, OperationFailedError } from "~~/server/shared/errors";
+import { DeliveryRetryPolicy } from "~~/server/application/checkout/services/delivery-retry-policy";
 
 const baseOrderRequest: OrderRequest = {
     id: "order-request-1",
@@ -18,7 +19,15 @@ const baseOrderRequest: OrderRequest = {
     createdAt: new Date(),
     submittedAt: new Date(),
     sentAt: null,
+    deliveryAttempts: 0,
+    nextDeliveryRetryAt: null,
+    lastDeliveryError: null,
     updatedAt: new Date(),
+};
+const retryPolicy: DeliveryRetryPolicy = {
+    maxAttempts: 3,
+    baseDelayMs: 1_000,
+    maxDelayMs: 60_000,
 };
 
 function makeSut(options: {
@@ -57,7 +66,7 @@ function makeSut(options: {
         },
     } as unknown as OrderRequestDeliveryService;
 
-    const uc = new SubmitOrderRequest(orderRequestRepo, orderRequestDeliveryService);
+    const uc = new SubmitOrderRequest(orderRequestRepo, orderRequestDeliveryService, retryPolicy);
 
     return { uc, getPatchInputs: () => patchInputs, getDelivered: () => deliveredOrderRequests };
 }
@@ -92,6 +101,7 @@ describe("SubmitOrderRequest", () => {
         assert.equal(patches[0].id, "order-request-1");
         assert.equal(patches[0].status, "submitted");
         assert.equal(patches[0].contactPhone, "+10000000000");
+        assert.equal(patches[0].deliveryAttempts, 0);
         assert.equal(patches[1].status, "sent");
         assert.ok(patches[1].sentAt instanceof Date);
         assert.equal(getDelivered().length, 1);
@@ -167,5 +177,8 @@ describe("SubmitOrderRequest", () => {
         assert.equal(patches.length, 2);
         assert.equal(patches[0].status, "submitted");
         assert.equal(patches[1].status, "failed");
+        assert.equal(patches[1].deliveryAttempts, 1);
+        assert.ok(patches[1].nextDeliveryRetryAt instanceof Date);
+        assert.equal(patches[1].lastDeliveryError, "telegram unavailable");
     });
 });

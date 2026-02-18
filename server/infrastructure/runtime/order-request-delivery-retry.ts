@@ -1,17 +1,27 @@
+import { calculateNextDeliveryRetryAt } from "~~/server/application/checkout/services/delivery-retry-policy";
 import type { RuntimeContainer } from "./container";
 
 export type DeliveryRetryConfig = {
     intervalMs: number;
     batchSize: number;
+    maxAttempts: number;
+    baseDelayMs: number;
+    maxDelayMs: number;
 };
 
 export function readDeliveryRetryConfigFromEnv(): DeliveryRetryConfig {
     const intervalMs = Math.max(1_000, Number(process.env.ORDER_DELIVERY_RETRY_INTERVAL ?? 30_000));
     const batchSize = Math.max(1, Number(process.env.ORDER_DELIVERY_RETRY_BATCH_SIZE ?? 20));
+    const maxAttempts = Math.max(1, Number(process.env.ORDER_DELIVERY_MAX_ATTEMPTS ?? 5));
+    const baseDelayMs = Math.max(1_000, Number(process.env.ORDER_DELIVERY_RETRY_BASE_DELAY ?? 30_000));
+    const maxDelayMs = Math.max(baseDelayMs, Number(process.env.ORDER_DELIVERY_RETRY_MAX_DELAY ?? 3_600_000));
 
     return {
         intervalMs,
         batchSize,
+        maxAttempts,
+        baseDelayMs,
+        maxDelayMs,
     };
 }
 
@@ -21,6 +31,8 @@ export async function processFailedOrderRequestsOnce(
 ): Promise<void> {
     const { data: failedRequests } = await container.repos.orderRequestRepo.getFailedForDelivery({
         limit: config.batchSize,
+        now: new Date(),
+        maxAttempts: config.maxAttempts,
     });
 
     for (const orderRequest of failedRequests) {
@@ -31,15 +43,31 @@ export async function processFailedOrderRequestsOnce(
                 patch: {
                     id: orderRequest.id,
                     status: "sent",
+                    nextDeliveryRetryAt: null,
+                    lastDeliveryError: null,
                     sentAt: now,
                     updatedAt: now,
                 },
             });
-        } catch {
+        } catch (error) {
+            const attempts = orderRequest.deliveryAttempts + 1;
+            const retryAt = calculateNextDeliveryRetryAt({
+                attempts,
+                policy: {
+                    maxAttempts: config.maxAttempts,
+                    baseDelayMs: config.baseDelayMs,
+                    maxDelayMs: config.maxDelayMs,
+                },
+                now: new Date(),
+            });
+
             await container.repos.orderRequestRepo.update({
                 patch: {
                     id: orderRequest.id,
                     status: "failed",
+                    deliveryAttempts: attempts,
+                    nextDeliveryRetryAt: retryAt,
+                    lastDeliveryError: error instanceof Error ? error.message : "Delivery failed",
                     updatedAt: new Date(),
                 },
             });

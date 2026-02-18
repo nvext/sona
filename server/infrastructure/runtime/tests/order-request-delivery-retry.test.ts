@@ -6,8 +6,8 @@ import type { RuntimeContainer } from "~~/server/infrastructure/runtime/containe
 function makeContainer(options: {
     failedIds: string[];
     shouldFailDelivery?: boolean;
-}): { container: RuntimeContainer; updates: Array<{ id: string; status: string }> } {
-    const updates: Array<{ id: string; status: string }> = [];
+}): { container: RuntimeContainer; updates: Array<Record<string, unknown>> } {
+    const updates: Array<Record<string, unknown>> = [];
 
     const failedRequests = options.failedIds.map((id) => ({
         id,
@@ -21,6 +21,9 @@ function makeContainer(options: {
         createdAt: new Date(),
         submittedAt: new Date(),
         sentAt: null,
+        deliveryAttempts: 0,
+        nextDeliveryRetryAt: null,
+        lastDeliveryError: null,
         updatedAt: new Date(),
     }));
 
@@ -30,8 +33,8 @@ function makeContainer(options: {
                 async getFailedForDelivery() {
                     return { data: failedRequests, meta: undefined };
                 },
-                async update(input: { patch: { id: string; status: string } }) {
-                    updates.push({ id: input.patch.id, status: input.patch.status });
+                async update(input: { patch: Record<string, unknown> }) {
+                    updates.push(input.patch);
                     return { data: null, meta: undefined };
                 },
             },
@@ -59,6 +62,9 @@ describe("order request delivery retry worker", () => {
         await processFailedOrderRequestsOnce(container, {
             intervalMs: 1_000,
             batchSize: 20,
+            maxAttempts: 3,
+            baseDelayMs: 1_000,
+            maxDelayMs: 60_000,
         });
 
         assert.equal(updates.length, 2);
@@ -75,9 +81,14 @@ describe("order request delivery retry worker", () => {
         await processFailedOrderRequestsOnce(container, {
             intervalMs: 1_000,
             batchSize: 20,
+            maxAttempts: 3,
+            baseDelayMs: 1_000,
+            maxDelayMs: 60_000,
         });
 
         assert.equal(updates.length, 1);
         assert.equal(updates[0].status, "failed");
+        assert.equal(updates[0].deliveryAttempts, 1);
+        assert.ok(updates[0].nextDeliveryRetryAt instanceof Date);
     });
 });

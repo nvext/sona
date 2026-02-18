@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, lt, lte, or } from "drizzle-orm";
 import { RepoResponse } from "~~/server/domain/base/types";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
 import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
@@ -24,6 +24,9 @@ export class PgOrderRequestRepo
             | "contactTelegram"
             | "sentAt"
             | "submittedAt"
+            | "deliveryAttempts"
+            | "nextDeliveryRetryAt"
+            | "lastDeliveryError"
         >;
     }): Promise<RepoResponse<OrderRequest>> {
         const [row] = await db
@@ -37,6 +40,9 @@ export class PgOrderRequestRepo
                 contactTelegram: null,
                 submittedAt: null,
                 sentAt: null,
+                deliveryAttempts: 0,
+                nextDeliveryRetryAt: null,
+                lastDeliveryError: null,
             })
             .onConflictDoUpdate({
                 target: [orderRequests.userId, orderRequests.idempotencyKey],
@@ -60,11 +66,24 @@ export class PgOrderRequestRepo
         return { data: (row as OrderRequest | undefined) ?? null, meta: undefined };
     }
 
-    async getFailedForDelivery(parameters: { limit: number }): Promise<RepoResponse<OrderRequest[]>> {
+    async getFailedForDelivery(parameters: {
+        limit: number;
+        now: Date;
+        maxAttempts: number;
+    }): Promise<RepoResponse<OrderRequest[]>> {
         const rows = await db
             .select()
             .from(orderRequests)
-            .where(eq(orderRequests.status, "failed"))
+            .where(
+                and(
+                    eq(orderRequests.status, "failed"),
+                    lt(orderRequests.deliveryAttempts, parameters.maxAttempts),
+                    or(
+                        isNull(orderRequests.nextDeliveryRetryAt),
+                        lte(orderRequests.nextDeliveryRetryAt, parameters.now),
+                    ),
+                ),
+            )
             .orderBy(asc(orderRequests.updatedAt))
             .limit(parameters.limit);
 

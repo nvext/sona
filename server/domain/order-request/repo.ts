@@ -13,8 +13,15 @@ export interface OrderRequestRepo extends BaseRepo<OrderRequest> {
             | "contactTelegram"
             | "sentAt"
             | "submittedAt"
+            | "deliveryAttempts"
+            | "nextDeliveryRetryAt"
+            | "lastDeliveryError"
         >;
     }): Promise<RepoResponse<OrderRequest>>;
     getDraftByUserId(parameters: { userId: string }): Promise<RepoResponse<OrderRequest | null>>;
-    getFailedForDelivery(parameters: { limit: number }): Promise<RepoResponse<OrderRequest[]>>;
+    getFailedForDelivery(parameters: {
+        limit: number;
+        now: Date;
+        maxAttempts: number;
+    }): Promise<RepoResponse<OrderRequest[]>>;
 }
