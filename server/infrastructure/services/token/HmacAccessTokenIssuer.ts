@@ -3,7 +3,7 @@ import { AccessTokenIssuer } from "~~/server/shared/token";
 
 type AccessTokenIssuerConfig = {
     secret: string;
-    ttlSeconds: number;
+    ttlMs: number;
 };
 
 type AccessTokenPayload = {
@@ -19,12 +19,13 @@ export class HmacAccessTokenIssuer implements AccessTokenIssuer {
 
     issue(input: { userId: string; sessionId: string; sessionVersion: number }): string {
         const now = Math.floor(Date.now() / 1000);
+        const ttlSeconds = Math.max(1, Math.floor(this.config.ttlMs / 1000));
         const payload: AccessTokenPayload = {
             sub: input.userId,
             sid: input.sessionId,
             ver: input.sessionVersion,
             iat: now,
-            exp: now + this.config.ttlSeconds,
+            exp: now + ttlSeconds,
         };
 
         const payloadEncoded = Buffer.from(JSON.stringify(payload)).toString("base64url");

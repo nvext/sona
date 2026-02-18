@@ -17,7 +17,7 @@ describe("token services", () => {
     test("HmacAccessTokenIssuer issues signed token", () => {
         const issuer = new HmacAccessTokenIssuer({
             secret: "test-secret",
-            ttlSeconds: 60,
+            ttlMs: 60_000,
         });
 
         const token = issuer.issue({
