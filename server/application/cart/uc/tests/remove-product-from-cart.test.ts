@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { RemoveItemFromCart } from "~~/server/application/cart/uc/remove-product-from-cart";
 import type { CartItemRepo } from "~~/server/domain/cart-item/repo";
 import type { CartItem } from "~~/server/domain/cart-item/entity";
+import type { CartRepo } from "~~/server/domain/cart/repo";
 import { NotFoundError } from "~~/server/shared/errors";
 
 const baseCartItem: CartItem = {
@@ -29,9 +30,14 @@ describe("RemoveItemFromCart", () => {
                 return { data: { ...baseCartItem, quantity: 1 }, meta: undefined };
             },
         } as unknown as CartItemRepo;
+        const cartRepo = {
+            async getById() {
+                return { data: { id: "cart-1", userId: "user-1" }, meta: undefined };
+            },
+        } as unknown as CartRepo;
 
-        const uc = new RemoveItemFromCart(cartItemRepo);
-        const result = await uc.execute({ itemId: "item-1" });
+        const uc = new RemoveItemFromCart(cartItemRepo, cartRepo);
+        const result = await uc.execute({ itemId: "item-1", userId: "user-1" });
 
         assert.ok(result.data);
         assert.equal(result.data.quantity, 1);
@@ -46,8 +52,31 @@ describe("RemoveItemFromCart", () => {
                 return { data: null, meta: undefined };
             },
         } as unknown as CartItemRepo;
+        const cartRepo = {} as unknown as CartRepo;
 
-        const uc = new RemoveItemFromCart(cartItemRepo);
-        await assert.rejects(uc.execute({ itemId: "missing-item" }), NotFoundError);
+        const uc = new RemoveItemFromCart(cartItemRepo, cartRepo);
+        await assert.rejects(
+            uc.execute({ itemId: "missing-item", userId: "user-1" }),
+            (error) => error instanceof NotFoundError && error.message === "Cart item not found",
+        );
+    });
+
+    test("throws NotFoundError when item belongs to another user", async () => {
+        const cartItemRepo = {
+            async getById() {
+                return { data: baseCartItem, meta: undefined };
+            },
+        } as unknown as CartItemRepo;
+        const cartRepo = {
+            async getById() {
+                return { data: { id: "cart-1", userId: "another-user" }, meta: undefined };
+            },
+        } as unknown as CartRepo;
+
+        const uc = new RemoveItemFromCart(cartItemRepo, cartRepo);
+        await assert.rejects(
+            uc.execute({ itemId: "item-1", userId: "user-1" }),
+            (error) => error instanceof NotFoundError && error.message === "Cart item not found",
+        );
     });
 });

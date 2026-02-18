@@ -7,16 +7,27 @@ import submitHandler from "~~/server/infrastructure/api/checkout/submit.post";
 import { NotFoundError } from "~~/server/shared/errors/NotFoundError";
 import { callApi } from "./_helpers";
 
+const authContext = {
+    auth: {
+        userId: "u1",
+        sessionId: "s1",
+        sessionVersion: 0,
+    },
+};
+
 describe("infra cart/checkout api", () => {
     test("POST /cart/items adds item", async () => {
+        let received: any = null;
         const response = await callApi({
             route: "/cart/items",
             method: "POST",
             handler: addItemHandler as any,
-            body: { userId: "u1", productId: "p1", productColorId: "c1" },
+            context: authContext,
+            body: { productId: "p1", productColorId: "c1" },
             useCases: {
                 addItemToCart: {
-                    async execute() {
+                    async execute(input: any) {
+                        received = input;
                         return { data: { id: "item-1" }, meta: undefined };
                     },
                 },
@@ -25,6 +36,19 @@ describe("infra cart/checkout api", () => {
 
         assert.equal(response.status, 200);
         assert.equal(response.body.data.id, "item-1");
+        assert.deepEqual(received, { userId: "u1", productId: "p1", productColorId: "c1" });
+    });
+
+    test("POST /cart/items returns 401 when unauthorized", async () => {
+        const response = await callApi({
+            route: "/cart/items",
+            method: "POST",
+            handler: addItemHandler as any,
+            body: { productId: "p1", productColorId: "c1" },
+        });
+
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
     });
 
     test("POST /cart/items returns 400 on invalid body", async () => {
@@ -32,7 +56,8 @@ describe("infra cart/checkout api", () => {
             route: "/cart/items",
             method: "POST",
             handler: addItemHandler as any,
-            body: { userId: "", productId: "p1", productColorId: "c1" },
+            context: authContext,
+            body: { productId: "p1", productColorId: "" },
         });
 
         assert.equal(response.status, 400);
@@ -46,6 +71,7 @@ describe("infra cart/checkout api", () => {
             requestPath: "/cart/items/item-1",
             method: "DELETE",
             handler: removeItemHandler as any,
+            context: authContext,
             useCases: {
                 removeItemFromCart: {
                     async execute(input: any) {
@@ -57,7 +83,7 @@ describe("infra cart/checkout api", () => {
         });
 
         assert.equal(response.status, 200);
-        assert.deepEqual(received, { itemId: "item-1" });
+        assert.deepEqual(received, { itemId: "item-1", userId: "u1" });
         assert.equal(response.body.deleted, true);
     });
 
@@ -67,6 +93,7 @@ describe("infra cart/checkout api", () => {
             requestPath: "/cart/items/missing",
             method: "DELETE",
             handler: removeItemHandler as any,
+            context: authContext,
             useCases: {
                 removeItemFromCart: {
                     async execute() {
@@ -80,15 +107,30 @@ describe("infra cart/checkout api", () => {
         assert.equal(response.body.statusMessage, "Cart item not found");
     });
 
+    test("DELETE /cart/items/:itemId returns 401 when unauthorized", async () => {
+        const response = await callApi({
+            route: "/cart/items/:itemId",
+            requestPath: "/cart/items/item-1",
+            method: "DELETE",
+            handler: removeItemHandler as any,
+        });
+
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
+    });
+
     test("POST /checkout/drafts and /checkout/submit", async () => {
+        let draftInput: any = null;
         const draftResponse = await callApi({
             route: "/checkout/drafts",
             method: "POST",
             handler: createDraftHandler as any,
+            context: authContext,
             body: { cartId: "cart-1", idempotencyKey: "idem-1" },
             useCases: {
                 createOrderRequestDraft: {
-                    async execute() {
+                    async execute(input: any) {
+                        draftInput = input;
                         return { orderRequest: { id: "o1" }, snapshots: [] };
                     },
                 },
@@ -96,11 +138,18 @@ describe("infra cart/checkout api", () => {
         });
         assert.equal(draftResponse.status, 200);
         assert.equal(draftResponse.body.orderRequest.id, "o1");
+        assert.deepEqual(draftInput, {
+            cartId: "cart-1",
+            idempotencyKey: "idem-1",
+            userId: "u1",
+        });
 
+        let submitInput: any = null;
         const submitResponse = await callApi({
             route: "/checkout/submit",
             method: "POST",
             handler: submitHandler as any,
+            context: authContext,
             body: {
                 orderRequestId: "o1",
                 contactName: "John",
@@ -110,7 +159,8 @@ describe("infra cart/checkout api", () => {
             },
             useCases: {
                 submitOrderRequest: {
-                    async execute() {
+                    async execute(input: any) {
+                        submitInput = input;
                         return { orderRequest: { id: "o1", status: "submitted" } };
                     },
                 },
@@ -118,6 +168,14 @@ describe("infra cart/checkout api", () => {
         });
         assert.equal(submitResponse.status, 200);
         assert.equal(submitResponse.body.orderRequest.status, "submitted");
+        assert.deepEqual(submitInput, {
+            orderRequestId: "o1",
+            contactName: "John",
+            contactPhone: "+100",
+            contactEmail: "john@example.com",
+            contactTelegram: "@john",
+            userId: "u1",
+        });
     });
 
     test("POST /checkout/drafts returns 400 on invalid body", async () => {
@@ -125,6 +183,7 @@ describe("infra cart/checkout api", () => {
             route: "/checkout/drafts",
             method: "POST",
             handler: createDraftHandler as any,
+            context: authContext,
             body: { cartId: "", idempotencyKey: "" },
         });
 
@@ -137,6 +196,7 @@ describe("infra cart/checkout api", () => {
             route: "/checkout/submit",
             method: "POST",
             handler: submitHandler as any,
+            context: authContext,
             body: {
                 orderRequestId: "o1",
                 contactName: null,
@@ -148,5 +208,23 @@ describe("infra cart/checkout api", () => {
 
         assert.equal(response.status, 400);
         assert.equal(response.body.statusMessage, "Validation failed");
+    });
+
+    test("POST /checkout/submit returns 401 when unauthorized", async () => {
+        const response = await callApi({
+            route: "/checkout/submit",
+            method: "POST",
+            handler: submitHandler as any,
+            body: {
+                orderRequestId: "o1",
+                contactName: "John",
+                contactPhone: "+100",
+                contactEmail: "john@example.com",
+                contactTelegram: "@john",
+            },
+        });
+
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
     });
 });

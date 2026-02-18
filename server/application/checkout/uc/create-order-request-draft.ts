@@ -23,6 +23,9 @@ export class CreateOrderRequestDraft {
         if (cart === null) {
             throw new NotFoundError();
         }
+        if (cart.userId !== input.userId) {
+            throw new NotFoundError("Cart not found");
+        }
 
         const { data: orderRequest } = await this.orderRequestRepo.upsertDraft({
             entity: {
@@ -53,6 +56,7 @@ export class CreateOrderRequestDraft {
 
 type CreateOrderRequestDraftInput = {
     cartId: string;
+    userId: string;
     idempotencyKey: string;
 };
 

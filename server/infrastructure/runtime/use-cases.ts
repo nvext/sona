@@ -59,7 +59,10 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
             container.repos.productColorRepo,
             container.services.entityIdGenerator,
         ),
-        removeItemFromCart: new RemoveItemFromCart(container.repos.cartItemRepo),
+        removeItemFromCart: new RemoveItemFromCart(
+            container.repos.cartItemRepo,
+            container.repos.cartRepo,
+        ),
         createOrderRequestDraft: new CreateOrderRequestDraft(
             container.repos.cartRepo,
             container.repos.orderRequestRepo,

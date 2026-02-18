@@ -9,14 +9,23 @@ export async function callApi(options: {
     method?: string;
     query?: Record<string, string | number>;
     body?: unknown;
+    headers?: Record<string, string>;
+    context?: Record<string, unknown>;
     useCases?: unknown;
+    container?: unknown;
 }) {
     const app = createApp();
     const router = createRouter();
     const method = (options.method ?? "GET").toUpperCase();
     const wrappedHandler = eventHandler(async (event) => {
+        if (options.context !== undefined) {
+            Object.assign(event.context as Record<string, unknown>, options.context);
+        }
         if (options.useCases !== undefined) {
             (event.context as any).useCases = options.useCases;
+        }
+        if (options.container !== undefined) {
+            (event.context as any).container = options.container;
         }
         return options.handler(event);
     });
@@ -51,7 +60,10 @@ export async function callApi(options: {
 
     const response = await fetch(url, {
         method,
-        headers: options.body === undefined ? undefined : { "content-type": "application/json" },
+        headers: {
+            ...(options.body === undefined ? {} : { "content-type": "application/json" }),
+            ...(options.headers ?? {}),
+        },
         body: options.body === undefined ? undefined : JSON.stringify(options.body),
     });
 

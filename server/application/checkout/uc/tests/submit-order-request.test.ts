@@ -20,14 +20,23 @@ const baseOrderRequest: OrderRequest = {
     updatedAt: new Date(),
 };
 
-function makeSut(updatedOrderRequest: OrderRequest | null) {
+function makeSut(options: {
+    existingOrderRequest: OrderRequest | null;
+    updatedOrderRequest: OrderRequest | null;
+}) {
     let patchInput: Partial<OrderRequest> & { id: string } | null = null;
 
     const orderRequestRepo = {
+        async getById() {
+            return {
+                data: options.existingOrderRequest,
+                meta: undefined,
+            };
+        },
         async update(input: { patch: Partial<OrderRequest> & { id: string } }) {
             patchInput = input.patch;
             return {
-                data: updatedOrderRequest,
+                data: options.updatedOrderRequest,
                 meta: undefined,
             };
         },
@@ -40,10 +49,14 @@ function makeSut(updatedOrderRequest: OrderRequest | null) {
 
 describe("SubmitOrderRequest", () => {
     test("returns updated order request", async () => {
-        const { uc, getPatchInput } = makeSut(baseOrderRequest);
+        const { uc, getPatchInput } = makeSut({
+            existingOrderRequest: baseOrderRequest,
+            updatedOrderRequest: baseOrderRequest,
+        });
 
         const result = await uc.execute({
             orderRequestId: "order-request-1",
+            userId: "user-1",
             contactName: "John",
             contactPhone: "+10000000000",
             contactEmail: "john@example.com",
@@ -61,11 +74,37 @@ describe("SubmitOrderRequest", () => {
     });
 
     test("throws NotFoundError when order request does not exist", async () => {
-        const { uc } = makeSut(null);
+        const { uc } = makeSut({
+            existingOrderRequest: null,
+            updatedOrderRequest: null,
+        });
 
         await assert.rejects(
             uc.execute({
                 orderRequestId: "missing-order-request",
+                userId: "user-1",
+                contactName: "John",
+                contactPhone: "+10000000000",
+                contactEmail: "john@example.com",
+                contactTelegram: "@john",
+            }),
+            (error) => error instanceof NotFoundError && error.message === "Order request not found",
+        );
+    });
+
+    test("throws NotFoundError when order request belongs to another user", async () => {
+        const { uc } = makeSut({
+            existingOrderRequest: {
+                ...baseOrderRequest,
+                userId: "another-user",
+            },
+            updatedOrderRequest: null,
+        });
+
+        await assert.rejects(
+            uc.execute({
+                orderRequestId: "order-request-1",
+                userId: "user-1",
                 contactName: "John",
                 contactPhone: "+10000000000",
                 contactEmail: "john@example.com",

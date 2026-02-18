@@ -15,6 +15,7 @@ import {
     Argon2PasswordHasher,
     Argon2TokenHasher,
     HmacAccessTokenIssuer,
+    HmacAccessTokenVerifier,
     CryptoRefreshTokenGenerator,
     readAuthConfigFromEnv,
     Sha256Fingerprinter,
@@ -45,6 +46,7 @@ export type RuntimeContainer = {
         entityIdGenerator: UuidGenerator;
         uniqueIdGenerator: UuidGenerator;
         accessTokenIssuer: HmacAccessTokenIssuer;
+        accessTokenVerifier: HmacAccessTokenVerifier;
         refreshTokenGenerator: CryptoRefreshTokenGenerator;
         orderRequestDeliveryService: NoopOrderRequestDeliveryService;
     };
@@ -80,6 +82,7 @@ export function getRuntimeContainer(): RuntimeContainer {
     const refreshTokenGenerator = new CryptoRefreshTokenGenerator();
     const { authConfig, accessTokenConfig } = readAuthConfigFromEnv();
     const accessTokenIssuer = new HmacAccessTokenIssuer(accessTokenConfig);
+    const accessTokenVerifier = new HmacAccessTokenVerifier(accessTokenConfig);
     const orderRequestDeliveryService = new NoopOrderRequestDeliveryService();
 
     container = {
@@ -105,6 +108,7 @@ export function getRuntimeContainer(): RuntimeContainer {
             entityIdGenerator: idGenerator,
             uniqueIdGenerator: idGenerator,
             accessTokenIssuer,
+            accessTokenVerifier,
             refreshTokenGenerator,
             orderRequestDeliveryService,
         },

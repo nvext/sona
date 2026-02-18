@@ -6,6 +6,13 @@ export class SubmitOrderRequest {
     constructor(private readonly orderRequestRepo: OrderRequestRepo) {}
 
     async execute(input: SubmitOrderRequestInput): Promise<SubmitOrderRequestOutput> {
+        const { data: currentOrderRequest } = await this.orderRequestRepo.getById({
+            id: input.orderRequestId,
+        });
+        if (currentOrderRequest === null || currentOrderRequest.userId !== input.userId) {
+            throw new NotFoundError("Order request not found");
+        }
+
         const now = new Date();
 
         const { data: orderRequest } = await this.orderRequestRepo.update({
@@ -36,6 +43,7 @@ export class SubmitOrderRequest {
 
 type SubmitOrderRequestInput = {
     orderRequestId: string;
+    userId: string;
 
     contactName: string | null;
     contactPhone: string;

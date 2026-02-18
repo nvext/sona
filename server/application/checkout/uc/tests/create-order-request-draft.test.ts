@@ -114,7 +114,11 @@ describe("CreateOrderRequestDraft", () => {
     test("returns orderRequest and snapshots", async () => {
         const { uc, getCapturedSnapshotInput } = makeSut({ cart: baseCart });
 
-        const result = await uc.execute({ cartId: baseCart.id, idempotencyKey: "idem-1" });
+        const result = await uc.execute({
+            cartId: baseCart.id,
+            userId: "user-1",
+            idempotencyKey: "idem-1",
+        });
 
         assert.equal(result.orderRequest.status, "draft");
         assert.equal(result.snapshots.length, 1);
@@ -128,8 +132,22 @@ describe("CreateOrderRequestDraft", () => {
         const { uc } = makeSut({ cart: null });
 
         await assert.rejects(
-            uc.execute({ cartId: "missing-cart", idempotencyKey: "idem-1" }),
+            uc.execute({ cartId: "missing-cart", userId: "user-1", idempotencyKey: "idem-1" }),
             NotFoundError,
+        );
+    });
+
+    test("throws NotFoundError when cart belongs to another user", async () => {
+        const { uc } = makeSut({
+            cart: {
+                ...baseCart,
+                userId: "another-user",
+            },
+        });
+
+        await assert.rejects(
+            uc.execute({ cartId: baseCart.id, userId: "user-1", idempotencyKey: "idem-1" }),
+            (error) => error instanceof NotFoundError && error.message === "Cart not found",
         );
     });
 
@@ -140,7 +158,7 @@ describe("CreateOrderRequestDraft", () => {
         });
 
         await assert.rejects(
-            uc.execute({ cartId: baseCart.id, idempotencyKey: "idem-1" }),
+            uc.execute({ cartId: baseCart.id, userId: "user-1", idempotencyKey: "idem-1" }),
             (error) =>
                 error instanceof OperationFailedError &&
                 error.message === "Failed to capture cart snapshot",
