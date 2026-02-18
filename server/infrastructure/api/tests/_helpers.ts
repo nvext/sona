@@ -77,8 +77,11 @@ export async function callApi(options: {
 
     await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 
+    const headers = Object.fromEntries(response.headers.entries());
+
     return {
         status: response.status,
         body: json,
+        headers,
     };
 }

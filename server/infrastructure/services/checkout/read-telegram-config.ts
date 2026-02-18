@@ -1,18 +1,18 @@
+import { readRuntimeEnv } from "~~/server/infrastructure/runtime/env";
+
 export type TelegramDeliveryConfig = {
     botToken: string;
     managerChatId: string;
 };
 
 export function readTelegramDeliveryConfigFromEnv(): TelegramDeliveryConfig | null {
-    const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim() ?? "";
-    const managerChatId = process.env.TELEGRAM_MANAGER_CHAT_ID?.trim() ?? "";
-
-    if (botToken.length === 0 || managerChatId.length === 0) {
+    const env = readRuntimeEnv();
+    if (env.delivery.provider !== "telegram") {
         return null;
     }
 
     return {
-        botToken,
-        managerChatId,
+        botToken: env.delivery.telegramBotToken!,
+        managerChatId: env.delivery.telegramManagerChatId!,
     };
 }

@@ -1,6 +1,7 @@
 import { beforeEach, describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { readAuthConfigFromEnv } from "~~/server/infrastructure/services/auth/read-auth-config";
+import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
 
 describe("readAuthConfigFromEnv", () => {
     const originalSessionTtl = process.env.AUTH_SESSION_TTL;
@@ -11,6 +12,7 @@ describe("readAuthConfigFromEnv", () => {
         process.env.AUTH_SESSION_TTL = originalSessionTtl;
         process.env.AUTH_ACCESS_TTL = originalAccessTtl;
         process.env.AUTH_ACCESS_SECRET = originalSecret;
+        resetRuntimeEnvCacheForTests();
     });
 
     test("reads custom values", () => {
@@ -24,10 +26,11 @@ describe("readAuthConfigFromEnv", () => {
         assert.equal(result.accessTokenConfig.secret, "abc");
     });
 
-    test("uses defaults when envs are not set", () => {
+    test("uses defaults when auth envs are not set", () => {
         delete process.env.AUTH_SESSION_TTL;
         delete process.env.AUTH_ACCESS_TTL;
         delete process.env.AUTH_ACCESS_SECRET;
+        resetRuntimeEnvCacheForTests();
 
         const result = readAuthConfigFromEnv();
         assert.equal(result.authConfig.sessionTtl, 30 * 24 * 60 * 60 * 1000);

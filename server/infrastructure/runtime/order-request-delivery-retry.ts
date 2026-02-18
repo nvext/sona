@@ -1,6 +1,7 @@
 import { calculateNextDeliveryRetryAt } from "~~/server/application/checkout/services/delivery-retry-policy";
 import { recordRetryCycle, recordRetryDelivered, recordRetryFailed } from "./metrics";
 import type { RuntimeContainer } from "./container";
+import { readRuntimeEnv } from "./env";
 
 export type DeliveryRetryConfig = {
     intervalMs: number;
@@ -11,18 +12,14 @@ export type DeliveryRetryConfig = {
 };
 
 export function readDeliveryRetryConfigFromEnv(): DeliveryRetryConfig {
-    const intervalMs = Math.max(1_000, Number(process.env.ORDER_DELIVERY_RETRY_INTERVAL ?? 30_000));
-    const batchSize = Math.max(1, Number(process.env.ORDER_DELIVERY_RETRY_BATCH_SIZE ?? 20));
-    const maxAttempts = Math.max(1, Number(process.env.ORDER_DELIVERY_MAX_ATTEMPTS ?? 5));
-    const baseDelayMs = Math.max(1_000, Number(process.env.ORDER_DELIVERY_RETRY_BASE_DELAY ?? 30_000));
-    const maxDelayMs = Math.max(baseDelayMs, Number(process.env.ORDER_DELIVERY_RETRY_MAX_DELAY ?? 3_600_000));
+    const env = readRuntimeEnv();
 
     return {
-        intervalMs,
-        batchSize,
-        maxAttempts,
-        baseDelayMs,
-        maxDelayMs,
+        intervalMs: env.retry.intervalMs,
+        batchSize: env.retry.batchSize,
+        maxAttempts: env.retry.maxAttempts,
+        baseDelayMs: env.retry.baseDelayMs,
+        maxDelayMs: env.retry.maxDelayMs,
     };
 }
 
