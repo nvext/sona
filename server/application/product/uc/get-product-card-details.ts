@@ -10,7 +10,7 @@ export class GetProductCardDetails {
         private readonly productRepo: ProductRepo,
     ) {}
 
-    async execute(input: GetProductCardDetaisInput) {
+    async execute(input: GetProductCardDetailsInput) {
         const { data: card } = await this.productCardRepo.getById({ id: input.cardId });
 
         if (card === null) {
@@ -33,6 +33,6 @@ export class GetProductCardDetails {
     }
 }
 
-type GetProductCardDetaisInput = {
+type GetProductCardDetailsInput = {
     cardId: string;
 };

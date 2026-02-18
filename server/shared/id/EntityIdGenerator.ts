@@ -1,3 +1,3 @@
-import { UniqueIdGenerator } from "./UniqueIdGenrator";
+import { UniqueIdGenerator } from "./UniqueIdGenerator";
 
 export interface EntityIdGenerator extends UniqueIdGenerator {}
