@@ -77,6 +77,7 @@ bun run db:generate
 bun run db:migrate
 
 bun run test:db
+bun run test:telegram:smoke
 ```
 
 ## Runbook (Сервер)

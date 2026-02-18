@@ -12,7 +12,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test:db": "bun test server/infrastructure/db/repos/tests",
-    "test:db:test": "NODE_ENV=test bun test server/infrastructure/db/repos/tests"
+    "test:db:test": "NODE_ENV=test bun test server/infrastructure/db/repos/tests",
+    "test:telegram:smoke": "E2E_TELEGRAM_SMOKE=1 bun test ./server/infrastructure/services/checkout/tests/telegram-smoke.manual.ts"
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
