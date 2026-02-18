@@ -24,4 +24,46 @@ describe("PgOrderRequestRepo", () => {
         const draft = await orderRequestRepo.getDraftByUserId({ userId: "user-1" });
         assert.equal(draft.data?.id, upsertedDraft.data.id);
     });
+
+    test("getFailedForDelivery returns only failed requests", async () => {
+        await seedUser();
+        const orderRequestRepo = new PgOrderRequestRepo();
+
+        await orderRequestRepo.add({
+            entity: {
+                id: "order-failed-1",
+                userId: "user-1",
+                idempotencyKey: "idem-failed-1",
+                status: "failed",
+                contactName: null,
+                contactPhone: null,
+                contactEmail: null,
+                contactTelegram: null,
+                createdAt: FIXED_NOW,
+                submittedAt: FIXED_NOW,
+                sentAt: null,
+                updatedAt: new Date(FIXED_NOW.getTime() - 1000),
+            },
+        });
+        await orderRequestRepo.add({
+            entity: {
+                id: "order-sent-1",
+                userId: "user-1",
+                idempotencyKey: "idem-sent-1",
+                status: "sent",
+                contactName: null,
+                contactPhone: null,
+                contactEmail: null,
+                contactTelegram: null,
+                createdAt: FIXED_NOW,
+                submittedAt: FIXED_NOW,
+                sentAt: FIXED_NOW,
+                updatedAt: FIXED_NOW,
+            },
+        });
+
+        const failed = await orderRequestRepo.getFailedForDelivery({ limit: 10 });
+        assert.equal(failed.data.length, 1);
+        assert.equal(failed.data[0].id, "order-failed-1");
+    });
 });

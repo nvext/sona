@@ -16,4 +16,5 @@ export interface OrderRequestRepo extends BaseRepo<OrderRequest> {
         >;
     }): Promise<RepoResponse<OrderRequest>>;
     getDraftByUserId(parameters: { userId: string }): Promise<RepoResponse<OrderRequest | null>>;
+    getFailedForDelivery(parameters: { limit: number }): Promise<RepoResponse<OrderRequest[]>>;
 }

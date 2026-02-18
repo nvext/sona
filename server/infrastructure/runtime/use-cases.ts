@@ -69,7 +69,10 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
             container.queries.captureCartSnapshotQuery,
             container.services.entityIdGenerator,
         ),
-        submitOrderRequest: new SubmitOrderRequest(container.repos.orderRequestRepo),
+        submitOrderRequest: new SubmitOrderRequest(
+            container.repos.orderRequestRepo,
+            container.services.orderRequestDeliveryService,
+        ),
         getCatalogPage: new GetCatalogPage(container.queries.getCatalogPageQuery),
         getProductCardDetails: new GetProductCardDetails(
             container.repos.productCardRepo,

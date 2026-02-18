@@ -1,3 +1,5 @@
+import { OrderRequest } from "~~/server/domain/order-request/entity";
+
 export interface OrderRequestDeliveryService {
-    send(input: { orderRequestId: string }): Promise<void>;
+    send(input: { orderRequest: OrderRequest }): Promise<void>;
 }

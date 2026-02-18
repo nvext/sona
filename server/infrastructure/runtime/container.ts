@@ -21,7 +21,10 @@ import {
     Sha256Fingerprinter,
     UuidGenerator,
     NoopOrderRequestDeliveryService,
+    TelegramOrderRequestDeliveryService,
+    readTelegramDeliveryConfigFromEnv,
 } from "~~/server/infrastructure/services";
+import { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
 
 export type RuntimeContainer = {
     repos: {
@@ -48,7 +51,7 @@ export type RuntimeContainer = {
         accessTokenIssuer: HmacAccessTokenIssuer;
         accessTokenVerifier: HmacAccessTokenVerifier;
         refreshTokenGenerator: CryptoRefreshTokenGenerator;
-        orderRequestDeliveryService: NoopOrderRequestDeliveryService;
+        orderRequestDeliveryService: OrderRequestDeliveryService;
     };
     config: {
         authConfig: ReturnType<typeof readAuthConfigFromEnv>["authConfig"];
@@ -83,7 +86,10 @@ export function getRuntimeContainer(): RuntimeContainer {
     const { authConfig, accessTokenConfig } = readAuthConfigFromEnv();
     const accessTokenIssuer = new HmacAccessTokenIssuer(accessTokenConfig);
     const accessTokenVerifier = new HmacAccessTokenVerifier(accessTokenConfig);
-    const orderRequestDeliveryService = new NoopOrderRequestDeliveryService();
+    const telegramConfig = readTelegramDeliveryConfigFromEnv();
+    const orderRequestDeliveryService: OrderRequestDeliveryService = telegramConfig
+        ? new TelegramOrderRequestDeliveryService(telegramConfig)
+        : new NoopOrderRequestDeliveryService();
 
     container = {
         repos: {

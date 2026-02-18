@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { RepoResponse } from "~~/server/domain/base/types";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
 import { OrderRequestRepo } from "~~/server/domain/order-request/repo";
@@ -58,5 +58,16 @@ export class PgOrderRequestRepo
             .limit(1);
 
         return { data: (row as OrderRequest | undefined) ?? null, meta: undefined };
+    }
+
+    async getFailedForDelivery(parameters: { limit: number }): Promise<RepoResponse<OrderRequest[]>> {
+        const rows = await db
+            .select()
+            .from(orderRequests)
+            .where(eq(orderRequests.status, "failed"))
+            .orderBy(asc(orderRequests.updatedAt))
+            .limit(parameters.limit);
+
+        return { data: rows as OrderRequest[], meta: undefined };
     }
 }
