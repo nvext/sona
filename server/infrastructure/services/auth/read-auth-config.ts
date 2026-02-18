@@ -2,19 +2,19 @@ import { AuthConfig } from "~~/server/application/auth/config/AuthConfig";
 
 export type AccessTokenConfig = {
     secret: string;
-    ttlSeconds: number;
+    ttlMs: number;
 };
 
 export function readAuthConfigFromEnv(): { authConfig: AuthConfig; accessTokenConfig: AccessTokenConfig } {
-    const sessionTtl = Number(process.env.AUTH_SESSION_TTL_MS ?? 30 * 24 * 60 * 60 * 1000);
-    const accessTokenTtlSeconds = Number(process.env.AUTH_ACCESS_TTL_SEC ?? 15 * 60);
+    const sessionTtl = Number(process.env.AUTH_SESSION_TTL ?? 30 * 24 * 60 * 60 * 1000);
+    const accessTokenTtlMs = Number(process.env.AUTH_ACCESS_TTL ?? 15 * 60 * 1000);
     const accessTokenSecret = process.env.AUTH_ACCESS_SECRET ?? "dev-access-secret-change-me";
 
     return {
         authConfig: { sessionTtl },
         accessTokenConfig: {
             secret: accessTokenSecret,
-            ttlSeconds: accessTokenTtlSeconds,
+            ttlMs: accessTokenTtlMs,
         },
     };
 }
