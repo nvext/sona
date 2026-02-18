@@ -43,6 +43,13 @@
       "when": 1771413000000,
       "tag": "0005_hot_komodo",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771412440727,
+      "tag": "0006_clever_triton",
+      "breakpoints": true
     }
   ]
 }
