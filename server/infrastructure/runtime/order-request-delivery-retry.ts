@@ -2,6 +2,7 @@ import { calculateNextDeliveryRetryAt } from "~~/server/application/checkout/ser
 import { recordRetryCycle, recordRetryDelivered, recordRetryFailed } from "./metrics";
 import type { RuntimeContainer } from "./container";
 import { readRuntimeEnv } from "./env";
+import { logError, logInfo } from "./logger";
 
 export type DeliveryRetryConfig = {
     intervalMs: number;
@@ -34,6 +35,11 @@ export async function processFailedOrderRequestsOnce(
         now: new Date(),
         maxAttempts: config.maxAttempts,
     });
+    logInfo("checkout.retry.cycle_started", {
+        failedCount: failedRequests.length,
+        batchSize: config.batchSize,
+        maxAttempts: config.maxAttempts,
+    });
 
     for (const orderRequest of failedRequests) {
         try {
@@ -50,6 +56,10 @@ export async function processFailedOrderRequestsOnce(
                 },
             });
             recordRetryDelivered();
+            logInfo("checkout.retry.delivered", {
+                orderRequestId: orderRequest.id,
+                attempts: orderRequest.deliveryAttempts,
+            });
         } catch (error) {
             const attempts = orderRequest.deliveryAttempts + 1;
             const retryAt = calculateNextDeliveryRetryAt({
@@ -73,6 +83,12 @@ export async function processFailedOrderRequestsOnce(
                 },
             });
             recordRetryFailed();
+            logError("checkout.retry.failed", {
+                orderRequestId: orderRequest.id,
+                attempts,
+                nextRetryAt: retryAt?.toISOString() ?? null,
+                errorMessage: error instanceof Error ? error.message : "Delivery failed",
+            });
         }
     }
 }
