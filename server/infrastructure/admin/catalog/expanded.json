@@ -1,0 +1,81 @@
+{
+  "files": [
+    {
+      "id": "panel-classic-black-img-1",
+      "url": "/uploads/catalog/panel-classic-black-img-1.png",
+      "originalName": "0-black-0.png",
+      "mimeType": "image/png",
+      "sizeBytes": 47080,
+      "width": null,
+      "height": null
+    }
+  ],
+  "productCards": [
+    {
+      "id": "panel-classic",
+      "type": "panel",
+      "slug": "panel-classic",
+      "title": "Панель Classic",
+      "description": "Базовая звуковая панель для жилых помещений.",
+      "isActive": true
+    }
+  ],
+  "productColors": [
+    {
+      "id": "panel-classic-black",
+      "productCardId": "panel-classic",
+      "name": "Черный",
+      "hex": "#111111",
+      "imageIds": [
+        "panel-classic-black-img-1"
+      ],
+      "isActive": true
+    }
+  ],
+  "products": [
+    {
+      "id": "panel-classic-panel-classic-black-600x600x20",
+      "cardId": "panel-classic",
+      "productColorId": "panel-classic-black",
+      "width": 600,
+      "height": 600,
+      "thickness": 20,
+      "price": 3900,
+      "currency": "RUB",
+      "isActive": true
+    },
+    {
+      "id": "panel-classic-panel-classic-black-600x600x40",
+      "cardId": "panel-classic",
+      "productColorId": "panel-classic-black",
+      "width": 600,
+      "height": 600,
+      "thickness": 40,
+      "price": 3900,
+      "currency": "RUB",
+      "isActive": true
+    },
+    {
+      "id": "panel-classic-panel-classic-black-1200x600x20",
+      "cardId": "panel-classic",
+      "productColorId": "panel-classic-black",
+      "width": 1200,
+      "height": 600,
+      "thickness": 20,
+      "price": 9900,
+      "currency": "RUB",
+      "isActive": true
+    },
+    {
+      "id": "panel-classic-panel-classic-black-1200x600x40",
+      "cardId": "panel-classic",
+      "productColorId": "panel-classic-black",
+      "width": 1200,
+      "height": 600,
+      "thickness": 40,
+      "price": 3900,
+      "currency": "RUB",
+      "isActive": true
+    }
+  ]
+}

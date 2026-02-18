@@ -76,9 +76,44 @@ bun run preview
 bun run db:generate
 bun run db:migrate
 
+bun run admin:catalog:build
+bun run admin:catalog:sync
+bun run admin:catalog:apply
+
 bun run test:db
 bun run test:telegram:smoke
 ```
+
+## Каталог (admin JSON)
+
+Источник каталога: `server/infrastructure/admin/catalog/source.json`.
+
+Поддерживаются изображения:
+
+- URL строкой (`https://...`)
+- Локальный путь строкой (`public/images/...`)
+- Объект с `path` или объект с полными метаданными
+
+Команды:
+
+```bash
+# 1) из source.json -> expanded.json (и копирование локальных файлов в public/uploads/catalog)
+bun run admin:catalog:build
+
+# 2) синхронизация expanded.json -> БД
+bun run admin:catalog:sync
+
+# shortcut
+bun run admin:catalog:apply
+```
+
+Поведение `sync`:
+
+- По умолчанию чистит отсутствующие в JSON данные:
+  - `files` удаляются
+  - `product_cards`, `product_colors`, `products` деактивируются (`isActive=false`)
+- Для режима без очистки: `bun run admin:catalog:sync -- --keep-missing`
+- Для проверки без записи: `bun run admin:catalog:sync -- --dry-run`
 
 ## Runbook (Сервер)
 

@@ -1,0 +1,37 @@
+{
+  "cards": [
+    {
+      "id": "panel-classic",
+      "type": "panel",
+      "slug": "panel-classic",
+      "title": "Панель Classic",
+      "description": "Базовая звуковая панель для жилых помещений.",
+      "isActive": true,
+      "price": 3900,
+      "currency": "RUB",
+      "colors": [
+        {
+          "id": "panel-classic-black",
+          "name": "Черный",
+          "hex": "#111111",
+          "images": [
+            "public/images/panels/0-black-0.png"
+          ]
+        }
+      ],
+      "matrix": {
+        "sizes": [
+          {
+            "width": 600,
+            "height": 600
+          },
+          {
+            "width": 1200,
+            "height": 600
+          }
+        ],
+        "thicknesses": [20, 40]
+      }
+    }
+  ]
+}
