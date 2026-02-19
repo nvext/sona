@@ -4,7 +4,7 @@ import healthHandler from "~~/server/infrastructure/api/health.get";
 import loginHandler from "~~/server/infrastructure/api/auth/login.post";
 import submitHandler from "~~/server/infrastructure/api/checkout/submit.post";
 import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
-import { resetSecurityStateForTests } from "~~/server/infrastructure/api/shared/security";
+import { resetSecurityStateForTests } from "~~/server/infrastructure/http/api/security";
 import { callApi } from "./helpers";
 
 describe("infra api security", () => {

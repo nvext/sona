@@ -1,4 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
+import { fileURLToPath } from "node:url";
+
+const infrastructureScanDir = fileURLToPath(new URL("./server/infrastructure", import.meta.url));
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -13,7 +16,7 @@ export default defineNuxtConfig({
   // vite: { plugins: [tailwindcss()] },
   nitro: {
     preset: "node-server",
-    scanDirs: ["server/infrastructure"],
+    scanDirs: [infrastructureScanDir],
   },
   modules: ["@nuxt/image", "@nuxt/ui"],
   ui: {

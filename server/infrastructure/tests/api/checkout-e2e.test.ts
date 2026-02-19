@@ -41,7 +41,7 @@ import {
     setupDbTestHooks,
 } from "~~/server/infrastructure/db/repos/tests/helpers";
 import { resetRuntimeEnvCacheForTests } from "~~/server/infrastructure/runtime/env";
-import { resetSecurityStateForTests } from "~~/server/infrastructure/api/shared/security";
+import { resetSecurityStateForTests } from "~~/server/infrastructure/http/api/security";
 import type { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
 
 setupDbTestHooks();

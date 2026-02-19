@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { resolveUseCases } from '~~/server/infrastructure/api/shared/use-cases';
-import { defineApiHandler } from '~~/server/infrastructure/api/shared/handler';
-import { readValidatedBody } from '~~/server/infrastructure/api/shared/validation';
-import { requireAuth } from '~~/server/infrastructure/api/shared/auth';
+import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
+import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
+import { readValidatedBody } from '~~/server/infrastructure/http/api/validation';
+import { requireAuth } from '~~/server/infrastructure/http/api/auth';
 import { OperationFailedError } from '~~/server/shared/errors';
 import { recordSubmitAttempt, recordSubmitDelivered, recordSubmitFailed } from '~~/server/infrastructure/runtime/metrics';
 import { logError, logInfo } from '~~/server/infrastructure/runtime';

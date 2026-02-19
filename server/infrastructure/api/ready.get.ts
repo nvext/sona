@@ -1,5 +1,5 @@
 import { createError } from "h3";
-import { defineApiHandler } from "./shared/handler";
+import { defineApiHandler } from "../http/api/handler";
 import { pool } from "~~/server/infrastructure/db";
 
 type ApiEventContext = {

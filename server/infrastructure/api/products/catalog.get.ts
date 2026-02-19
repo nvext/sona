@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { resolveUseCases } from '~~/server/infrastructure/api/shared/use-cases';
-import { defineApiHandler } from '~~/server/infrastructure/api/shared/handler';
-import { readValidatedQuery } from '~~/server/infrastructure/api/shared/validation';
+import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
+import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
+import { readValidatedQuery } from '~~/server/infrastructure/http/api/validation';
 
 const querySchema = z.object({
   offset: z.coerce.number().int().min(0).optional(),
