@@ -2,7 +2,7 @@
     <div>
         <section class="px-25 pt-8.75 mb-20 flex gap-5" v-if="product">
             <div
-                class="w-2/5 aspect-7/9 grid gap-3.5 grid-rows-[4.75fr_1fr] grid-cols-4 *:first:col-span-4">
+                class="w-3/5 aspect-7/9 grid gap-3.5 grid-rows-[4.75fr_1fr] grid-cols-4 *:first:col-span-4">
                 <div
                     v-for="image in currentImages"
                     :key="image.id"
@@ -11,15 +11,37 @@
                 </div>
             </div>
 
-            <div>
+            <div class="w-full">
                 <h2 class="text-5xl">{{ product.card.title }} {{ currentColor?.name }}</h2>
 
-                <div class="py-2.5 text-xl flex border-b border-dark-bg">
-                    <p>Размер: {{ currentProduct?.width }}x{{ currentProduct?.height }} мм</p>
+                <div class="py-2.5 border-b border-dark-bg">
+                    <p class="text-xl mb-2">Размер</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button
+                            v-for="size in availableSizes"
+                            :key="size.key"
+                            type="button"
+                            class="px-4 py-1.5 rounded-full border text-sm transition-colors"
+                            :class="selectedSizeKey === size.key ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                            @click="selectedSizeKey = size.key">
+                            {{ size.label }}
+                        </button>
+                    </div>
                 </div>
 
-                <div class="py-2.5 text-xl flex border-b border-dark-bg">
-                    <p>Толщина: {{ currentProduct?.thickness }} мм</p>
+                <div class="py-2.5 border-b border-dark-bg">
+                    <p class="text-xl mb-2">Толщина</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button
+                            v-for="thickness in availableThicknesses"
+                            :key="thickness"
+                            type="button"
+                            class="px-4 py-1.5 rounded-full border text-sm transition-colors"
+                            :class="selectedThickness === thickness ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                            @click="selectedThickness = thickness">
+                            {{ thickness }} мм
+                        </button>
+                    </div>
                 </div>
 
                 <div class="py-2.5">
@@ -85,6 +107,8 @@ const { data: relatedCatalog } = await useAsyncData("related-catalog", () =>
 const relatedProducts = computed<CatalogCardItem[]>(() => relatedCatalog.value?.data ?? []);
 
 const selectedColorId = ref<string | null>(null);
+const selectedSizeKey = ref<string | null>(null);
+const selectedThickness = ref<number | null>(null);
 
 watch(
     () => product.value?.colors?.[0]?.id ?? null,
@@ -104,18 +128,88 @@ const currentColor = computed(() => {
 
 const currentImages = computed(() => currentColor.value?.images ?? []);
 
+const productsForColor = computed(() => {
+    if (!product.value) {
+        return [];
+    }
+    const selectedColor = currentColor.value;
+    if (!selectedColor) {
+        return product.value.products;
+    }
+    return product.value.products.filter((item) => item.productColorId === selectedColor.id);
+});
+
+const availableSizes = computed(() => {
+    const seen = new Set<string>();
+    const result: Array<{ key: string; label: string; width: number; height: number }> = [];
+    for (const item of productsForColor.value) {
+        const key = `${item.width}x${item.height}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        result.push({
+            key,
+            label: `${item.width}x${item.height} мм`,
+            width: item.width,
+            height: item.height,
+        });
+    }
+    return result;
+});
+
+const availableThicknesses = computed(() => {
+    const sizes = selectedSizeKey.value;
+    const source = sizes
+        ? productsForColor.value.filter((item) => `${item.width}x${item.height}` === sizes)
+        : productsForColor.value;
+    return Array.from(new Set(source.map((item) => item.thickness))).sort((a, b) => a - b);
+});
+
+watch(
+    () => currentColor.value?.id ?? null,
+    () => {
+        const sizeOptions = availableSizes.value.map((item) => item.key);
+        const thicknessOptions = availableThicknesses.value;
+
+        if (!selectedSizeKey.value || !sizeOptions.includes(selectedSizeKey.value)) {
+            selectedSizeKey.value = sizeOptions[0] ?? null;
+        }
+
+        if (
+            selectedThickness.value === null ||
+            !thicknessOptions.includes(selectedThickness.value)
+        ) {
+            selectedThickness.value = thicknessOptions[0] ?? null;
+        }
+    },
+    { immediate: true },
+);
+
+watch(
+    () => selectedSizeKey.value,
+    () => {
+        const thicknessOptions = availableThicknesses.value;
+        if (
+            selectedThickness.value === null ||
+            !thicknessOptions.includes(selectedThickness.value)
+        ) {
+            selectedThickness.value = thicknessOptions[0] ?? null;
+        }
+    },
+);
+
 const currentProduct = computed(() => {
     if (!product.value) {
         return null;
     }
-    const selectedColor = currentColor.value;
-    if (!selectedColor) {
-        return product.value.products[0] ?? null;
+    const sizeKey = selectedSizeKey.value;
+    const thickness = selectedThickness.value;
+    let filtered = productsForColor.value;
+    if (sizeKey) {
+        filtered = filtered.filter((item) => `${item.width}x${item.height}` === sizeKey);
     }
-    return (
-        product.value.products.find((item) => item.productColorId === selectedColor.id) ??
-        product.value.products[0] ??
-        null
-    );
+    if (thickness !== null) {
+        filtered = filtered.filter((item) => item.thickness === thickness);
+    }
+    return filtered[0] ?? productsForColor.value[0] ?? product.value.products[0] ?? null;
 });
 </script>
