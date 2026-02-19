@@ -18,7 +18,7 @@ export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
                 type: "panel";
                 minPrice: number;
                 currency: "RUB";
-                colors: Array<{ colorId: string; images: Array<{ id: string; url: string }> }>;
+                colors: Array<{ colorId: string; hex: string; images: Array<{ id: string; url: string }> }>;
             }>,
             { pagination: Pagination; total: number }
         >
@@ -70,12 +70,13 @@ export class DbGetCatalogPageQuery implements GetCatalogPageQuery {
 
         const colorsByCard = new Map<
             string,
-            Array<{ colorId: string; images: Array<{ id: string; url: string }> }>
+            Array<{ colorId: string; hex: string; images: Array<{ id: string; url: string }> }>
         >();
         for (const row of colorRows) {
             const current = colorsByCard.get(row.productCardId) ?? [];
             current.push({
                 colorId: row.id,
+                hex: row.hex,
                 images: row.imageIds.flatMap((imageId) => {
                     const file = filesById.get(imageId);
                     return file ? [{ id: file.id, url: file.url }] : [];

@@ -23,6 +23,7 @@ type CatalogItem = {
 
 type CatalogItemColor = {
     colorId: string;
+    hex: string;
     images: Array<{
         id: string;
         url: string;
