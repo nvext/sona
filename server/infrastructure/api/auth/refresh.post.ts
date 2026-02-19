@@ -1,13 +1,19 @@
-import { z } from 'zod';
 import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
 import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
-import { readValidatedBody } from '~~/server/infrastructure/http/api/validation';
-
-const refreshSchema = z.object({
-  refreshToken: z.string().min(1),
-});
+import { readBody } from 'h3';
+import { setAuthCookies, resolveRefreshToken } from '~~/server/infrastructure/http/api/auth';
 
 export default defineApiHandler(async (event) => {
-  const input = await readValidatedBody(event, refreshSchema);
-  return resolveUseCases(event).refresh.execute(input);
+  const body = (await readBody(event)) ?? {};
+  const refreshToken = typeof body.refreshToken === "string" && body.refreshToken.length > 0
+    ? body.refreshToken
+    : resolveRefreshToken(event);
+
+  if (!refreshToken) {
+    return { ok: false };
+  }
+
+  const result = await resolveUseCases(event).refresh.execute({ refreshToken });
+  setAuthCookies(event, result.accessToken, result.refreshToken);
+  return { ok: true };
 });

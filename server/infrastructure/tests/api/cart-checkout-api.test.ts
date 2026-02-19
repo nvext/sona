@@ -1,5 +1,6 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
+import getItemsHandler from "~~/server/infrastructure/api/cart/items.get";
 import addItemHandler from "~~/server/infrastructure/api/cart/items.post";
 import removeItemHandler from "~~/server/infrastructure/api/cart/items/[itemId].delete";
 import createDraftHandler from "~~/server/infrastructure/api/checkout/drafts.post";
@@ -16,6 +17,55 @@ const authContext = {
 };
 
 describe("infra cart/checkout api", () => {
+    test("GET /cart/items returns items", async () => {
+        const response = await callApi({
+            route: "/cart/items",
+            handler: getItemsHandler as any,
+            context: authContext,
+            useCases: {
+                getCartItems: {
+                    async execute() {
+                        return {
+                            data: [
+                                {
+                                    id: "item-1",
+                                    productId: "p1",
+                                    productColorId: "c1",
+                                    title: "Panel",
+                                    colorName: "Black",
+                                    colorHex: "#000",
+                                    width: 60,
+                                    height: 120,
+                                    thickness: 25,
+                                    price: 3000,
+                                    currency: "RUB",
+                                    imageUrl: "/img.png",
+                                    quantity: 2,
+                                },
+                            ],
+                            meta: { cartId: "cart-1" },
+                        };
+                    },
+                },
+            },
+        });
+
+        assert.equal(response.status, 200);
+        assert.equal(response.body.data.length, 1);
+        assert.equal(response.body.data[0].id, "item-1");
+        assert.equal(response.body.meta.cartId, "cart-1");
+    });
+
+    test("GET /cart/items returns 401 when unauthorized", async () => {
+        const response = await callApi({
+            route: "/cart/items",
+            handler: getItemsHandler as any,
+        });
+
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
+    });
+
     test("POST /cart/items adds item", async () => {
         let received: any = null;
         const response = await callApi({

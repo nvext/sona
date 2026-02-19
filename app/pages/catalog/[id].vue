@@ -58,9 +58,11 @@
                     <p class="text-5xl">{{ currentProduct?.price }} ₽</p>
 
                     <button
-                        class="text-xl py-6.25 text-fg bg-dark-bg flex-1 rounded-[100px] relative"
-                        type="button">
-                        Оставить заявку
+                        class="text-xl py-6.25 text-fg bg-dark-bg flex-1 rounded-[100px] relative disabled:opacity-50"
+                        type="button"
+                        :disabled="!currentProduct || !currentColor"
+                        @click="handleAddToCart">
+                        Добавить в корзину
                         <div
                             class="size-12.5 bg-bg absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full flex justify-center items-center">
                             <img class="object-cover h-2/5" src="/icons/arrow.svg" alt="" />
@@ -109,6 +111,8 @@ const relatedProducts = computed<CatalogCardItem[]>(() => relatedCatalog.value?.
 const selectedColorId = ref<string | null>(null);
 const selectedSizeKey = ref<string | null>(null);
 const selectedThickness = ref<number | null>(null);
+const { addItem } = useCart();
+const { isAuthenticated } = useAuth();
 
 watch(
     () => product.value?.colors?.[0]?.id ?? null,
@@ -212,4 +216,20 @@ const currentProduct = computed(() => {
     }
     return filtered[0] ?? productsForColor.value[0] ?? product.value.products[0] ?? null;
 });
+
+async function handleAddToCart() {
+    if (!product.value || !currentProduct.value || !currentColor.value) {
+        return;
+    }
+    if (!isAuthenticated.value) {
+        await navigateTo(`/login?next=${encodeURIComponent(route.fullPath)}`);
+        return;
+    }
+    const item = currentProduct.value;
+    const color = currentColor.value;
+    await addItem({
+        productId: item.id,
+        productColorId: color.id,
+    });
+}
 </script>

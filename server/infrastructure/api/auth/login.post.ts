@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
 import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
 import { readValidatedBody } from '~~/server/infrastructure/http/api/validation';
+import { setAuthCookies } from '~~/server/infrastructure/http/api/auth';
 
 const loginSchema = z.union([
   z.object({
@@ -16,5 +17,7 @@ const loginSchema = z.union([
 
 export default defineApiHandler(async (event) => {
   const input = await readValidatedBody(event, loginSchema);
-  return resolveUseCases(event).login.execute(input as any);
+  const result = await resolveUseCases(event).login.execute(input as any);
+  setAuthCookies(event, result.accessToken, result.refreshToken);
+  return { ok: true };
 });

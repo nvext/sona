@@ -65,8 +65,8 @@ describe("infra auth api", () => {
         });
 
         assert.equal(response.status, 200);
-        assert.equal(response.body.accessToken, "a");
-        assert.equal(response.body.refreshToken, "r");
+        assert.equal(response.body.ok, true);
+        assert.ok(response.headers["set-cookie"]);
     });
 
     test("POST /auth/login returns 401 on invalid credentials", async () => {
@@ -116,7 +116,8 @@ describe("infra auth api", () => {
         });
 
         assert.equal(refreshResponse.status, 200);
-        assert.equal(refreshResponse.body.accessToken, "a2");
+        assert.equal(refreshResponse.body.ok, true);
+        assert.ok(refreshResponse.headers["set-cookie"]);
 
         const logoutResponse = await callApi({
             route: "/auth/logout",
@@ -129,7 +130,13 @@ describe("infra auth api", () => {
                     },
                 },
             },
-            body: { sessionId: "s1" },
+            context: {
+                auth: {
+                    userId: "u1",
+                    sessionId: "s1",
+                    sessionVersion: 0,
+                },
+            },
         });
 
         assert.equal(logoutResponse.status, 200);
@@ -148,16 +155,15 @@ describe("infra auth api", () => {
         assert.equal(response.body.statusMessage, "Validation failed");
     });
 
-    test("POST /auth/logout returns 400 on invalid body", async () => {
+    test("POST /auth/logout returns 401 when unauthorized", async () => {
         const response = await callApi({
             route: "/auth/logout",
             method: "POST",
             handler: logoutHandler as any,
-            body: { sessionId: "" },
         });
 
-        assert.equal(response.status, 400);
-        assert.equal(response.body.statusMessage, "Validation failed");
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
     });
 
     test("POST /auth/refresh returns 500 on unknown error", async () => {

@@ -9,3 +9,11 @@
         </div>
     </UPage>
 </template>
+
+<script setup lang="ts">
+const { me } = useAuth();
+
+onMounted(() => {
+    me().catch(() => null);
+});
+</script>

@@ -34,6 +34,7 @@ describe("infra api security", () => {
 
         assert.equal(response.status, 200);
         assert.equal(response.headers["access-control-allow-origin"], "https://allowed.example");
+        assert.equal(response.headers["access-control-allow-credentials"], "true");
     });
 
     test("rejects disallowed origin", async () => {

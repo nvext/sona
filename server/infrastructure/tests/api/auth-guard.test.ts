@@ -1,28 +1,16 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import addItemHandler from "~~/server/infrastructure/api/cart/items.post";
-import { HmacAccessTokenIssuer } from "~~/server/infrastructure/services/token/HmacAccessTokenIssuer";
 import { callApi } from "./helpers";
 
-const issuer = new HmacAccessTokenIssuer({
-    secret: "test-access-secret",
-    ttlMs: 60_000,
-});
-
 describe("infra api auth guard", () => {
-    test("accepts valid bearer token with active session", async () => {
-        const token = issuer.issue({
-            userId: "user-1",
-            sessionId: "session-1",
-            sessionVersion: 2,
-        });
-
+    test("accepts cookie token with active session", async () => {
         let receivedInput: any = null;
         const response = await callApi({
             route: "/cart/items",
             method: "POST",
             handler: addItemHandler as any,
-            headers: { authorization: `Bearer ${token}` },
+            headers: { cookie: "access_token=token-1" },
             body: { productId: "p1", productColorId: "c1" },
             useCases: {
                 addItemToCart: {
@@ -52,10 +40,7 @@ describe("infra api auth guard", () => {
                 services: {
                     accessTokenVerifier: {
                         verify(value: string) {
-                            const [payload, signature] = value.split(".");
-                            if (!payload || !signature) {
-                                return null;
-                            }
+                            if (!value) return null;
                             return {
                                 userId: "user-1",
                                 sessionId: "session-1",
@@ -71,18 +56,12 @@ describe("infra api auth guard", () => {
         assert.deepEqual(receivedInput, { userId: "user-1", productId: "p1", productColorId: "c1" });
     });
 
-    test("rejects bearer token when session is revoked", async () => {
-        const token = issuer.issue({
-            userId: "user-1",
-            sessionId: "session-1",
-            sessionVersion: 2,
-        });
-
+    test("rejects cookie token when session is revoked", async () => {
         const response = await callApi({
             route: "/cart/items",
             method: "POST",
             handler: addItemHandler as any,
-            headers: { authorization: `Bearer ${token}` },
+            headers: { cookie: "access_token=token-1" },
             body: { productId: "p1", productColorId: "c1" },
             useCases: {
                 addItemToCart: {

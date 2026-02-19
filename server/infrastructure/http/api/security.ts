@@ -49,6 +49,7 @@ export function applyCors(event: H3Event): void {
     setHeader(event, "access-control-allow-origin", origin);
     setHeader(event, "access-control-allow-methods", "GET,POST,DELETE,OPTIONS");
     setHeader(event, "access-control-allow-headers", "content-type,authorization");
+    setHeader(event, "access-control-allow-credentials", "true");
 }
 
 export function enforceRateLimit(event: H3Event): void {

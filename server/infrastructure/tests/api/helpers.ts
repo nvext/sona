@@ -78,6 +78,10 @@ export async function callApi(options: {
     await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 
     const headers = Object.fromEntries(response.headers.entries());
+    const setCookie = response.headers.getSetCookie?.() ?? response.headers.get("set-cookie");
+    if (setCookie) {
+        (headers as Record<string, string | string[]>)["set-cookie"] = setCookie;
+    }
 
     return {
         status: response.status,

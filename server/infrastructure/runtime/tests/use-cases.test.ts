@@ -6,6 +6,7 @@ import { Register } from "~~/server/application/auth/uc/register";
 import { Refresh } from "~~/server/application/auth/uc/refresh";
 import { Logout } from "~~/server/application/auth/uc/logout";
 import { AddItemToCart } from "~~/server/application/cart/uc/add-product-to-cart";
+import { GetCartItems } from "~~/server/application/cart/uc/get-cart-items";
 import { RemoveItemFromCart } from "~~/server/application/cart/uc/remove-product-from-cart";
 import { CreateOrderRequestDraft } from "~~/server/application/checkout/uc/create-order-request-draft";
 import { SubmitOrderRequest } from "~~/server/application/checkout/uc/submit-order-request";
@@ -28,6 +29,7 @@ describe("runtime wiring", () => {
         assert.ok(useCases.refresh instanceof Refresh);
         assert.ok(useCases.logout instanceof Logout);
         assert.ok(useCases.addItemToCart instanceof AddItemToCart);
+        assert.ok(useCases.getCartItems instanceof GetCartItems);
         assert.ok(useCases.removeItemFromCart instanceof RemoveItemFromCart);
         assert.ok(useCases.createOrderRequestDraft instanceof CreateOrderRequestDraft);
         assert.ok(useCases.submitOrderRequest instanceof SubmitOrderRequest);

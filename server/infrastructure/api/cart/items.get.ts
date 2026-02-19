@@ -1,10 +1,8 @@
 import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
 import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
-import { clearAuthCookies, requireAuth } from '~~/server/infrastructure/http/api/auth';
+import { requireAuth } from '~~/server/infrastructure/http/api/auth';
 
 export default defineApiHandler(async (event) => {
   const auth = await requireAuth(event);
-  const result = await resolveUseCases(event).logout.execute({ sessionId: auth.sessionId });
-  clearAuthCookies(event);
-  return result;
+  return resolveUseCases(event).getCartItems.execute({ userId: auth.userId });
 });

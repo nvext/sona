@@ -16,7 +16,19 @@
             </ul>
         </nav>
 
-        <NuxtLink class="justify-self-end">Корзина</NuxtLink>
+        <div class="justify-self-end flex items-center gap-4">
+            <NuxtLink to="/cart">
+                Корзина<span v-if="cartCount > 0"> ({{ cartCount }})</span>
+            </NuxtLink>
+            <button
+                v-if="isAuthenticated"
+                type="button"
+                class="underline"
+                @click="logout">
+                Выйти
+            </button>
+            <NuxtLink v-else to="/login" class="underline">Войти</NuxtLink>
+        </div>
     </header>
 </template>
 
@@ -24,6 +36,8 @@
 import IconsLogo from './icons/Logo.vue';
 
 const route = useRoute();
+const { count: cartCount } = useCart();
+const { isAuthenticated, logout } = useAuth();
 
 const isMainPage = computed(() => route.path === "/");
 

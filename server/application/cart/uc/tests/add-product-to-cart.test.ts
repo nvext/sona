@@ -68,14 +68,21 @@ type BuildOptions = {
     product: Product;
     color: ProductColor;
     existingCartItem: CartItem | null;
+    cart: Cart | null;
 };
 
 function makeSut(options: BuildOptions) {
     let addCalled = false;
 
+    let addedCart: Cart | null = null;
+
     const cartRepo = {
         async getByUserId() {
-            return { data: baseCart, meta: undefined };
+            return { data: options.cart, meta: undefined };
+        },
+        async add(input: { entity: Cart }) {
+            addedCart = input.entity;
+            return { data: input.entity, meta: undefined };
         },
     } as unknown as CartRepo;
 
@@ -119,7 +126,7 @@ function makeSut(options: BuildOptions) {
         new StaticEntityIdGenerator(),
     );
 
-    return { uc, wasAddCalled: () => addCalled };
+    return { uc, wasAddCalled: () => addCalled, getAddedCart: () => addedCart };
 }
 
 describe("AddItemToCart", () => {
@@ -133,6 +140,7 @@ describe("AddItemToCart", () => {
             product: baseProduct,
             color: mismatchedColor,
             existingCartItem: null,
+            cart: baseCart,
         });
 
         await assert.rejects(
@@ -153,6 +161,7 @@ describe("AddItemToCart", () => {
             product: baseProduct,
             color: baseColor,
             existingCartItem: null,
+            cart: baseCart,
         });
 
         const result = await uc.execute({
@@ -165,5 +174,24 @@ describe("AddItemToCart", () => {
         assert.equal(result.data.productId, "product-1");
         assert.equal(result.data.productColorId, "color-1");
         assert.equal(wasAddCalled(), true);
+    });
+
+    test("creates cart when missing", async () => {
+        const { uc, getAddedCart } = makeSut({
+            product: baseProduct,
+            color: baseColor,
+            existingCartItem: null,
+            cart: null,
+        });
+
+        const result = await uc.execute({
+            userId: "user-1",
+            productId: "product-1",
+            productColorId: "color-1",
+        });
+
+        assert.ok(result.data);
+        assert.ok(getAddedCart());
+        assert.equal(getAddedCart()?.status, "active");
     });
 });

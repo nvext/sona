@@ -46,6 +46,31 @@ describe("RemoveItemFromCart", () => {
         assert.equal(adjustCalls[0].delta, -1);
     });
 
+    test("deletes item when quantity is 1", async () => {
+        let deletedId: string | null = null;
+
+        const cartItemRepo = {
+            async getById() {
+                return { data: { ...baseCartItem, quantity: 1 }, meta: undefined };
+            },
+            async delete(input: { id: string }) {
+                deletedId = input.id;
+                return { data: { ...baseCartItem, quantity: 1 }, meta: undefined };
+            },
+        } as unknown as CartItemRepo;
+        const cartRepo = {
+            async getById() {
+                return { data: { id: "cart-1", userId: "user-1" }, meta: undefined };
+            },
+        } as unknown as CartRepo;
+
+        const uc = new RemoveItemFromCart(cartItemRepo, cartRepo);
+        const result = await uc.execute({ itemId: "item-1", userId: "user-1" });
+
+        assert.ok(result.data);
+        assert.equal(deletedId, "item-1");
+    });
+
     test("throws NotFoundError when item is missing", async () => {
         const cartItemRepo = {
             async getById() {

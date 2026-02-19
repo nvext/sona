@@ -1,6 +1,7 @@
 import {
     DbCaptureCartSnapshotQuery,
     DbGetCatalogPageQuery,
+    DbGetCartItemsQuery,
     PgCartItemRepo,
     PgCartRepo,
     PgFileRepo,
@@ -42,6 +43,7 @@ export type RuntimeContainer = {
     };
     queries: {
         getCatalogPageQuery: DbGetCatalogPageQuery;
+        getCartItemsQuery: DbGetCartItemsQuery;
         captureCartSnapshotQuery: DbCaptureCartSnapshotQuery;
     };
     services: {
@@ -79,6 +81,7 @@ export function getRuntimeContainer(): RuntimeContainer {
     const productSnapshotRepo = new PgProductSnapshotRepo();
 
     const getCatalogPageQuery = new DbGetCatalogPageQuery();
+    const getCartItemsQuery = new DbGetCartItemsQuery();
     const captureCartSnapshotQuery = new DbCaptureCartSnapshotQuery();
 
     const passwordHasher = new Argon2PasswordHasher();
@@ -109,6 +112,7 @@ export function getRuntimeContainer(): RuntimeContainer {
         },
         queries: {
             getCatalogPageQuery,
+            getCartItemsQuery,
             captureCartSnapshotQuery,
         },
         services: {

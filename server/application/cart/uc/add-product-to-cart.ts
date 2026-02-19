@@ -19,12 +19,25 @@ export class AddItemToCart {
     async execute(input: AddProductToCartInput) {
         const now = new Date();
 
-        const { data: cart } = await this.cartRepo.getByUserId({ userId: input.userId });
+        let { data: cart } = await this.cartRepo.getByUserId({ userId: input.userId });
         const { data: product } = await this.productRepo.getById({ id: input.productId });
         const { data: color } = await this.productColorRepo.getById({ id: input.productColorId });
 
-        if (cart === null || product === null || color === null) {
+        if (product === null || color === null) {
             throw new NotFoundError();
+        }
+
+        if (cart === null) {
+            const created = await this.cartRepo.add({
+                entity: {
+                    id: this.entityIdGenerator.generate(),
+                    userId: input.userId,
+                    status: "active",
+                    createdAt: now,
+                    updatedAt: now,
+                },
+            });
+            cart = created.data;
         }
 
         const { data: card } = await this.productCardRepo.getById({ id: product.cardId });
