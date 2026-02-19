@@ -8,10 +8,10 @@
     <section class="px-25">
         <h2 class="text-5xl my-7">Акустические панели</h2>
         <div class="flex gap-5">
-            <ProductCard v-for="product in products.slice(0, 3)" :product class="flex-1" />
+            <ProductCard v-for="product in featuredProducts" :key="product.cardId" :product class="flex-1" />
         </div>
         <div class="h-full flex flex-row-reverse">
-            <NuxtLink class="my-9 underline">Смотреть все</NuxtLink>
+            <NuxtLink to="/catalog" class="my-9 underline">Смотреть все</NuxtLink>
         </div>
     </section>
 
@@ -55,5 +55,13 @@
 </template>
 
 <script setup lang="ts">
-import products from "~~/public/content/products.json";
+import type { CatalogCardItem, CatalogResponse } from "~/types/catalog";
+
+const { data: response } = await useAsyncData("home-featured-catalog", () =>
+    $fetch<CatalogResponse>("/api/products/catalog", {
+        query: { limit: 3 },
+    }),
+);
+
+const featuredProducts = computed<CatalogCardItem[]>(() => response.value?.data ?? []);
 </script>

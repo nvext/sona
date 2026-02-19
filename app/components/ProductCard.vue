@@ -3,51 +3,41 @@
         @click="onClick"
         class="h-137.5 px-12.5 pb-8 bg-bg-1 rounded-3xl grid grid-rows-[1fr] cursor-pointer">
         <div class="flex items-center justify-center">
-            <NuxtImg
-                class="object-cover"
-                :src="'/images/' + product.variants[selectedVariantId]?.images[0]"
-                alt="product-image" />
+            <NuxtImg class="object-cover max-h-9/10" :src="previewImageUrl" alt="product-image" />
         </div>
 
         <div class="flex justify-between mb-7 text-[15px] min-w-64">
             <h2>
-                {{ product.category }}<br />{{ product.series }}
-                {{ product.variants[selectedVariantId]?.name }}
+                {{ product.title }}
             </h2>
-            <p>{{ product.variants[selectedVariantId]?.price.rub }}₽</p>
+            <p>{{ product.minPrice }}₽</p>
         </div>
 
-        <div class="w-full flex gap-1.25 justify-center">
-            <button
-                v-for="color in new Set(product.variants.map((variant) => variant.color))"
-                :key="color"
-                class="size-5 rounded-full border border-neutral-300"
-                @click="() => selectVariantFromColor(color)"
-                :style="{ background: color }"></button>
+        <div class="flex gap-2">
+            <span
+                v-for="color in product.colors"
+                :key="color.colorId"
+                class="size-6 rounded-full border border-dark-bg/20"
+                :style="{ backgroundColor: color.hex || '#fff' }">
+            </span>
         </div>
     </article>
 </template>
 
 <script setup lang="ts">
-const { $config } = useNuxtApp();
+import type { CatalogCardItem } from "~/types/catalog";
 
-const { product } = defineProps<{ product: Product }>();
+const { product } = defineProps<{ product: CatalogCardItem }>();
 const router = useRouter();
 
-const selectedVariantId = ref(0);
-
-function selectVariantFromColor(color: string) {
-    for (const [index, variant] of product.variants.entries()) {
-        if (variant.color === color) {
-            selectedVariantId.value = index;
-            return;
-        }
-    }
-
-    throw new Error(`Failed to find color (${color}) in product ${product.series}.`);
-}
+const previewImageUrl = computed(() => {
+    return (
+        product.colors[0]?.images[0]?.url ??
+        "/images/panel-exmpl-0.png"
+    );
+});
 
 function onClick() {
-    router.push(`/catalog/${0}`);
+    router.push(`/catalog/${product.cardId}`);
 }
 </script>

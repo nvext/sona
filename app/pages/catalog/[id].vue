@@ -1,44 +1,39 @@
 <template>
     <div>
-        <section class="px-25 pt-8.75 mb-20 flex gap-5">
+        <section class="px-25 pt-8.75 mb-20 flex gap-5" v-if="product">
             <div
                 class="w-2/5 aspect-7/9 grid gap-3.5 grid-rows-[4.75fr_1fr] grid-cols-4 *:first:col-span-4">
                 <div
-                    v-for="i in 5"
+                    v-for="image in currentImages"
+                    :key="image.id"
                     class="size-full bg-bg-1 rounded-[5px] flex items-center justify-center">
-                    <NuxtImg
-                        class="object-cover max-h-6/10"
-                        :src="'images/' + product?.variants[0]?.images[0]" />
+                    <NuxtImg class="object-cover max-h-6/10" :src="image.url" />
                 </div>
             </div>
 
             <div>
-                <h2 class="text-5xl">{{ product?.category }}<br />{{ product?.series }} Black</h2>
+                <h2 class="text-5xl">{{ product.card.title }} {{ currentColor?.name }}</h2>
 
                 <div class="py-2.5 text-xl flex border-b border-dark-bg">
-                    <p>Цвет</p>
+                    <p>Размер: {{ currentProduct?.width }}x{{ currentProduct?.height }} мм</p>
                 </div>
 
                 <div class="py-2.5 text-xl flex border-b border-dark-bg">
-                    <p>Размер</p>
+                    <p>Толщина: {{ currentProduct?.thickness }} мм</p>
                 </div>
 
-                <div class="py-2.5 text-xl flex border-b border-dark-bg">
-                    <p>Толщина</p>
-                </div>
-
-                <div class="py-2.5 text-xl flex">
-                    <p>Количество</p>
+                <div class="py-2.5">
+                    <ColorSelect v-model="selectedColorId" :colors="product.colors" :size="32" />
                 </div>
 
                 <div class="py-2.5 border-b border-dark-bg">
                     <h3 class="text-xl">Характеристики</h3>
 
-                    <p class="text-[16px] font-thin">{{ product?.description }}</p>
+                    <p class="text-[16px] font-thin">{{ product.card.description }}</p>
                 </div>
 
                 <div class="py-2.5 flex items-center gap-8.75">
-                    <p class="text-5xl">{{ product?.variants[0]?.price.rub }}Р</p>
+                    <p class="text-5xl">{{ currentProduct?.price }} ₽</p>
 
                     <button
                         class="text-xl py-6.25 text-fg bg-dark-bg flex-1 rounded-[100px] relative"
@@ -57,19 +52,70 @@
             <h2 class="text-3xl mb-12">Вам может понравится</h2>
 
             <div class="flex gap-5">
-                <ProductCard v-for="product in products.slice(0, 3)" :product class="flex-1" />
+                <ProductCard v-for="item in relatedProducts" :key="item.cardId" :product="item" class="flex-1" />
             </div>
         </section>
 
-        <section class="px-25 mb-20">
-            <h2 class="text-5xl mb-5">О панелях {{ product?.series }}</h2>
+        <section class="px-25 mb-20" v-if="product">
+            <h2 class="text-5xl mb-5">О панели {{ product.card.title }}</h2>
 
-            <p class="text-2xl font-thin">{{ product?.description }}</p>
+            <p class="text-2xl font-thin">{{ product.card.description }}</p>
         </section>
     </div>
 </template>
 
 <script setup lang="ts">
-import products from "~~/public/content/products.json";
-const product = products[0];
+import type { CatalogCardItem, CatalogResponse, ProductDetailsResponse } from "~/types/catalog";
+
+const route = useRoute();
+const cardId = computed(() => String(route.params.id ?? ""));
+
+const { data: product } = await useAsyncData(
+    () => `product-details-${cardId.value}`,
+    () => $fetch<ProductDetailsResponse>(`/api/products/${cardId.value}`),
+    { watch: [cardId] },
+);
+
+const { data: relatedCatalog } = await useAsyncData("related-catalog", () =>
+    $fetch<CatalogResponse>("/api/products/catalog", {
+        query: { limit: 3 },
+    }),
+);
+
+const relatedProducts = computed<CatalogCardItem[]>(() => relatedCatalog.value?.data ?? []);
+
+const selectedColorId = ref<string | null>(null);
+
+watch(
+    () => product.value?.colors?.[0]?.id ?? null,
+    (value) => {
+        selectedColorId.value = value;
+    },
+    { immediate: true },
+);
+
+const currentColor = computed(() => {
+    const id = selectedColorId.value;
+    if (!id || !product.value) {
+        return product.value?.colors[0] ?? null;
+    }
+    return product.value.colors.find((color) => color.id === id) ?? product.value.colors[0] ?? null;
+});
+
+const currentImages = computed(() => currentColor.value?.images ?? []);
+
+const currentProduct = computed(() => {
+    if (!product.value) {
+        return null;
+    }
+    const selectedColor = currentColor.value;
+    if (!selectedColor) {
+        return product.value.products[0] ?? null;
+    }
+    return (
+        product.value.products.find((item) => item.productColorId === selectedColor.id) ??
+        product.value.products[0] ??
+        null
+    );
+});
 </script>
