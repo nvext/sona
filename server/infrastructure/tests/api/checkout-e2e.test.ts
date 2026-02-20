@@ -133,7 +133,7 @@ async function registerAndLogin(
     useCases: ReturnType<typeof createUseCases>,
     email: string,
     password: string,
-): Promise<{ userId: string; accessToken: string }> {
+): Promise<{ userId: string; cookieHeader: string }> {
     const registerResponse = await callApi({
         route: "/auth/register",
         method: "POST",
@@ -151,10 +151,17 @@ async function registerAndLogin(
         body: { email, password },
     });
     assert.equal(loginResponse.status, 200);
+    const setCookie = loginResponse.headers["set-cookie"];
+    const cookieHeader = Array.isArray(setCookie)
+        ? setCookie.map((value) => value.split(";")[0]).join("; ")
+        : typeof setCookie === "string"
+          ? setCookie.split(";")[0]
+          : "";
+    assert.notEqual(cookieHeader, "");
 
     return {
         userId: registerResponse.body.user.id as string,
-        accessToken: loginResponse.body.accessToken as string,
+        cookieHeader,
     };
 }
 
@@ -225,7 +232,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: addItemHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: { productId: "product-1", productColorId: "color-1" },
         });
         assert.equal(addResponse.status, 200);
@@ -235,7 +242,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: createDraftHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: { cartId: "cart-1", idempotencyKey: "idem-1" },
         });
         assert.equal(draftResponse.status, 200);
@@ -245,7 +252,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: submitHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: {
                 orderRequestId: draftResponse.body.orderRequest.id,
                 contactName: "John",
@@ -279,7 +286,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: addItemHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: { productId: "product-1", productColorId: "color-1" },
         });
 
@@ -288,7 +295,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: createDraftHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: { cartId: "cart-2", idempotencyKey: "idem-2" },
         });
         assert.equal(draftResponse.status, 200);
@@ -298,7 +305,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: submitHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user.accessToken}` },
+            headers: { cookie: user.cookieHeader },
             body: {
                 orderRequestId: draftResponse.body.orderRequest.id,
                 contactName: "John",
@@ -419,7 +426,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: addItemHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user1.accessToken}` },
+            headers: { cookie: user1.cookieHeader },
             body: { productId: "product-1", productColorId: "color-1" },
         });
 
@@ -428,7 +435,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: createDraftHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user1.accessToken}` },
+            headers: { cookie: user1.cookieHeader },
             body: { cartId: "cart-owner", idempotencyKey: "idem-owner" },
         });
         assert.equal(draftResponse.status, 200);
@@ -438,7 +445,7 @@ describe("infra checkout e2e", () => {
             method: "POST",
             handler: submitHandler as any,
             useCases,
-            headers: { authorization: `Bearer ${user2.accessToken}` },
+            headers: { cookie: user2.cookieHeader },
             body: {
                 orderRequestId: draftResponse.body.orderRequest.id,
                 contactName: "Evil",

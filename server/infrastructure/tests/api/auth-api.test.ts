@@ -28,6 +28,11 @@ describe("infra auth api", () => {
                         };
                     },
                 },
+                login: {
+                    async execute() {
+                        return { accessToken: "a", refreshToken: "r" };
+                    },
+                },
             },
             body: { email: "user@example.com", password: "secret123" },
         });
@@ -143,7 +148,7 @@ describe("infra auth api", () => {
         assert.equal(logoutResponse.body.revoked, true);
     });
 
-    test("POST /auth/refresh returns 400 on invalid body", async () => {
+    test("POST /auth/refresh returns ok=false when token is missing", async () => {
         const response = await callApi({
             route: "/auth/refresh",
             method: "POST",
@@ -151,8 +156,8 @@ describe("infra auth api", () => {
             body: { refreshToken: "" },
         });
 
-        assert.equal(response.status, 400);
-        assert.equal(response.body.statusMessage, "Validation failed");
+        assert.equal(response.status, 200);
+        assert.equal(response.body.ok, false);
     });
 
     test("POST /auth/logout returns 401 when unauthorized", async () => {
