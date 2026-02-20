@@ -6,7 +6,11 @@ export class TelegramOrderRequestDeliveryService implements OrderRequestDelivery
 
     async send(input: Parameters<OrderRequestDeliveryService["send"]>[0]): Promise<void> {
         const { orderRequest, snapshots } = input;
-        const totalPrice = snapshots.reduce((sum, snapshot) => sum + snapshot.price, 0);
+        const totalPrice = snapshots.reduce(
+            (sum, snapshot) => sum + snapshot.price * snapshot.quantity,
+            0,
+        );
+        const totalUnits = snapshots.reduce((sum, snapshot) => sum + snapshot.quantity, 0);
         const currency = snapshots[0]?.currency ?? "RUB";
         const submittedAt = orderRequest.submittedAt
             ? orderRequest.submittedAt.toISOString()
@@ -46,7 +50,9 @@ export class TelegramOrderRequestDeliveryService implements OrderRequestDelivery
                           `   - Цвет: ${snapshot.colorName} (${snapshot.colorHex})`,
                           `   - ID товара: ${snapshot.productId}`,
                           `   - ID цвета: ${snapshot.colorId}`,
-                          `   - Цена: ${snapshot.price} ${snapshot.currency}`,
+                          `   - Количество: ${snapshot.quantity} шт.`,
+                          `   - Цена за шт.: ${snapshot.price} ${snapshot.currency}`,
+                          `   - Сумма по позиции: ${snapshot.price * snapshot.quantity} ${snapshot.currency}`,
                           `   - Изображения: ${imageLinks}`,
                       ];
                   });
@@ -54,7 +60,8 @@ export class TelegramOrderRequestDeliveryService implements OrderRequestDelivery
         const footer = [
             "",
             "Итого:",
-            `- Позиций: ${snapshots.length}`,
+            `- Позиции (уникальные): ${snapshots.length}`,
+            `- Единиц товара: ${totalUnits}`,
             `- Сумма: ${totalPrice} ${currency}`,
         ];
 

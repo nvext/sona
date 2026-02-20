@@ -18,6 +18,7 @@ export interface ProductSnapshot {
     width: number;
     height: number;
     thickness: number;
+    quantity: number;
 
     price: number;
     currency: Currency;

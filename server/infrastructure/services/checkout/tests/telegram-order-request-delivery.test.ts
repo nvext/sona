@@ -35,6 +35,7 @@ const snapshots: ProductSnapshot[] = [
         width: 1200,
         height: 600,
         thickness: 40,
+        quantity: 3,
         price: 25000,
         currency: "RUB",
         capturedAt: new Date("2026-01-01T00:30:00.000Z"),
@@ -70,6 +71,8 @@ describe("TelegramOrderRequestDeliveryService", () => {
         assert.ok(String(payload.text).includes("Новая заявка"));
         assert.ok(String(payload.text).includes("Состав заявки:"));
         assert.ok(String(payload.text).includes("Панель A"));
+        assert.ok(String(payload.text).includes("Количество: 3 шт."));
+        assert.ok(String(payload.text).includes("Сумма по позиции: 75000 RUB"));
         assert.ok(String(payload.text).includes("Итого:"));
     });
 

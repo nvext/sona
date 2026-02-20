@@ -10,6 +10,7 @@ import productDetailsHandler from "~~/server/infrastructure/api/products/[cardId
 import { callApi } from "./helpers";
 import {
     DbCaptureCartSnapshotQuery,
+    DbGetCartItemsQuery,
     DbGetCatalogPageQuery,
     PgCartItemRepo,
     PgCartRepo,
@@ -76,6 +77,7 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
     const productSnapshotRepo = new PgProductSnapshotRepo();
 
     const getCatalogPageQuery = new DbGetCatalogPageQuery();
+    const getCartItemsQuery = new DbGetCartItemsQuery();
     const captureCartSnapshotQuery = new DbCaptureCartSnapshotQuery();
 
     const passwordHasher = new Argon2PasswordHasher();
@@ -102,6 +104,7 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
         },
         queries: {
             getCatalogPageQuery,
+            getCartItemsQuery,
             captureCartSnapshotQuery,
         },
         services: {

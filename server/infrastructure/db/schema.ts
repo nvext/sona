@@ -197,6 +197,7 @@ export const productSnapshots = pgTable("product_snapshots", {
     width: integer("width").notNull(),
     height: integer("height").notNull(),
     thickness: integer("thickness").notNull(),
+    quantity: integer("quantity").notNull(),
     price: integer("price").notNull(),
     currency: text("currency").$type<(typeof currencies)[number]>().notNull(),
     capturedAt: timestamp("captured_at", { mode: "date" }).notNull(),

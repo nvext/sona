@@ -45,6 +45,7 @@ const baseSnapshots: ProductSnapshot[] = [
         width: 1000,
         height: 500,
         thickness: 30,
+        quantity: 2,
         price: 1000,
         currency: "RUB",
         capturedAt: new Date(),

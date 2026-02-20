@@ -6,11 +6,13 @@ import { EntityIdGenerator } from "~~/server/shared/id";
 import { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
 import { OrderRequest } from "~~/server/domain/order-request/entity";
 import { OperationFailedError } from "~~/server/shared/errors/OperationFailedError";
+import { ProductSnapshotRepo } from "~~/server/domain/product-snapshot/repo";
 
 export class CreateOrderRequestDraft {
     constructor(
         private readonly cartRepo: CartRepo,
         private readonly orderRequestRepo: OrderRequestRepo,
+        private readonly productSnapshotRepo: ProductSnapshotRepo,
         private readonly captureCartSnapshotQuery: CaptureCartSnapshotQuery,
         private readonly entityIdGenerator: EntityIdGenerator,
     ) {}
@@ -43,6 +45,7 @@ export class CreateOrderRequestDraft {
                 cartId: cart.id,
                 orderRequestId: orderRequest.id,
             });
+            await this.productSnapshotRepo.addMany({ entities: snapshots });
 
             return {
                 orderRequest,

@@ -53,6 +53,7 @@ export class DbCaptureCartSnapshotQuery implements CaptureCartSnapshotQuery {
                 width: product.width,
                 height: product.height,
                 thickness: product.thickness,
+                quantity: item.quantity,
                 price: product.price,
                 currency: product.currency,
                 capturedAt,

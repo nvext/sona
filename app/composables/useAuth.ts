@@ -10,8 +10,16 @@ type RegisterInput = {
     password: string;
 };
 
+type AuthUser = {
+    id: string;
+    email: string | null;
+    phone: string | null;
+    status: string;
+};
+
 export function useAuth() {
     const isAuthenticated = useState<boolean>("auth-is-authenticated", () => false);
+    const user = useState<AuthUser | null>("auth-user", () => null);
     const refreshInFlight = useState<Promise<boolean> | null>("auth-refresh-in-flight", () => null);
 
     async function login(input: LoginInput) {
@@ -21,6 +29,7 @@ export function useAuth() {
             credentials: "include",
         });
         isAuthenticated.value = true;
+        await me();
     }
 
     async function register(input: RegisterInput) {
@@ -30,6 +39,7 @@ export function useAuth() {
             credentials: "include",
         });
         isAuthenticated.value = true;
+        await me();
     }
 
     async function refresh(): Promise<boolean> {
@@ -40,25 +50,29 @@ export function useAuth() {
             });
             if (response?.ok) {
                 isAuthenticated.value = true;
+                await me();
                 return true;
             }
         } catch {
             // ignore and fall through
         }
         isAuthenticated.value = false;
+        user.value = null;
         return false;
     }
 
     async function logout() {
         await $fetch("/api/auth/logout", { method: "POST", credentials: "include" }).catch(() => null);
         isAuthenticated.value = false;
+        user.value = null;
     }
 
     async function me() {
-        const response = await $fetch<{ user: { id: string } | null }>("/api/auth/me", {
+        const response = await $fetch<{ user: AuthUser | null }>("/api/auth/me", {
             credentials: "include",
         });
         isAuthenticated.value = Boolean(response.user);
+        user.value = response.user;
         return response.user;
     }
 
@@ -89,6 +103,7 @@ export function useAuth() {
 
     return {
         isAuthenticated,
+        user,
         login,
         register,
         refresh,

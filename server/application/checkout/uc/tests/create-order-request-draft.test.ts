@@ -10,6 +10,7 @@ import { OperationFailedError } from "~~/server/shared/errors/OperationFailedErr
 import type { Cart } from "~~/server/domain/cart/entity";
 import type { OrderRequest } from "~~/server/domain/order-request/entity";
 import type { ProductSnapshot } from "~~/server/domain/product-snapshot/entity";
+import type { ProductSnapshotRepo } from "~~/server/domain/product-snapshot/repo";
 
 const baseCart: Cart = {
     id: "cart-1",
@@ -50,6 +51,7 @@ const baseSnapshot: ProductSnapshot = {
     width: 100,
     height: 100,
     thickness: 10,
+    quantity: 2,
     price: 1000,
     currency: "RUB",
     capturedAt: new Date(),
@@ -69,6 +71,7 @@ type BuildOptions = {
 
 function makeSut(options: BuildOptions) {
     let capturedSnapshotInput: { cartId: string; orderRequestId: string } | null = null;
+    let savedSnapshots: ProductSnapshot[] | null = null;
 
     const cartRepo = {
         async getById() {
@@ -103,19 +106,31 @@ function makeSut(options: BuildOptions) {
         },
     } as unknown as CaptureCartSnapshotQuery;
 
+    const productSnapshotRepo = {
+        async addMany(input: { entities: ProductSnapshot[] }) {
+            savedSnapshots = input.entities;
+            return { data: input.entities, meta: undefined };
+        },
+    } as unknown as ProductSnapshotRepo;
+
     const uc = new CreateOrderRequestDraft(
         cartRepo,
         orderRequestRepo,
+        productSnapshotRepo,
         captureCartSnapshotQuery,
         new StaticEntityIdGenerator(),
     );
 
-    return { uc, getCapturedSnapshotInput: () => capturedSnapshotInput };
+    return {
+        uc,
+        getCapturedSnapshotInput: () => capturedSnapshotInput,
+        getSavedSnapshots: () => savedSnapshots,
+    };
 }
 
 describe("CreateOrderRequestDraft", () => {
     test("returns orderRequest and snapshots", async () => {
-        const { uc, getCapturedSnapshotInput } = makeSut({ cart: baseCart });
+        const { uc, getCapturedSnapshotInput, getSavedSnapshots } = makeSut({ cart: baseCart });
 
         const result = await uc.execute({
             cartId: baseCart.id,
@@ -129,6 +144,7 @@ describe("CreateOrderRequestDraft", () => {
             cartId: baseCart.id,
             orderRequestId: baseOrderRequest.id,
         });
+        assert.equal(getSavedSnapshots()?.length, 1);
     });
 
     test("throws NotFoundError when cart is missing", async () => {

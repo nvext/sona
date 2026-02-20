@@ -72,6 +72,7 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
         createOrderRequestDraft: new CreateOrderRequestDraft(
             container.repos.cartRepo,
             container.repos.orderRequestRepo,
+            container.repos.productSnapshotRepo,
             container.queries.captureCartSnapshotQuery,
             container.services.entityIdGenerator,
         ),

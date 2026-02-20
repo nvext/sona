@@ -35,6 +35,7 @@ describe("PgProductSnapshotRepo", () => {
                 width: 100,
                 height: 100,
                 thickness: 10,
+                quantity: 2,
                 price: 1000,
                 currency: "RUB",
                 capturedAt: FIXED_NOW,
