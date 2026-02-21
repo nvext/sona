@@ -67,7 +67,8 @@
                     <p class="text-5xl">{{ currentProduct?.price }} ₽</p>
 
                     <button
-                        class="text-xl py-6.25 text-fg bg-dark-bg flex-1 rounded-[100px] relative disabled:opacity-50"
+                        v-if="currentCartQuantity === 0"
+                        class="text-xl h-20 text-fg bg-dark-bg flex-1 rounded-[100px] relative cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         type="button"
                         :disabled="!currentProduct || !currentColor"
                         @click="handleAddToCart">
@@ -77,6 +78,27 @@
                             <img class="object-cover h-2/5" src="/icons/arrow.svg" alt="" />
                         </div>
                     </button>
+
+                    <div
+                        v-else
+                        class="bg-dark-bg text-fg flex-1 h-20 rounded-[100px] px-4 flex items-center justify-between">
+                        <button
+                            class="size-12.5 rounded-full border border-fg/30 cursor-pointer flex items-center justify-center text-3xl leading-none"
+                            type="button"
+                            @click="handleDecrementCurrent">
+                            -
+                        </button>
+                        <div class="text-center">
+                            <p class="text-xs opacity-80 uppercase tracking-wide">В корзине</p>
+                            <p class="text-2xl leading-none">{{ currentCartQuantity }}</p>
+                        </div>
+                        <button
+                            class="size-12.5 rounded-full border border-fg/30 cursor-pointer flex items-center justify-center text-3xl leading-none"
+                            type="button"
+                            @click="handleIncrementCurrent">
+                            +
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -125,7 +147,7 @@ const relatedProducts = computed<CatalogCardItem[]>(() => relatedCatalog.value?.
 const selectedColorId = ref<string | null>(null);
 const selectedSizeKey = ref<string | null>(null);
 const selectedThickness = ref<number | null>(null);
-const { addItem } = useCart();
+const { items, increment, decrement, addItem } = useCart();
 const { isAuthenticated } = useAuth();
 
 watch(
@@ -231,6 +253,21 @@ const currentProduct = computed(() => {
     return filtered[0] ?? productsForColor.value[0] ?? product.value.products[0] ?? null;
 });
 
+const currentCartItem = computed(() => {
+    if (!currentProduct.value) {
+        return null;
+    }
+    return (
+        items.value.find(
+            (item) =>
+                item.productId === currentProduct.value?.id &&
+                item.productColorId === currentProduct.value?.productColorId,
+        ) ?? null
+    );
+});
+
+const currentCartQuantity = computed(() => currentCartItem.value?.quantity ?? 0);
+
 async function handleAddToCart() {
     if (!product.value || !currentProduct.value || !currentColor.value) {
         return;
@@ -245,5 +282,30 @@ async function handleAddToCart() {
         productId: item.id,
         productColorId: color.id,
     });
+}
+
+async function handleIncrementCurrent() {
+    if (!currentProduct.value || !currentColor.value) {
+        return;
+    }
+    if (!isAuthenticated.value) {
+        await navigateTo(`/login?next=${encodeURIComponent(route.fullPath)}`);
+        return;
+    }
+
+    await increment(currentProduct.value.id, currentColor.value.id);
+}
+
+async function handleDecrementCurrent() {
+    const cartItem = currentCartItem.value;
+    if (!cartItem) {
+        return;
+    }
+    if (!isAuthenticated.value) {
+        await navigateTo(`/login?next=${encodeURIComponent(route.fullPath)}`);
+        return;
+    }
+
+    await decrement(cartItem.id);
 }
 </script>
