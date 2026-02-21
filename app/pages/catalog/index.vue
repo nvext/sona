@@ -44,13 +44,15 @@
                             : "Попробуйте ослабить фильтр по цене, чтобы увидеть больше доступных вариантов."
                     }}
                 </p>
-                <button
+                <UButton
                     v-if="products.length > 0"
                     type="button"
-                    class="inline-flex mt-2 text-fg bg-dark-bg rounded-[100px] px-6 py-3 cursor-pointer"
+                    color="neutral"
+                    variant="solid"
+                    class="inline-flex mt-2 px-6 py-3 !text-fg !bg-dark-bg"
                     @click="resetPriceFilter">
                     Сбросить фильтр
-                </button>
+                </UButton>
             </div>
         </div>
     </div>

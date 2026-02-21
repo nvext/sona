@@ -47,6 +47,10 @@ html {
     font-family: "HelveticaNeueCyr", sans-serif;
 }
 
+:root {
+    --font-ui-buttons: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 @theme {
     --font-sans: "HelveticaNeueCyr";
 }

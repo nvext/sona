@@ -64,24 +64,15 @@
                     </svg>
                 </button>
 
-                <NuxtLink
+                <UButton
                     v-else
                     to="/login"
-                    class="size-11 rounded-full border border-current/25 flex items-center justify-center cursor-pointer hover:bg-current/10 transition-colors"
-                    aria-label="Войти">
-                    <svg
-                        class="size-6"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true">
-                        <circle cx="12" cy="8" r="4"></circle>
-                        <path d="M4 20a8 8 0 0 1 16 0"></path>
-                    </svg>
-                </NuxtLink>
+                    color="neutral"
+                    variant="soft"
+                    icon="i-lucide-log-in"
+                    class="h-11 px-5">
+                    Войти
+                </UButton>
 
                 <div
                     v-if="isAuthenticated && profileMenuOpen"

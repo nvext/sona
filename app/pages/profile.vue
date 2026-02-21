@@ -40,12 +40,14 @@
                     <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
                     <p v-if="success" class="text-sm text-green-700">{{ success }}</p>
 
-                    <button
+                    <UButton
                         type="submit"
-                        class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        color="neutral"
+                        variant="solid"
+                        class="text-xl py-4 px-10 !text-fg !bg-dark-bg disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="saving || !canSubmit">
                         {{ saving ? "Сохранение..." : "Сохранить профиль" }}
-                    </button>
+                    </UButton>
                 </form>
             </div>
 

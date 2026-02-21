@@ -22,38 +22,42 @@
                 <div class="py-2.5 border-b border-dark-bg flex justify-between">
                     <p class="text-xl mb-2">Размер</p>
                     <div class="flex flex-wrap gap-2">
-                        <button
+                        <UButton
                             v-for="size in availableSizes"
                             :key="size.key"
                             type="button"
-                            class="px-4 py-1.5 rounded-full border text-sm transition-colors"
+                            color="neutral"
+                            variant="outline"
+                            class="px-4 py-1.5 border text-sm transition-colors"
                             :class="
                                 selectedSizeKey === size.key
-                                    ? 'bg-dark-bg text-fg border-dark-bg'
-                                    : 'border-dark-bg/20'
+                                    ? '!bg-dark-bg !text-fg !border-dark-bg'
+                                    : '!border-dark-bg/20'
                             "
                             @click="selectedSizeKey = size.key">
                             {{ size.label }}
-                        </button>
+                        </UButton>
                     </div>
                 </div>
 
                 <div class="py-2.5 flex justify-between">
                     <p class="text-xl mb-2">Толщина</p>
                     <div class="flex flex-wrap gap-2">
-                        <button
+                        <UButton
                             v-for="thickness in availableThicknesses"
                             :key="thickness"
                             type="button"
-                            class="px-4 py-1.5 rounded-full border text-sm transition-colors"
+                            color="neutral"
+                            variant="outline"
+                            class="px-4 py-1.5 border text-sm transition-colors"
                             :class="
                                 selectedThickness === thickness
-                                    ? 'bg-dark-bg text-fg border-dark-bg'
-                                    : 'border-dark-bg/20'
+                                    ? '!bg-dark-bg !text-fg !border-dark-bg'
+                                    : '!border-dark-bg/20'
                             "
                             @click="selectedThickness = thickness">
                             {{ thickness }} мм
-                        </button>
+                        </UButton>
                     </div>
                 </div>
 
@@ -66,10 +70,12 @@
                 <div class="py-2.5 flex items-center gap-8.75">
                     <p class="text-5xl">{{ currentProduct?.price }} ₽</p>
 
-                    <button
+                    <UButton
                         v-if="currentCartQuantity === 0"
-                        class="text-xl h-20 text-fg bg-dark-bg flex-1 rounded-[100px] relative cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         type="button"
+                        color="neutral"
+                        variant="solid"
+                        class="text-xl h-20 !text-fg !bg-dark-bg flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="!currentProduct || !currentColor"
                         @click="handleAddToCart">
                         Добавить в корзину
@@ -77,27 +83,31 @@
                             class="size-12.5 bg-bg absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full flex justify-center items-center">
                             <img class="object-cover h-2/5" src="/icons/arrow.svg" alt="" />
                         </div>
-                    </button>
+                    </UButton>
 
                     <div
                         v-else
                         class="bg-dark-bg text-fg flex-1 h-20 rounded-[100px] px-4 flex items-center justify-between">
-                        <button
-                            class="size-12.5 rounded-full border border-fg/30 cursor-pointer flex items-center justify-center text-3xl leading-none"
+                        <UButton
                             type="button"
+                            color="neutral"
+                            variant="outline"
+                            class="size-12.5 !rounded-full !min-w-0 !p-0 !border-fg/30 !text-fg text-3xl leading-none flex items-center justify-center"
                             @click="handleDecrementCurrent">
                             -
-                        </button>
+                        </UButton>
                         <div class="text-center">
                             <p class="text-xs opacity-80 uppercase tracking-wide">В корзине</p>
                             <p class="text-2xl leading-none">{{ currentCartQuantity }}</p>
                         </div>
-                        <button
-                            class="size-12.5 rounded-full border border-fg/30 cursor-pointer flex items-center justify-center text-3xl leading-none"
+                        <UButton
                             type="button"
+                            color="neutral"
+                            variant="outline"
+                            class="size-12.5 !rounded-full !min-w-0 !p-0 !border-fg/30 !text-fg text-3xl leading-none flex items-center justify-center"
                             @click="handleIncrementCurrent">
                             +
-                        </button>
+                        </UButton>
                     </div>
                 </div>
             </div>

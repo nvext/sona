@@ -1,16 +1,24 @@
 <template>
     <div class="flex items-center gap-2">
-        <button
+        <UButton
             v-for="color in colors"
             :key="color.id"
             type="button"
-            class="rounded-full border border-dark-bg/20 transition-[width,box-shadow] duration-150"
+            color="neutral"
+            variant="ghost"
+            :aria-label="`Цвет ${color.id}`"
+            :ui="{
+                base: 'rounded-full border border-dark-bg/20 transition-[width,box-shadow] duration-150 p-0 min-w-0',
+                label: 'hidden',
+            }"
             :style="{
                 backgroundColor: color.hex,
                 height: `${sizePx}px`,
                 width: selectedId === color.id ? `${sizePx * 2.5}px` : `${sizePx}px`,
             }"
-            @click="selectedId = color.id" />
+            @click="selectedId = color.id">
+            {{ color.id }}
+        </UButton>
     </div>
 </template>
 

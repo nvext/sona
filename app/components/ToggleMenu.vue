@@ -1,8 +1,13 @@
 <template>
     <div class="bg-bg-1 rounded-3xl">
-        <button
-            class="px-5 py-3 w-full flex gap-2 justify-between cursor-pointer text-[15px]"
+        <UButton
             type="button"
+            color="neutral"
+            variant="ghost"
+            class="px-5 py-3 w-full flex gap-2 justify-between text-[15px]"
+            :ui="{
+                base: 'justify-between rounded-3xl',
+            }"
             @click="toggle">
             <slot />
             <img
@@ -11,7 +16,7 @@
                 :style="{
                     transform: isOpen ? 'rotate(-180deg)' : 'rotate(0deg)',
                 }" />
-        </button>
+        </UButton>
         <div
             ref="content"
             class="box-border overflow-hidden transition-[max-height]"

@@ -82,28 +82,37 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <button
-                        class="size-8 rounded-full border border-dark-bg/20 cursor-pointer"
+                    <UButton
                         type="button"
+                        color="neutral"
+                        variant="outline"
+                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20"
                         :disabled="item.quantity <= 1"
                         :class="item.quantity <= 1 ? 'opacity-50 cursor-not-allowed' : ''"
                         @click="decrement(item.id)">
                         -
-                    </button>
+                    </UButton>
                     <span class="w-8 text-center">{{ item.quantity }}</span>
-                    <button
-                        class="size-8 rounded-full border border-dark-bg/20 cursor-pointer"
+                    <UButton
                         type="button"
+                        color="neutral"
+                        variant="outline"
+                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20"
                         @click="increment(item.productId, item.productColorId)">
                         +
-                    </button>
+                    </UButton>
                 </div>
 
                 <div class="text-xl w-28 text-right">{{ item.price * item.quantity }} ₽</div>
 
-                <button class="text-sm underline cursor-pointer" type="button" @click="removeItem(item.id)">
+                <UButton
+                    type="button"
+                    color="neutral"
+                    variant="link"
+                    class="text-sm underline"
+                    @click="removeItem(item.id)">
                     Удалить
-                </button>
+                </UButton>
             </div>
 
             <div class="grid gap-6 lg:grid-cols-[1fr_20rem] items-start">
@@ -147,12 +156,14 @@
 
                     <div class="flex justify-end items-center gap-6">
                         <p class="text-2xl">Итого: {{ total }} ₽</p>
-                        <button
-                            class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        <UButton
                             type="submit"
+                            color="neutral"
+                            variant="solid"
+                            class="text-xl py-4 px-10 !text-fg !bg-dark-bg disabled:opacity-50 disabled:cursor-not-allowed"
                             :disabled="checkoutLoading || !canSubmitCheckout">
                             {{ checkoutLoading ? "Отправка..." : "Оформить" }}
-                        </button>
+                        </UButton>
                     </div>
 
                     <p v-if="checkoutError" class="text-sm text-red-600">{{ checkoutError }}</p>

@@ -26,9 +26,13 @@
                 мембраны / Обтяжка акустической тканью / Монтаж крепежа или платформы / Отделка
                 дерева / Контроль качества / Упаковка / Доставка.
             </p>
-            <button type="button" class="bg-bg text-dark-fg px-28 py-7 rounded-3xl text-2xl">
+            <UButton
+                type="button"
+                color="neutral"
+                variant="solid"
+                class="!bg-bg !text-dark-fg px-28 py-7 text-2xl">
                 Подробнее
-            </button>
+            </UButton>
         </div>
     </section>
 
@@ -47,9 +51,13 @@
                 задачу и бюджет, согласуем макеты и запустим производство. Готовые вариации тоже
                 можно настраивать.
             </p>
-            <button type="button" class="bg-dark-bg text-fg px-28 py-7 rounded-3xl text-2xl">
+            <UButton
+                type="button"
+                color="neutral"
+                variant="solid"
+                class="!bg-dark-bg !text-fg px-28 py-7 text-2xl">
                 Подробнее
-            </button>
+            </UButton>
         </div>
     </section>
 </template>
