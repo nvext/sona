@@ -1,51 +1,67 @@
 <template>
-    <section class="px-25 py-12 max-w-160">
-        <h1 class="text-5xl mb-8">Вход</h1>
+    <section class="px-6 lg:px-25 py-12 min-h-[calc(100dvh-120px)] flex items-center justify-center">
+        <div class="w-full max-w-6xl grid gap-6 lg:grid-cols-[1fr_22rem]">
+            <div class="bg-bg-1 rounded-3xl p-8 lg:p-10 border border-dark-bg/10">
+                <h1 class="text-5xl mb-8">Вход</h1>
 
-        <div class="flex gap-4 mb-6">
-            <button
-                type="button"
-                class="px-4 py-2 rounded-full border text-sm"
-                :class="mode === 'login' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
-                @click="mode = 'login'">
-                Вход
-            </button>
-            <button
-                type="button"
-                class="px-4 py-2 rounded-full border text-sm"
-                :class="mode === 'register' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
-                @click="mode = 'register'">
-                Регистрация
-            </button>
+                <div class="flex gap-4 mb-6">
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-full border text-sm cursor-pointer"
+                        :class="mode === 'login' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                        @click="mode = 'login'">
+                        Вход
+                    </button>
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-full border text-sm cursor-pointer"
+                        :class="mode === 'register' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                        @click="mode = 'register'">
+                        Регистрация
+                    </button>
+                </div>
+
+                <form class="space-y-4" @submit.prevent="submit">
+                    <div>
+                        <label class="block text-sm mb-1">Email или телефон</label>
+                        <input
+                            v-model="identifier"
+                            type="text"
+                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                            placeholder="name@example.com" />
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Пароль</label>
+                        <input
+                            v-model="password"
+                            type="password"
+                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                            placeholder="•••••••" />
+                    </div>
+
+                    <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
+
+                    <button
+                        type="submit"
+                        class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50"
+                        :disabled="loading">
+                        {{ mode === 'login' ? 'Войти' : 'Создать аккаунт' }}
+                    </button>
+                </form>
+            </div>
+
+            <aside class="bg-dark-bg text-fg rounded-3xl p-8 flex flex-col justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-wide opacity-70">Кабинет</p>
+                    <h2 class="text-3xl mt-2">Быстрый доступ</h2>
+                </div>
+                <ul class="space-y-3 text-sm opacity-90">
+                    <li>Сохраненные контакты для заявки</li>
+                    <li>Быстрое оформление из корзины</li>
+                    <li>Актуальные данные профиля в одном месте</li>
+                </ul>
+            </aside>
         </div>
-
-        <form class="space-y-4" @submit.prevent="submit">
-            <div>
-                <label class="block text-sm mb-1">Email или телефон</label>
-                <input
-                    v-model="identifier"
-                    type="text"
-                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg-1"
-                    placeholder="name@example.com" />
-            </div>
-            <div>
-                <label class="block text-sm mb-1">Пароль</label>
-                <input
-                    v-model="password"
-                    type="password"
-                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg-1"
-                    placeholder="•••••••" />
-            </div>
-
-            <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
-
-            <button
-                type="submit"
-                class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px]"
-                :disabled="loading">
-                {{ mode === 'login' ? 'Войти' : 'Создать аккаунт' }}
-            </button>
-        </form>
     </section>
 </template>
 

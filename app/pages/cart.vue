@@ -10,7 +10,7 @@
             Корзина пуста.
         </div>
 
-        <div v-else class="space-y-10">
+        <div v-else class="space-y-10 max-w-6xl mx-auto">
             <div
                 v-for="item in items"
                 :key="item.id"
@@ -51,57 +51,69 @@
                 </button>
             </div>
 
-            <form class="bg-bg-1 rounded-3xl p-8 space-y-6" @submit.prevent="submitOrder">
-                <h2 class="text-3xl">Оформление заказа</h2>
+            <div class="grid gap-6 lg:grid-cols-[1fr_20rem] items-start">
+                <form class="bg-bg-1 rounded-3xl p-8 space-y-6 border border-dark-bg/10" @submit.prevent="submitOrder">
+                    <h2 class="text-3xl">Оформление заказа</h2>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="space-y-2">
-                        <span class="text-sm">Имя</span>
-                        <input
-                            v-model="checkoutForm.name"
-                            type="text"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="Иван" />
-                    </label>
-                    <label class="space-y-2">
-                        <span class="text-sm">Телефон</span>
-                        <input
-                            v-model="checkoutForm.phone"
-                            type="tel"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="+7..." />
-                    </label>
-                    <label class="space-y-2">
-                        <span class="text-sm">Email</span>
-                        <input
-                            v-model="checkoutForm.email"
-                            type="email"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="name@example.com" />
-                    </label>
-                    <label class="space-y-2">
-                        <span class="text-sm">Telegram</span>
-                        <input
-                            v-model="checkoutForm.telegram"
-                            type="text"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="@username" />
-                    </label>
-                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="space-y-2">
+                            <span class="text-sm">Имя</span>
+                            <input
+                                v-model="checkoutForm.name"
+                                type="text"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="Иван" />
+                        </label>
+                        <label class="space-y-2">
+                            <span class="text-sm">Телефон</span>
+                            <input
+                                v-model="checkoutForm.phone"
+                                type="tel"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="+7..." />
+                        </label>
+                        <label class="space-y-2">
+                            <span class="text-sm">Email</span>
+                            <input
+                                v-model="checkoutForm.email"
+                                type="email"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="name@example.com" />
+                        </label>
+                        <label class="space-y-2">
+                            <span class="text-sm">Telegram</span>
+                            <input
+                                v-model="checkoutForm.telegram"
+                                type="text"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="@username" />
+                        </label>
+                    </div>
 
-                <div class="flex justify-end items-center gap-6">
-                    <p class="text-2xl">Итого: {{ total }} ₽</p>
-                    <button
-                        class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        type="submit"
-                        :disabled="checkoutLoading || !canSubmitCheckout">
-                        {{ checkoutLoading ? "Отправка..." : "Оформить" }}
-                    </button>
-                </div>
+                    <div class="flex justify-end items-center gap-6">
+                        <p class="text-2xl">Итого: {{ total }} ₽</p>
+                        <button
+                            class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            type="submit"
+                            :disabled="checkoutLoading || !canSubmitCheckout">
+                            {{ checkoutLoading ? "Отправка..." : "Оформить" }}
+                        </button>
+                    </div>
 
-                <p v-if="checkoutError" class="text-sm text-red-600">{{ checkoutError }}</p>
-                <p v-if="checkoutSuccess" class="text-sm text-green-700">{{ checkoutSuccess }}</p>
-            </form>
+                    <p v-if="checkoutError" class="text-sm text-red-600">{{ checkoutError }}</p>
+                    <p v-if="checkoutSuccess" class="text-sm text-green-700">{{ checkoutSuccess }}</p>
+                </form>
+
+                <aside class="bg-dark-bg text-fg rounded-3xl p-6 lg:sticky lg:top-34">
+                    <p class="text-sm uppercase tracking-wide opacity-70">Заказ</p>
+                    <p class="text-2xl mt-2 mb-4">Перед отправкой</p>
+                    <ul class="space-y-2 text-sm opacity-90">
+                        <li>Проверьте телефон для связи</li>
+                        <li>Имя и email подставляются из профиля</li>
+                        <li>После отправки менеджер пишет в Telegram</li>
+                    </ul>
+                </aside>
+            </div>
         </div>
     </section>
 </template>

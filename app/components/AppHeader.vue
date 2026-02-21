@@ -16,19 +16,90 @@
             </ul>
         </nav>
 
-        <div class="justify-self-end flex items-center gap-4">
-            <NuxtLink to="/cart">
-                Корзина<span v-if="cartCount > 0"> ({{ cartCount }})</span>
+        <div class="justify-self-end flex items-center gap-2">
+            <NuxtLink
+                to="/cart"
+                class="relative size-11 rounded-full border border-current/25 flex items-center justify-center cursor-pointer hover:bg-current/10 transition-colors"
+                aria-label="Корзина">
+                <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <circle cx="9" cy="20" r="1"></circle>
+                    <circle cx="17" cy="20" r="1"></circle>
+                    <path d="M3 4h2l2.6 10.4a1 1 0 0 0 1 .76h8.7a1 1 0 0 0 .97-.77L21 7H7"></path>
+                </svg>
+                <span
+                    v-if="cartCount > 0"
+                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-dark-bg text-fg text-[11px] leading-5 text-center border border-bg">
+                    {{ cartCount }}
+                </span>
             </NuxtLink>
-            <NuxtLink v-if="isAuthenticated" to="/profile" class="underline">Профиль</NuxtLink>
-            <button
-                v-if="isAuthenticated"
-                type="button"
-                class="underline"
-                @click="logout">
-                Выйти
-            </button>
-            <NuxtLink v-else to="/login" class="underline">Войти</NuxtLink>
+
+            <div
+                ref="profileMenuRef"
+                class="relative">
+                <button
+                    v-if="isAuthenticated"
+                    type="button"
+                    class="size-11 rounded-full border border-current/25 flex items-center justify-center cursor-pointer hover:bg-current/10 transition-colors"
+                    aria-label="Профиль"
+                    @click="toggleProfileMenu">
+                    <svg
+                        class="size-6"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4 20a8 8 0 0 1 16 0"></path>
+                    </svg>
+                </button>
+
+                <NuxtLink
+                    v-else
+                    to="/login"
+                    class="size-11 rounded-full border border-current/25 flex items-center justify-center cursor-pointer hover:bg-current/10 transition-colors"
+                    aria-label="Войти">
+                    <svg
+                        class="size-6"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4 20a8 8 0 0 1 16 0"></path>
+                    </svg>
+                </NuxtLink>
+
+                <div
+                    v-if="isAuthenticated && profileMenuOpen"
+                    class="absolute right-0 top-12 z-40 min-w-42 rounded-2xl border border-current/25 bg-bg text-dark-fg p-2 shadow-md">
+                    <NuxtLink
+                        to="/profile"
+                        class="w-full px-3 py-2 rounded-xl hover:bg-bg-1 transition-colors text-left block cursor-pointer"
+                        @click="closeProfileMenu">
+                        Профиль
+                    </NuxtLink>
+                    <button
+                        type="button"
+                        class="w-full px-3 py-2 rounded-xl hover:bg-bg-1 transition-colors text-left cursor-pointer"
+                        @click="handleLogout">
+                        Выйти
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 </template>
@@ -39,8 +110,46 @@ import IconsLogo from './icons/Logo.vue';
 const route = useRoute();
 const { count: cartCount } = useCart();
 const { isAuthenticated, logout } = useAuth();
+const profileMenuOpen = ref(false);
+const profileMenuRef = useTemplateRef("profileMenuRef");
 
 const isMainPage = computed(() => route.path === "/");
+
+function toggleProfileMenu() {
+    profileMenuOpen.value = !profileMenuOpen.value;
+}
+
+function closeProfileMenu() {
+    profileMenuOpen.value = false;
+}
+
+async function handleLogout() {
+    closeProfileMenu();
+    await logout();
+}
+
+function onDocumentClick(event: MouseEvent) {
+    if (!profileMenuOpen.value) {
+        return;
+    }
+
+    const target = event.target as Node | null;
+    if (!target) {
+        return;
+    }
+
+    if (!profileMenuRef.value?.contains(target)) {
+        closeProfileMenu();
+    }
+}
+
+onMounted(() => {
+    document.addEventListener("click", onDocumentClick);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", onDocumentClick);
+});
 
 type NavItem = {
     label: string;

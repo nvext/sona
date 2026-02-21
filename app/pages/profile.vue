@@ -1,50 +1,66 @@
 <template>
-    <section class="px-25 py-12 max-w-180">
-        <h1 class="text-5xl mb-8">Профиль</h1>
+    <section class="px-6 lg:px-25 py-12 min-h-[calc(100dvh-120px)] flex items-center justify-center">
+        <div class="w-full max-w-6xl grid gap-6 lg:grid-cols-[1fr_22rem]">
+            <div class="bg-bg-1 rounded-3xl p-8 lg:p-10 border border-dark-bg/10">
+                <h1 class="text-5xl mb-8">Профиль</h1>
 
-        <div v-if="pageLoading" class="text-dark-fg-2">
-            Загрузка профиля...
+                <div v-if="pageLoading" class="text-dark-fg-2">
+                    Загрузка профиля...
+                </div>
+
+                <form v-else class="space-y-6" @submit.prevent="submit">
+                    <label class="block space-y-2">
+                        <span class="text-sm">Имя</span>
+                        <input
+                            v-model="form.name"
+                            type="text"
+                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                            placeholder="Иван" />
+                    </label>
+
+                    <label class="block space-y-2">
+                        <span class="text-sm">Email</span>
+                        <input
+                            v-model="form.email"
+                            type="email"
+                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                            placeholder="name@example.com" />
+                    </label>
+
+                    <label class="block space-y-2">
+                        <span class="text-sm">Телефон</span>
+                        <input
+                            v-model="form.phone"
+                            type="tel"
+                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                            placeholder="+7..." />
+                    </label>
+
+                    <p class="text-sm text-dark-fg-2">Хотя бы одно поле должно быть заполнено.</p>
+                    <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
+                    <p v-if="success" class="text-sm text-green-700">{{ success }}</p>
+
+                    <button
+                        type="submit"
+                        class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        :disabled="saving || !canSubmit">
+                        {{ saving ? "Сохранение..." : "Сохранить профиль" }}
+                    </button>
+                </form>
+            </div>
+
+            <aside class="bg-dark-bg text-fg rounded-3xl p-8 flex flex-col justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-wide opacity-70">Данные</p>
+                    <h2 class="text-3xl mt-2">Личный кабинет</h2>
+                </div>
+                <ul class="space-y-3 text-sm opacity-90">
+                    <li>Имя подставляется при оформлении заказа</li>
+                    <li>Можно хранить и email, и телефон</li>
+                    <li>Изменения применяются сразу</li>
+                </ul>
+            </aside>
         </div>
-
-        <form v-else class="space-y-6 bg-bg-1 rounded-3xl p-8" @submit.prevent="submit">
-            <label class="block space-y-2">
-                <span class="text-sm">Имя</span>
-                <input
-                    v-model="form.name"
-                    type="text"
-                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                    placeholder="Иван" />
-            </label>
-
-            <label class="block space-y-2">
-                <span class="text-sm">Email</span>
-                <input
-                    v-model="form.email"
-                    type="email"
-                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                    placeholder="name@example.com" />
-            </label>
-
-            <label class="block space-y-2">
-                <span class="text-sm">Телефон</span>
-                <input
-                    v-model="form.phone"
-                    type="tel"
-                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                    placeholder="+7..." />
-            </label>
-
-            <p class="text-sm text-dark-fg-2">Хотя бы одно поле должно быть заполнено.</p>
-            <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
-            <p v-if="success" class="text-sm text-green-700">{{ success }}</p>
-
-            <button
-                type="submit"
-                class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                :disabled="saving || !canSubmit">
-                {{ saving ? "Сохранение..." : "Сохранить профиль" }}
-            </button>
-        </form>
     </section>
 </template>
 
