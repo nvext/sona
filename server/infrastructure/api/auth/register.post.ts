@@ -27,6 +27,7 @@ export default defineApiHandler(async (event) => {
   return {
     user: {
       id: result.user.id,
+      name: result.user.name,
       email: result.user.email,
       phone: result.user.phone,
       status: result.user.status,

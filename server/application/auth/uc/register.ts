@@ -1,6 +1,6 @@
-import { UserRepo } from "~~/server/domain/user/repo";
-import { PasswordHasher } from "~~/server/shared/hash";
-import { EntityIdGenerator } from "~~/server/shared/id";
+import type { UserRepo } from "~~/server/domain/user/repo";
+import type { PasswordHasher } from "~~/server/shared/hash";
+import type { EntityIdGenerator } from "~~/server/shared/id";
 import { ConflictError } from "~~/server/shared/errors";
 
 export class Register {
@@ -31,6 +31,7 @@ export class Register {
         const { data: user } = await this.userRepo.add({
             entity: {
                 id: this.entityIdGenerator.generate(),
+                name: null,
                 email: normalizedEmail,
                 phone: normalizedPhone,
                 passwordHash: await this.passwordHasher.hash(input.password),

@@ -46,6 +46,7 @@ export async function seedUser() {
     await userRepo.add({
         entity: {
             id: "user-1",
+            name: "Иван",
             email: "user@example.com",
             phone: "+10000000000",
             passwordHash: "hash",

@@ -45,6 +45,7 @@ describe("Register", () => {
 
         assert.equal(addedUsers.length, 1);
         assert.equal(addedUsers[0].id, "user-1");
+        assert.equal(addedUsers[0].name, null);
         assert.equal(addedUsers[0].email, "user@example.com");
         assert.equal(addedUsers[0].phone, null);
         assert.equal(addedUsers[0].passwordHash, "hashed:secret");
@@ -54,6 +55,7 @@ describe("Register", () => {
     test("throws ConflictError when email already exists", async () => {
         const existingUser: User = {
             id: "existing-user",
+            name: null,
             email: "user@example.com",
             phone: null,
             passwordHash: "hash",
@@ -95,6 +97,7 @@ describe("Register", () => {
     test("throws ConflictError when phone already exists", async () => {
         const existingUser: User = {
             id: "existing-user",
+            name: null,
             email: null,
             phone: "+10000000000",
             passwordHash: "hash",

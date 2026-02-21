@@ -144,6 +144,9 @@ function applyProfileDefaults() {
     if (!user.value) {
         return;
     }
+    if (!checkoutForm.name.trim() && user.value.name) {
+        checkoutForm.name = user.value.name;
+    }
     if (!checkoutForm.email.trim() && user.value.email) {
         checkoutForm.email = user.value.email;
     }

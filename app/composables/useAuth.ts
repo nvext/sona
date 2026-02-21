@@ -11,12 +11,14 @@ type RegisterInput = {
 };
 
 type UpdateProfileInput = {
+    name?: string | null;
     email?: string | null;
     phone?: string | null;
 };
 
 type AuthUser = {
     id: string;
+    name: string | null;
     email: string | null;
     phone: string | null;
     status: string;

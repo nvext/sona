@@ -7,6 +7,7 @@ import { ConflictError, NotFoundError, ValidationError } from "~~/server/shared/
 
 const baseUser: User = {
     id: "user-1",
+    name: null,
     email: "user@example.com",
     phone: "+10000000000",
     passwordHash: "hash",
@@ -45,9 +46,44 @@ describe("UpdateProfile", () => {
         });
 
         assert.equal(result.user.email, "new@example.com");
+        assert.equal(result.user.name, null);
         assert.equal(result.user.phone, baseUser.phone);
         assert.equal(appliedPatch.id, baseUser.id);
         assert.equal(appliedPatch.email, "new@example.com");
+        assert.ok(appliedPatch.updatedAt instanceof Date);
+    });
+
+    test("updates and normalizes name", async () => {
+        let storedUser: User = { ...baseUser };
+        let appliedPatch: any = null;
+
+        const userRepo = {
+            async getById() {
+                return { data: storedUser, meta: undefined };
+            },
+            async getByEmail() {
+                return { data: null, meta: undefined };
+            },
+            async getByPhone() {
+                return { data: null, meta: undefined };
+            },
+            async update(input: any) {
+                appliedPatch = input.patch;
+                storedUser = { ...storedUser, ...input.patch };
+                return { data: storedUser, meta: undefined };
+            },
+        } as unknown as UserRepo;
+
+        const uc = new UpdateProfile(userRepo);
+        const result = await uc.execute({
+            userId: baseUser.id,
+            name: "  Иван Петров  ",
+        });
+
+        assert.equal(result.user.name, "Иван Петров");
+        assert.equal(result.user.email, baseUser.email);
+        assert.equal(result.user.phone, baseUser.phone);
+        assert.equal(appliedPatch.name, "Иван Петров");
         assert.ok(appliedPatch.updatedAt instanceof Date);
     });
 
@@ -61,6 +97,7 @@ describe("UpdateProfile", () => {
                     data: {
                         ...baseUser,
                         id: "other-user",
+                        name: "Other",
                         email: "taken@example.com",
                     },
                     meta: undefined,

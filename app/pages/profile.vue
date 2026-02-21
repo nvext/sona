@@ -8,6 +8,15 @@
 
         <form v-else class="space-y-6 bg-bg-1 rounded-3xl p-8" @submit.prevent="submit">
             <label class="block space-y-2">
+                <span class="text-sm">Имя</span>
+                <input
+                    v-model="form.name"
+                    type="text"
+                    class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                    placeholder="Иван" />
+            </label>
+
+            <label class="block space-y-2">
                 <span class="text-sm">Email</span>
                 <input
                     v-model="form.email"
@@ -48,6 +57,7 @@ const saving = ref(false);
 const error = ref<string | null>(null);
 const success = ref<string | null>(null);
 const form = reactive({
+    name: "",
     email: "",
     phone: "",
 });
@@ -59,11 +69,16 @@ const canSubmit = computed(() => {
 
     const email = form.email.trim();
     const phone = form.phone.trim();
+    const name = form.name.trim();
     if (email.length === 0 && phone.length === 0) {
         return false;
     }
 
-    return email !== (user.value.email ?? "") || phone !== (user.value.phone ?? "");
+    return (
+        name !== (user.value.name ?? "") ||
+        email !== (user.value.email ?? "") ||
+        phone !== (user.value.phone ?? "")
+    );
 });
 
 onMounted(async () => {
@@ -84,6 +99,7 @@ onMounted(async () => {
 });
 
 function fillFormFromUser() {
+    form.name = user.value?.name ?? "";
     form.email = user.value?.email ?? "";
     form.phone = user.value?.phone ?? "";
 }
@@ -95,12 +111,14 @@ async function submit() {
 
     const email = form.email.trim();
     const phone = form.phone.trim();
+    const name = form.name.trim();
 
     saving.value = true;
     error.value = null;
     success.value = null;
     try {
         await updateProfile({
+            name: name.length > 0 ? name : null,
             email: email.length > 0 ? email : null,
             phone: phone.length > 0 ? phone : null,
         });

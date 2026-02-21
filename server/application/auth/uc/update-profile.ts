@@ -10,6 +10,9 @@ export class UpdateProfile {
             throw new NotFoundError("User not found");
         }
 
+        const nextName = input.name === undefined
+            ? currentUser.name
+            : normalizeName(input.name);
         const nextEmail = input.email === undefined
             ? currentUser.email
             : normalizeEmail(input.email);
@@ -37,6 +40,7 @@ export class UpdateProfile {
 
         const patch: {
             id: string;
+            name?: string | null;
             email?: string | null;
             phone?: string | null;
             updatedAt: Date;
@@ -45,6 +49,9 @@ export class UpdateProfile {
             updatedAt: new Date(),
         };
 
+        if (input.name !== undefined) {
+            patch.name = nextName;
+        }
         if (input.email !== undefined) {
             patch.email = nextEmail;
         }
@@ -63,9 +70,18 @@ export class UpdateProfile {
 
 type UpdateProfileInput = {
     userId: string;
+    name?: string | null;
     email?: string | null;
     phone?: string | null;
 };
+
+function normalizeName(value: string | null): string | null {
+    if (value === null) {
+        return null;
+    }
+    const normalized = value.trim();
+    return normalized.length > 0 ? normalized : null;
+}
 
 function normalizeEmail(value: string | null): string | null {
     if (value === null) {

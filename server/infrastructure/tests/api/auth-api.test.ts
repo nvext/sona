@@ -22,6 +22,7 @@ describe("infra auth api", () => {
                         return {
                             user: {
                                 id: "user-1",
+                                name: null,
                                 email: "user@example.com",
                                 phone: null,
                                 status: "active",
@@ -212,6 +213,7 @@ describe("infra auth api", () => {
                             return {
                                 data: {
                                     id: "u1",
+                                    name: "Иван",
                                     email: "user@example.com",
                                     phone: "+10000000000",
                                     status: "active",
@@ -226,6 +228,7 @@ describe("infra auth api", () => {
 
         assert.equal(response.status, 200);
         assert.equal(response.body.user.id, "u1");
+        assert.equal(response.body.user.name, "Иван");
         assert.equal(response.body.user.email, "user@example.com");
         assert.equal(response.body.user.phone, "+10000000000");
     });
@@ -250,6 +253,7 @@ describe("infra auth api", () => {
                         return {
                             user: {
                                 id: "u1",
+                                name: "Иван Петров",
                                 email: "new@example.com",
                                 phone: "+10000000000",
                                 status: "active",
@@ -258,11 +262,17 @@ describe("infra auth api", () => {
                     },
                 },
             },
-            body: { email: "new@example.com" },
+            body: { name: "Иван Петров", email: "new@example.com" },
         });
 
         assert.equal(response.status, 200);
-        assert.deepEqual(received, { userId: "u1", email: "new@example.com", phone: undefined });
+        assert.deepEqual(received, {
+            userId: "u1",
+            name: "Иван Петров",
+            email: "new@example.com",
+            phone: undefined,
+        });
+        assert.equal(response.body.user.name, "Иван Петров");
         assert.equal(response.body.user.email, "new@example.com");
     });
 

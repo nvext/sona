@@ -2,6 +2,7 @@ import type { User } from "~~/server/domain/user/entity";
 
 export const baseUser: User = {
     id: "user-1",
+    name: "Иван",
     email: "user@example.com",
     phone: null,
     passwordHash: "password-hash",

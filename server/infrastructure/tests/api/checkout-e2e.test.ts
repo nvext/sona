@@ -356,6 +356,7 @@ describe("infra checkout e2e", () => {
         await container.repos.userRepo.add({
             entity: {
                 id: "user-max",
+                name: "Макс",
                 email: "user-max@example.com",
                 phone: null,
                 passwordHash: "hash",
