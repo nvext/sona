@@ -311,31 +311,13 @@ async function setCurrentProductQuantity(targetQuantity: number) {
     }
 
     const normalizedTarget = Math.max(1, Math.floor(targetQuantity));
-    const currentQuantity = currentCartQuantity.value;
-    const quantityDelta = normalizedTarget - currentQuantity;
-
-    if (quantityDelta === 0) {
-        return;
-    }
-
-    if (quantityDelta > 0) {
-        await addItem(
-            {
-                productId: currentProduct.value.id,
-                productColorId: currentColor.value.id,
-            },
-            quantityDelta,
-        );
-        return;
-    }
-
-    for (let index = 0; index < Math.abs(quantityDelta); index += 1) {
-        const currentItem = currentCartItem.value;
-        if (!currentItem) {
-            break;
-        }
-        await decrement(currentItem.id);
-    }
+    await addItem(
+        {
+            productId: currentProduct.value.id,
+            productColorId: currentColor.value.id,
+        },
+        normalizedTarget,
+    );
 }
 
 async function applyPresetQuantity(quantity: number) {

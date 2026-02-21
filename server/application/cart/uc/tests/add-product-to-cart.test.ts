@@ -73,7 +73,7 @@ type BuildOptions = {
 
 function makeSut(options: BuildOptions) {
     let addCalled = false;
-    let adjustDelta: number | null = null;
+    let updatedQuantity: number | null = null;
 
     let addedCart: Cart | null = null;
 
@@ -113,15 +113,16 @@ function makeSut(options: BuildOptions) {
             addCalled = true;
             return { data: input.entity, meta: undefined };
         },
-        async adjustQuantity(input: { id: string; delta: number }) {
-            adjustDelta = input.delta;
+        async update(input: { patch: Partial<CartItem> & { id: string } }) {
+            updatedQuantity = input.patch.quantity ?? null;
             if (options.existingCartItem === null) {
                 return { data: null, meta: undefined };
             }
             return {
                 data: {
                     ...options.existingCartItem,
-                    quantity: options.existingCartItem.quantity + input.delta,
+                    quantity: input.patch.quantity ?? options.existingCartItem.quantity,
+                    updatedAt: (input.patch.updatedAt as Date | undefined) ?? options.existingCartItem.updatedAt,
                 },
                 meta: undefined,
             };
@@ -141,7 +142,7 @@ function makeSut(options: BuildOptions) {
         uc,
         wasAddCalled: () => addCalled,
         getAddedCart: () => addedCart,
-        getAdjustDelta: () => adjustDelta,
+        getUpdatedQuantity: () => updatedQuantity,
     };
 }
 
@@ -231,7 +232,7 @@ describe("AddItemToCart", () => {
         assert.equal(result.data.quantity, 4);
     });
 
-    test("adjusts existing cart item by provided quantity", async () => {
+    test("sets existing cart item quantity to provided value", async () => {
         const existingCartItem: CartItem = {
             id: "item-1",
             cartId: baseCart.id,
@@ -242,7 +243,7 @@ describe("AddItemToCart", () => {
             createdAt: new Date(),
             updatedAt: new Date(),
         };
-        const { uc, getAdjustDelta } = makeSut({
+        const { uc, getUpdatedQuantity } = makeSut({
             product: baseProduct,
             color: baseColor,
             existingCartItem,
@@ -257,8 +258,8 @@ describe("AddItemToCart", () => {
         });
 
         assert.ok(result.data);
-        assert.equal(result.data.quantity, 5);
-        assert.equal(getAdjustDelta(), 3);
+        assert.equal(result.data.quantity, 3);
+        assert.equal(getUpdatedQuantity(), 3);
     });
 
     test("throws ValidationError on invalid quantity", async () => {

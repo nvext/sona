@@ -18,16 +18,16 @@ const baseCartItem: CartItem = {
 };
 
 describe("RemoveItemFromCart", () => {
-    test("decrements item quantity", async () => {
-        const adjustCalls: { id: string; delta: number }[] = [];
+    test("deletes item regardless of quantity", async () => {
+        let deletedId: string | null = null;
 
         const cartItemRepo = {
             async getById() {
                 return { data: baseCartItem, meta: undefined };
             },
-            async adjustQuantity(input: { id: string; delta: number }) {
-                adjustCalls.push(input);
-                return { data: { ...baseCartItem, quantity: 1 }, meta: undefined };
+            async delete(input: { id: string }) {
+                deletedId = input.id;
+                return { data: baseCartItem, meta: undefined };
             },
         } as unknown as CartItemRepo;
         const cartRepo = {
@@ -40,10 +40,7 @@ describe("RemoveItemFromCart", () => {
         const result = await uc.execute({ itemId: "item-1", userId: "user-1" });
 
         assert.ok(result.data);
-        assert.equal(result.data.quantity, 1);
-        assert.equal(adjustCalls.length, 1);
-        assert.equal(adjustCalls[0].id, "item-1");
-        assert.equal(adjustCalls[0].delta, -1);
+        assert.equal(deletedId, "item-1");
     });
 
     test("deletes item when quantity is 1", async () => {

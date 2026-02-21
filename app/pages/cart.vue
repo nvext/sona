@@ -86,20 +86,20 @@
                         type="button"
                         color="neutral"
                         variant="outline"
-                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20"
+                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20 !justify-center"
                         :disabled="item.quantity <= 1"
                         :class="item.quantity <= 1 ? 'opacity-50 cursor-not-allowed' : ''"
                         @click="decrement(item.id)">
-                        -
+                        <UIcon name="i-lucide-minus" class="size-4" />
                     </UButton>
                     <span class="w-8 text-center">{{ item.quantity }}</span>
                     <UButton
                         type="button"
                         color="neutral"
                         variant="outline"
-                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20"
+                        class="size-8 !rounded-full !p-0 !min-w-0 !border-dark-bg/20 !justify-center"
                         @click="increment(item.productId, item.productColorId)">
-                        +
+                        <UIcon name="i-lucide-plus" class="size-4" />
                     </UButton>
                 </div>
 

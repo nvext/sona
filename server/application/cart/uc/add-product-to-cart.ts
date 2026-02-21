@@ -77,7 +77,13 @@ export class AddItemToCart {
             });
         }
 
-        return this.cartItemRepo.adjustQuantity({ id: cartItem.id, delta: quantity });
+        return this.cartItemRepo.update({
+            patch: {
+                id: cartItem.id,
+                quantity,
+                updatedAt: now,
+            },
+        });
     }
 }
 

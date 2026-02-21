@@ -49,11 +49,28 @@ export function useCart() {
     }
 
     async function increment(productId: string, productColorId: string) {
-        await addItem({ productId, productColorId });
+        const current = items.value.find(
+            (item) => item.productId === productId && item.productColorId === productColorId,
+        );
+        const nextQuantity = (current?.quantity ?? 0) + 1;
+        await addItem({ productId, productColorId }, nextQuantity);
     }
 
     async function decrement(itemId: string) {
-        await removeItem(itemId);
+        const current = items.value.find((item) => item.id === itemId);
+        if (!current) {
+            return;
+        }
+
+        if (current.quantity <= 1) {
+            await removeItem(itemId);
+            return;
+        }
+
+        await addItem(
+            { productId: current.productId, productColorId: current.productColorId },
+            current.quantity - 1,
+        );
     }
 
     const total = computed(() =>

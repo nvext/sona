@@ -20,11 +20,7 @@ export class RemoveItemFromCart {
             throw new NotFoundError("Cart item not found");
         }
 
-        if (cartItem.quantity <= 1) {
-            return await this.cartItemRepo.delete({ id: cartItem.id });
-        }
-
-        return await this.cartItemRepo.adjustQuantity({ id: cartItem.id, delta: -1 });
+        return await this.cartItemRepo.delete({ id: cartItem.id });
     }
 }
 
