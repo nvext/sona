@@ -4,50 +4,50 @@
             <div class="bg-bg-1 rounded-3xl p-8 lg:p-10 border border-dark-bg/10">
                 <h1 class="text-5xl mb-8">Вход</h1>
 
-                <div class="flex gap-4 mb-6">
-                    <button
-                        type="button"
-                        class="px-4 py-2 rounded-full border text-sm cursor-pointer"
-                        :class="mode === 'login' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
-                        @click="mode = 'login'">
-                        Вход
-                    </button>
-                    <button
-                        type="button"
-                        class="px-4 py-2 rounded-full border text-sm cursor-pointer"
-                        :class="mode === 'register' ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
-                        @click="mode = 'register'">
-                        Регистрация
-                    </button>
-                </div>
+                <UTabs
+                    v-model="mode"
+                    :items="modeTabs"
+                    color="neutral"
+                    variant="pill"
+                    class="mb-6" />
 
-                <form class="space-y-4" @submit.prevent="submit">
-                    <div>
-                        <label class="block text-sm mb-1">Email или телефон</label>
-                        <input
-                            v-model="identifier"
+                <UForm :state="formState" class="space-y-4" @submit="submit">
+                    <UFormField name="identifier" label="Email или телефон" required>
+                        <UInput
+                            v-model="formState.identifier"
                             type="text"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="name@example.com" />
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-1">Пароль</label>
-                        <input
-                            v-model="password"
+                            color="neutral"
+                            variant="outline"
+                            autocomplete="username"
+                            placeholder="name@example.com"
+                            size="xl"
+                            class="w-full" />
+                    </UFormField>
+                    <UFormField name="password" label="Пароль" required>
+                        <UInput
+                            v-model="formState.password"
                             type="password"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="•••••••" />
-                    </div>
+                            color="neutral"
+                            variant="outline"
+                            autocomplete="current-password"
+                            placeholder="•••••••"
+                            size="xl"
+                            class="w-full" />
+                    </UFormField>
 
                     <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
 
-                    <button
+                    <UButton
                         type="submit"
-                        class="text-xl py-4 px-10 text-fg bg-dark-bg rounded-[100px] cursor-pointer disabled:opacity-50"
+                        color="neutral"
+                        variant="solid"
+                        :icon="mode === 'login' ? 'i-lucide-log-in' : 'i-lucide-user-plus'"
+                        size="lg"
+                        class="mt-3 text-lg py-3 px-8 !text-fg !bg-dark-bg disabled:opacity-50"
                         :disabled="loading">
                         {{ mode === 'login' ? 'Войти' : 'Создать аккаунт' }}
-                    </button>
-                </form>
+                    </UButton>
+                </UForm>
             </div>
 
             <aside class="bg-dark-bg text-fg rounded-3xl p-8 flex flex-col justify-between">
@@ -71,10 +71,16 @@ const router = useRouter();
 const { login, register, me, isAuthenticated } = useAuth();
 
 const mode = ref<"login" | "register">("login");
-const identifier = ref("");
-const password = ref("");
+const formState = reactive({
+    identifier: "",
+    password: "",
+});
 const loading = ref(false);
 const error = ref<string | null>(null);
+const modeTabs = [
+    { label: "Вход", value: "login" },
+    { label: "Регистрация", value: "register" },
+];
 
 const nextUrl = computed(() => {
     const next = route.query.next;
@@ -89,16 +95,16 @@ watchEffect(() => {
 
 async function submit() {
     error.value = null;
-    const value = identifier.value.trim();
-    if (!value || !password.value) {
+    const value = formState.identifier.trim();
+    if (!value || !formState.password) {
         error.value = "Введите логин и пароль.";
         return;
     }
 
     const isEmail = value.includes("@");
     const payload = isEmail
-        ? { email: value, password: password.value }
-        : { phone: value, password: password.value };
+        ? { email: value, password: formState.password }
+        : { phone: value, password: formState.password };
 
     loading.value = true;
     try {
