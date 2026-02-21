@@ -19,11 +19,40 @@
         </div>
     </div>
 
-    <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(25rem,1fr))] px-25 mb-15">
+    <div
+        v-if="filteredProducts.length > 0"
+        class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(25rem,1fr))] px-25 mb-15">
         <ProductCard
             v-for="product in filteredProducts"
             :key="product.cardId"
             :product />
+    </div>
+
+    <div v-else class="px-6 lg:px-25 mb-15">
+        <div class="max-w-4xl mx-auto bg-bg-1 rounded-3xl border border-dark-bg/10 p-8 md:p-10 flex flex-col md:flex-row items-center gap-8">
+            <NuxtImg
+                :src="products.length === 0 ? '/images/panel-exmpl-2.png' : '/images/panel-exmpl-0.png'"
+                class="w-44 h-44 object-contain" />
+            <div class="space-y-3 text-center md:text-left">
+                <p class="text-3xl">
+                    {{ products.length === 0 ? "Каталог пополняется" : "Ничего не найдено" }}
+                </p>
+                <p class="text-dark-fg-2">
+                    {{
+                        products.length === 0
+                            ? "Скоро здесь появятся панели. Можно вернуться позже и посмотреть новинки."
+                            : "Попробуйте ослабить фильтр по цене, чтобы увидеть больше доступных вариантов."
+                    }}
+                </p>
+                <button
+                    v-if="products.length > 0"
+                    type="button"
+                    class="inline-flex mt-2 text-fg bg-dark-bg rounded-[100px] px-6 py-3 cursor-pointer"
+                    @click="resetPriceFilter">
+                    Сбросить фильтр
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -59,4 +88,8 @@ const filteredProducts = computed(() =>
         (item) => item.minPrice >= price.value[0] && item.minPrice <= price.value[1],
     ),
 );
+
+function resetPriceFilter() {
+    price.value = [minPrice.value, maxPrice.value];
+}
 </script>
