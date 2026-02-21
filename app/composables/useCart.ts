@@ -25,11 +25,19 @@ export function useCart() {
         }
     }
 
-    async function addItem(input: { productId: string; productColorId: string }) {
+    async function addItem(
+        input: { productId: string; productColorId: string },
+        quantity = 1,
+    ) {
+        const safeQuantity = Math.max(1, Math.floor(quantity));
         await apiFetch("/api/cart/items", {
             method: "POST",
-            body: input,
+            body: {
+                ...input,
+                quantity: safeQuantity,
+            },
         });
+
         await refresh();
     }
 

@@ -73,7 +73,7 @@ describe("infra cart/checkout api", () => {
             method: "POST",
             handler: addItemHandler as any,
             context: authContext,
-            body: { productId: "p1", productColorId: "c1" },
+            body: { productId: "p1", productColorId: "c1", quantity: 4 },
             useCases: {
                 addItemToCart: {
                     async execute(input: any) {
@@ -86,7 +86,7 @@ describe("infra cart/checkout api", () => {
 
         assert.equal(response.status, 200);
         assert.equal(response.body.data.id, "item-1");
-        assert.deepEqual(received, { userId: "u1", productId: "p1", productColorId: "c1" });
+        assert.deepEqual(received, { userId: "u1", productId: "p1", productColorId: "c1", quantity: 4 });
     });
 
     test("POST /cart/items returns 401 when unauthorized", async () => {
@@ -108,6 +108,19 @@ describe("infra cart/checkout api", () => {
             handler: addItemHandler as any,
             context: authContext,
             body: { productId: "p1", productColorId: "" },
+        });
+
+        assert.equal(response.status, 400);
+        assert.equal(response.body.statusMessage, "Validation failed");
+    });
+
+    test("POST /cart/items returns 400 on invalid quantity", async () => {
+        const response = await callApi({
+            route: "/cart/items",
+            method: "POST",
+            handler: addItemHandler as any,
+            context: authContext,
+            body: { productId: "p1", productColorId: "c1", quantity: 0 },
         });
 
         assert.equal(response.status, 400);

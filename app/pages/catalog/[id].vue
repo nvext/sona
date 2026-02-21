@@ -40,7 +40,7 @@
                     </div>
                 </div>
 
-                <div class="py-2.5 flex justify-between">
+                <div class="py-2.5 border-b border-dark-bg flex justify-between">
                     <p class="text-xl mb-2">Толщина</p>
                     <div class="flex flex-wrap gap-2">
                         <UButton
@@ -57,6 +57,28 @@
                             "
                             @click="selectedThickness = thickness">
                             {{ thickness }}
+                        </UButton>
+                    </div>
+                </div>
+
+                <div class="py-2.5 flex justify-between">
+                    <p class="text-xl mb-2">Количество</p>
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        <UButton
+                            v-for="quantity in quantityPresets"
+                            :key="quantity"
+                            type="button"
+                            color="neutral"
+                            variant="ghost"
+                            :disabled="isApplyingQuantityPreset"
+                            class="px-4 py-1.5 border text-sm !font-light transition-colors !ring-0 !ring-transparent focus-visible:!ring-0"
+                            :class="
+                                currentCartQuantity === quantity
+                                    ? '!bg-dark-bg !text-fg !border-dark-bg'
+                                    : '!bg-transparent !text-dark-fg-1 !border-dark-bg/20 hover:!bg-bg-1'
+                            "
+                            @click="applyPresetQuantity(quantity)">
+                            {{ quantity }}
                         </UButton>
                     </div>
                 </div>
@@ -160,6 +182,8 @@ const relatedProducts = computed<CatalogCardItem[]>(() => relatedCatalog.value?.
 const selectedColorId = ref<string | null>(null);
 const selectedSizeKey = ref<string | null>(null);
 const selectedThickness = ref<number | null>(null);
+const isApplyingQuantityPreset = ref(false);
+const quantityPresets = [8, 12, 16] as const;
 const { items, increment, decrement, addItem } = useCart();
 const { isAuthenticated } = useAuth();
 
@@ -281,6 +305,59 @@ const currentCartItem = computed(() => {
 
 const currentCartQuantity = computed(() => currentCartItem.value?.quantity ?? 0);
 
+async function setCurrentProductQuantity(targetQuantity: number) {
+    if (!currentProduct.value || !currentColor.value) {
+        return;
+    }
+
+    const normalizedTarget = Math.max(1, Math.floor(targetQuantity));
+    const currentQuantity = currentCartQuantity.value;
+    const quantityDelta = normalizedTarget - currentQuantity;
+
+    if (quantityDelta === 0) {
+        return;
+    }
+
+    if (quantityDelta > 0) {
+        await addItem(
+            {
+                productId: currentProduct.value.id,
+                productColorId: currentColor.value.id,
+            },
+            quantityDelta,
+        );
+        return;
+    }
+
+    for (let index = 0; index < Math.abs(quantityDelta); index += 1) {
+        const currentItem = currentCartItem.value;
+        if (!currentItem) {
+            break;
+        }
+        await decrement(currentItem.id);
+    }
+}
+
+async function applyPresetQuantity(quantity: number) {
+    if (!currentProduct.value || !currentColor.value) {
+        return;
+    }
+    if (!isAuthenticated.value) {
+        await navigateTo(`/login?next=${encodeURIComponent(route.fullPath)}`);
+        return;
+    }
+    if (isApplyingQuantityPreset.value) {
+        return;
+    }
+
+    isApplyingQuantityPreset.value = true;
+    try {
+        await setCurrentProductQuantity(quantity);
+    } finally {
+        isApplyingQuantityPreset.value = false;
+    }
+}
+
 async function handleAddToCart() {
     if (!product.value || !currentProduct.value || !currentColor.value) {
         return;
@@ -294,7 +371,7 @@ async function handleAddToCart() {
     await addItem({
         productId: item.id,
         productColorId: color.id,
-    });
+    }, 1);
 }
 
 async function handleIncrementCurrent() {

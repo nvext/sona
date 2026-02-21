@@ -73,6 +73,7 @@ type BuildOptions = {
 
 function makeSut(options: BuildOptions) {
     let addCalled = false;
+    let adjustDelta: number | null = null;
 
     let addedCart: Cart | null = null;
 
@@ -112,8 +113,18 @@ function makeSut(options: BuildOptions) {
             addCalled = true;
             return { data: input.entity, meta: undefined };
         },
-        async adjustQuantity() {
-            return { data: options.existingCartItem, meta: undefined };
+        async adjustQuantity(input: { id: string; delta: number }) {
+            adjustDelta = input.delta;
+            if (options.existingCartItem === null) {
+                return { data: null, meta: undefined };
+            }
+            return {
+                data: {
+                    ...options.existingCartItem,
+                    quantity: options.existingCartItem.quantity + input.delta,
+                },
+                meta: undefined,
+            };
         },
     } as unknown as CartItemRepo;
 
@@ -126,7 +137,12 @@ function makeSut(options: BuildOptions) {
         new StaticEntityIdGenerator(),
     );
 
-    return { uc, wasAddCalled: () => addCalled, getAddedCart: () => addedCart };
+    return {
+        uc,
+        wasAddCalled: () => addCalled,
+        getAddedCart: () => addedCart,
+        getAdjustDelta: () => adjustDelta,
+    };
 }
 
 describe("AddItemToCart", () => {
@@ -173,6 +189,7 @@ describe("AddItemToCart", () => {
         assert.ok(result.data);
         assert.equal(result.data.productId, "product-1");
         assert.equal(result.data.productColorId, "color-1");
+        assert.equal(result.data.quantity, 1);
         assert.equal(wasAddCalled(), true);
     });
 
@@ -193,5 +210,75 @@ describe("AddItemToCart", () => {
         assert.ok(result.data);
         assert.ok(getAddedCart());
         assert.equal(getAddedCart()?.status, "active");
+    });
+
+    test("uses provided quantity when creating new cart item", async () => {
+        const { uc } = makeSut({
+            product: baseProduct,
+            color: baseColor,
+            existingCartItem: null,
+            cart: baseCart,
+        });
+
+        const result = await uc.execute({
+            userId: "user-1",
+            productId: "product-1",
+            productColorId: "color-1",
+            quantity: 4,
+        });
+
+        assert.ok(result.data);
+        assert.equal(result.data.quantity, 4);
+    });
+
+    test("adjusts existing cart item by provided quantity", async () => {
+        const existingCartItem: CartItem = {
+            id: "item-1",
+            cartId: baseCart.id,
+            productCardId: baseCard.id,
+            productColorId: baseColor.id,
+            productId: baseProduct.id,
+            quantity: 2,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+        const { uc, getAdjustDelta } = makeSut({
+            product: baseProduct,
+            color: baseColor,
+            existingCartItem,
+            cart: baseCart,
+        });
+
+        const result = await uc.execute({
+            userId: "user-1",
+            productId: "product-1",
+            productColorId: "color-1",
+            quantity: 3,
+        });
+
+        assert.ok(result.data);
+        assert.equal(result.data.quantity, 5);
+        assert.equal(getAdjustDelta(), 3);
+    });
+
+    test("throws ValidationError on invalid quantity", async () => {
+        const { uc } = makeSut({
+            product: baseProduct,
+            color: baseColor,
+            existingCartItem: null,
+            cart: baseCart,
+        });
+
+        await assert.rejects(
+            uc.execute({
+                userId: "user-1",
+                productId: "product-1",
+                productColorId: "color-1",
+                quantity: 0,
+            }),
+            (error) =>
+                error instanceof ValidationError &&
+                error.message === "Quantity must be a positive integer",
+        );
     });
 });

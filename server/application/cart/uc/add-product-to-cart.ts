@@ -18,6 +18,11 @@ export class AddItemToCart {
 
     async execute(input: AddProductToCartInput) {
         const now = new Date();
+        const quantity = input.quantity ?? 1;
+
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            throw new ValidationError("Quantity must be a positive integer");
+        }
 
         let { data: cart } = await this.cartRepo.getByUserId({ userId: input.userId });
         const { data: product } = await this.productRepo.getById({ id: input.productId });
@@ -65,14 +70,14 @@ export class AddItemToCart {
                     productCardId: card.id,
                     productColorId: color.id,
                     productId: product.id,
-                    quantity: 1,
+                    quantity,
                     createdAt: now,
                     updatedAt: now,
                 },
             });
         }
 
-        return this.cartItemRepo.adjustQuantity({ id: cartItem.id, delta: 1 });
+        return this.cartItemRepo.adjustQuantity({ id: cartItem.id, delta: quantity });
     }
 }
 
@@ -80,4 +85,5 @@ type AddProductToCartInput = {
     userId: string;
     productId: string;
     productColorId: string;
+    quantity?: number;
 };

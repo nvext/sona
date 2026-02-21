@@ -7,6 +7,7 @@ import { requireAuth } from '~~/server/infrastructure/http/api/auth';
 const addItemSchema = z.object({
   productId: z.string().min(1),
   productColorId: z.string().min(1),
+  quantity: z.number().int().min(1).optional(),
 });
 
 export default defineApiHandler(async (event) => {
