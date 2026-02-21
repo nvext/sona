@@ -10,6 +10,11 @@ type RegisterInput = {
     password: string;
 };
 
+type UpdateProfileInput = {
+    email?: string | null;
+    phone?: string | null;
+};
+
 type AuthUser = {
     id: string;
     email: string | null;
@@ -68,6 +73,16 @@ export function useAuth() {
         }
     }
 
+    async function updateProfile(input: UpdateProfileInput) {
+        const response = await apiFetch<{ user: AuthUser | null }>("/api/auth/me", {
+            method: "PATCH",
+            body: input,
+        });
+        isAuthenticated.value = Boolean(response.user);
+        user.value = response.user;
+        return response.user;
+    }
+
     return {
         isAuthenticated,
         user,
@@ -76,5 +91,6 @@ export function useAuth() {
         refresh,
         logout,
         me,
+        updateProfile,
     };
 }

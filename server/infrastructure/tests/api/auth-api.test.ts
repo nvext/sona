@@ -4,7 +4,10 @@ import registerHandler from "~~/server/infrastructure/api/auth/register.post";
 import loginHandler from "~~/server/infrastructure/api/auth/login.post";
 import refreshHandler from "~~/server/infrastructure/api/auth/refresh.post";
 import logoutHandler from "~~/server/infrastructure/api/auth/logout.post";
+import meGetHandler from "~~/server/infrastructure/api/auth/me.get";
+import mePatchHandler from "~~/server/infrastructure/api/auth/me.patch";
 import { InvalidCredentialsError } from "~~/server/shared/errors/InvalidCredentialsError";
+import { ConflictError } from "~~/server/shared/errors/ConflictError";
 import { callApi } from "./helpers";
 
 describe("infra auth api", () => {
@@ -188,5 +191,135 @@ describe("infra auth api", () => {
 
         assert.equal(response.status, 500);
         assert.equal(response.body.statusMessage, "Internal Server Error");
+    });
+
+    test("GET /auth/me returns user payload", async () => {
+        const response = await callApi({
+            route: "/auth/me",
+            method: "GET",
+            handler: meGetHandler as any,
+            context: {
+                auth: {
+                    userId: "u1",
+                    sessionId: "s1",
+                    sessionVersion: 0,
+                },
+            },
+            container: {
+                repos: {
+                    userRepo: {
+                        async getById() {
+                            return {
+                                data: {
+                                    id: "u1",
+                                    email: "user@example.com",
+                                    phone: "+10000000000",
+                                    status: "active",
+                                },
+                                meta: undefined,
+                            };
+                        },
+                    },
+                },
+            },
+        });
+
+        assert.equal(response.status, 200);
+        assert.equal(response.body.user.id, "u1");
+        assert.equal(response.body.user.email, "user@example.com");
+        assert.equal(response.body.user.phone, "+10000000000");
+    });
+
+    test("PATCH /auth/me updates profile", async () => {
+        let received: any = null;
+        const response = await callApi({
+            route: "/auth/me",
+            method: "PATCH",
+            handler: mePatchHandler as any,
+            context: {
+                auth: {
+                    userId: "u1",
+                    sessionId: "s1",
+                    sessionVersion: 0,
+                },
+            },
+            useCases: {
+                updateProfile: {
+                    async execute(input: any) {
+                        received = input;
+                        return {
+                            user: {
+                                id: "u1",
+                                email: "new@example.com",
+                                phone: "+10000000000",
+                                status: "active",
+                            },
+                        };
+                    },
+                },
+            },
+            body: { email: "new@example.com" },
+        });
+
+        assert.equal(response.status, 200);
+        assert.deepEqual(received, { userId: "u1", email: "new@example.com", phone: undefined });
+        assert.equal(response.body.user.email, "new@example.com");
+    });
+
+    test("PATCH /auth/me returns 400 on invalid body", async () => {
+        const response = await callApi({
+            route: "/auth/me",
+            method: "PATCH",
+            handler: mePatchHandler as any,
+            context: {
+                auth: {
+                    userId: "u1",
+                    sessionId: "s1",
+                    sessionVersion: 0,
+                },
+            },
+            body: {},
+        });
+
+        assert.equal(response.status, 400);
+        assert.equal(response.body.statusMessage, "Validation failed");
+    });
+
+    test("PATCH /auth/me maps conflict to 409", async () => {
+        const response = await callApi({
+            route: "/auth/me",
+            method: "PATCH",
+            handler: mePatchHandler as any,
+            context: {
+                auth: {
+                    userId: "u1",
+                    sessionId: "s1",
+                    sessionVersion: 0,
+                },
+            },
+            useCases: {
+                updateProfile: {
+                    async execute() {
+                        throw new ConflictError("Email already in use");
+                    },
+                },
+            },
+            body: { email: "taken@example.com" },
+        });
+
+        assert.equal(response.status, 409);
+        assert.equal(response.body.statusMessage, "Email already in use");
+    });
+
+    test("PATCH /auth/me returns 401 when unauthorized", async () => {
+        const response = await callApi({
+            route: "/auth/me",
+            method: "PATCH",
+            handler: mePatchHandler as any,
+            body: { email: "new@example.com" },
+        });
+
+        assert.equal(response.status, 401);
+        assert.equal(response.body.statusMessage, "Unauthorized");
     });
 });

@@ -20,6 +20,7 @@
             <NuxtLink to="/cart">
                 Корзина<span v-if="cartCount > 0"> ({{ cartCount }})</span>
             </NuxtLink>
+            <NuxtLink v-if="isAuthenticated" to="/profile" class="underline">Профиль</NuxtLink>
             <button
                 v-if="isAuthenticated"
                 type="button"

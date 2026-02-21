@@ -2,6 +2,7 @@ import { Login } from "~~/server/application/auth/uc/login";
 import { Logout } from "~~/server/application/auth/uc/logout";
 import { Refresh } from "~~/server/application/auth/uc/refresh";
 import { Register } from "~~/server/application/auth/uc/register";
+import { UpdateProfile } from "~~/server/application/auth/uc/update-profile";
 import { AddItemToCart } from "~~/server/application/cart/uc/add-product-to-cart";
 import { GetCartItems } from "~~/server/application/cart/uc/get-cart-items";
 import { RemoveItemFromCart } from "~~/server/application/cart/uc/remove-product-from-cart";
@@ -9,7 +10,8 @@ import { CreateOrderRequestDraft } from "~~/server/application/checkout/uc/creat
 import { SubmitOrderRequest } from "~~/server/application/checkout/uc/submit-order-request";
 import { GetCatalogPage } from "~~/server/application/product/uc/get-catalog-page";
 import { GetProductCardDetails } from "~~/server/application/product/uc/get-product-card-details";
-import { RuntimeContainer, getRuntimeContainer } from "./container";
+import { getRuntimeContainer } from "./container";
+import type { RuntimeContainer } from "./container";
 import { readDeliveryRetryConfigFromEnv } from "./order-request-delivery-retry";
 
 export type RuntimeUseCases = {
@@ -17,6 +19,7 @@ export type RuntimeUseCases = {
     logout: Logout;
     refresh: Refresh;
     register: Register;
+    updateProfile: UpdateProfile;
     addItemToCart: AddItemToCart;
     getCartItems: GetCartItems;
     removeItemFromCart: RemoveItemFromCart;
@@ -56,6 +59,7 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
             container.services.entityIdGenerator,
             container.services.passwordHasher,
         ),
+        updateProfile: new UpdateProfile(container.repos.userRepo),
         addItemToCart: new AddItemToCart(
             container.repos.cartRepo,
             container.repos.cartItemRepo,
