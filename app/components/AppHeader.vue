@@ -1,7 +1,7 @@
 <template>
     <header
         :class="[
-            'h-30 w-dvw sticky top-0 left-0 px-25 text-[1.25rem] grid grid-cols-3 items-center',
+            'h-30 w-dvw sticky top-0 left-0 z-50 px-25 text-[1.25rem] grid grid-cols-3 items-center',
             isMainPage ? 'bg-white text-dark-fg' : 'bg-dark-bg text-fg',
         ]">
         <UIcon
@@ -85,19 +85,28 @@
 
                 <div
                     v-if="isAuthenticated && profileMenuOpen"
-                    class="absolute right-0 top-12 z-40 min-w-42 rounded-2xl border border-current/25 bg-bg text-dark-fg p-2 shadow-md">
-                    <NuxtLink
+                    class="absolute right-0 top-12 z-[60] min-w-42 rounded-2xl border border-current/25 bg-bg text-dark-fg p-2 shadow-md">
+                    <UButton
                         to="/profile"
-                        class="w-full px-3 py-2 rounded-xl hover:bg-bg-1 transition-colors text-left block cursor-pointer"
+                        block
+                        color="neutral"
+                        variant="ghost"
+                        class="justify-start"
                         @click="closeProfileMenu">
                         Профиль
-                    </NuxtLink>
-                    <button
-                        type="button"
-                        class="w-full px-3 py-2 rounded-xl hover:bg-bg-1 transition-colors text-left cursor-pointer"
-                        @click="handleLogout">
-                        Выйти
-                    </button>
+                    </UButton>
+                    <div class="mt-1 pt-1 border-t border-dark-bg/10">
+                        <UButton
+                            block
+                            color="error"
+                            variant="soft"
+                            icon="i-lucide-log-out"
+                            :ui="{leadingIcon: 'size-4'}"
+                            class="justify-center"
+                            @click="handleLogout">
+                            Выйти
+                        </UButton>
+                    </div>
                 </div>
             </div>
         </div>
