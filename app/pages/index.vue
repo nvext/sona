@@ -5,10 +5,16 @@
         </video>
     </section>
 
-    <section class="px-25">
+    <section class="px-6 lg:px-25">
         <h2 class="text-5xl my-7">Акустические панели</h2>
-        <div class="flex gap-5">
-            <ProductCard v-for="product in featuredProducts" :key="product.cardId" :product class="flex-1" />
+        <div class="overflow-x-auto hide-scrollbar pb-2">
+            <div class="flex gap-5 min-w-max lg:min-w-0">
+                <ProductCard
+                    v-for="product in featuredProducts"
+                    :key="product.cardId"
+                    :product
+                    class="w-[20rem] flex-none lg:w-auto lg:flex-1" />
+            </div>
         </div>
         <div class="h-full flex flex-row-reverse">
             <NuxtLink to="/catalog" class="my-9 underline">Смотреть все</NuxtLink>

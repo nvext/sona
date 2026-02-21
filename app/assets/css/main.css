@@ -61,3 +61,12 @@ html {
     --color-dark-fg-1: #4D4D4D;
     --color-dark-fg: #1a1a1a;
 }
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}

@@ -113,15 +113,17 @@
             </div>
         </section>
 
-        <section class="px-25 mb-20">
+        <section class="px-6 lg:px-25 mb-20">
             <h2 class="text-3xl mb-12">Вам может понравится</h2>
 
-            <div class="flex gap-5">
-                <ProductCard
-                    v-for="item in relatedProducts"
-                    :key="item.cardId"
-                    :product="item"
-                    class="flex-1" />
+            <div class="overflow-x-auto hide-scrollbar pb-2">
+                <div class="flex gap-5 min-w-max lg:min-w-0">
+                    <ProductCard
+                        v-for="item in relatedProducts"
+                        :key="item.cardId"
+                        :product="item"
+                        class="w-[20rem] flex-none lg:w-auto lg:flex-1" />
+                </div>
             </div>
         </section>
 
