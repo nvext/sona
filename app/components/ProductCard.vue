@@ -1,12 +1,12 @@
 <template>
     <article
         @click="onClick"
-        class="h-137.5 px-12.5 pb-8 bg-bg-1 rounded-3xl grid grid-rows-[1fr] cursor-pointer">
-        <div class="flex items-center justify-center">
-            <NuxtImg class="object-cover max-h-9/10" :src="previewImageUrl" alt="product-image" />
+        class="h-137.5 px-10 py-8 bg-bg-1 rounded-3xl flex flex-col cursor-pointer">
+        <div class="h-84 w-full flex items-center justify-center">
+            <NuxtImg class="w-full h-full object-contain" :src="previewImageUrl" alt="product-image" />
         </div>
 
-        <div class="flex justify-between mb-7 text-[15px] min-w-64">
+        <div class="flex justify-between mb-7 mt-4 text-[15px] min-w-64">
             <h2>
                 {{ product.title }}
             </h2>
