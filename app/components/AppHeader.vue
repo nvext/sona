@@ -36,7 +36,12 @@
                 </svg>
                 <span
                     v-if="cartCount > 0"
-                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-dark-bg text-fg text-[11px] leading-5 text-center border border-bg">
+                    :class="[
+                        'absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-[11px] leading-5 text-center border',
+                        isMainPage
+                            ? 'bg-dark-bg text-fg border-bg'
+                            : 'bg-bg text-dark-fg border-dark-bg/20',
+                    ]">
                     {{ cartCount }}
                 </span>
             </NuxtLink>
