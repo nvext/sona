@@ -5,8 +5,7 @@ export default defineAppConfig({
         },
         button: {
             slots: {
-                base: "rounded-[100px] [font-family:var(--font-ui-buttons)] text-base font-medium leading-none",
-                label: "leading-none",
+                base: "rounded-[100px] text-base font-medium",
                 leadingIcon: "size-3.5",
                 trailingIcon: "size-3.5",
             },
