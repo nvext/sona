@@ -9,16 +9,13 @@
             :aria-label="`Цвет ${color.id}`"
             :ui="{
                 base: 'rounded-full border border-dark-bg/20 transition-[width,box-shadow] duration-150 p-0 min-w-0',
-                label: 'hidden',
             }"
             :style="{
                 backgroundColor: color.hex,
                 height: `${sizePx}px`,
                 width: selectedId === color.id ? `${sizePx * 2.5}px` : `${sizePx}px`,
             }"
-            @click="selectedId = color.id">
-            {{ color.id }}
-        </UButton>
+            @click="selectedId = color.id" />
     </div>
 </template>
 

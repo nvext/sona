@@ -27,12 +27,12 @@
                             :key="size.key"
                             type="button"
                             color="neutral"
-                            variant="outline"
-                            class="px-4 py-1.5 border text-sm transition-colors"
+                            variant="ghost"
+                            class="px-4 py-1.5 border text-sm !font-light transition-colors !ring-0 !ring-transparent focus-visible:!ring-0"
                             :class="
                                 selectedSizeKey === size.key
                                     ? '!bg-dark-bg !text-fg !border-dark-bg'
-                                    : '!border-dark-bg/20'
+                                    : '!bg-transparent !text-dark-fg-1 !border-dark-bg/20 hover:!bg-bg-1'
                             "
                             @click="selectedSizeKey = size.key">
                             {{ size.label }}
@@ -48,15 +48,15 @@
                             :key="thickness"
                             type="button"
                             color="neutral"
-                            variant="outline"
-                            class="px-4 py-1.5 border text-sm transition-colors"
+                            variant="ghost"
+                            class="px-4 py-1.5 border text-sm !font-light transition-colors !ring-0 !ring-transparent focus-visible:!ring-0"
                             :class="
                                 selectedThickness === thickness
                                     ? '!bg-dark-bg !text-fg !border-dark-bg'
-                                    : '!border-dark-bg/20'
+                                    : '!bg-transparent !text-dark-fg-1 !border-dark-bg/20 hover:!bg-bg-1'
                             "
                             @click="selectedThickness = thickness">
-                            {{ thickness }} мм
+                            {{ thickness }}
                         </UButton>
                     </div>
                 </div>
@@ -75,10 +75,10 @@
                         type="button"
                         color="neutral"
                         variant="solid"
-                        class="text-xl h-20 !text-fg !bg-dark-bg flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="text-xl h-17.5 !text-fg !bg-dark-bg flex-1 relative !justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="!currentProduct || !currentColor"
                         @click="handleAddToCart">
-                        Добавить в корзину
+                        <span class="w-full text-center">Добавить в корзину</span>
                         <div
                             class="size-12.5 bg-bg absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full flex justify-center items-center">
                             <img class="object-cover h-2/5" src="/icons/arrow.svg" alt="" />
@@ -87,26 +87,27 @@
 
                     <div
                         v-else
-                        class="bg-dark-bg text-fg flex-1 h-20 rounded-[100px] px-4 flex items-center justify-between">
+                        class="bg-dark-bg text-fg flex-1 h-17.5
+                         rounded-[100px] relative">
                         <UButton
                             type="button"
                             color="neutral"
-                            variant="outline"
-                            class="size-12.5 !rounded-full !min-w-0 !p-0 !border-fg/30 !text-fg text-3xl leading-none flex items-center justify-center"
+                            variant="ghost"
+                            class="absolute left-2.5 top-1/2 -translate-y-1/2 size-12.5 !rounded-full !min-w-0 !p-0 !border !border-dark-bg/15 !bg-bg !text-dark-fg flex items-center justify-center hover:!bg-bg-1"
                             @click="handleDecrementCurrent">
-                            -
+                            <UIcon name="i-lucide-minus" class="size-5" />
                         </UButton>
-                        <div class="text-center">
+                        <div class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-center">
                             <p class="text-xs opacity-80 uppercase tracking-wide">В корзине</p>
                             <p class="text-2xl leading-none">{{ currentCartQuantity }}</p>
                         </div>
                         <UButton
                             type="button"
                             color="neutral"
-                            variant="outline"
-                            class="size-12.5 !rounded-full !min-w-0 !p-0 !border-fg/30 !text-fg text-3xl leading-none flex items-center justify-center"
+                            variant="ghost"
+                            class="absolute right-2.5 top-1/2 -translate-y-1/2 size-12.5 !rounded-full !min-w-0 !p-0 !border !border-dark-bg/15 !bg-bg !text-dark-fg flex items-center justify-center hover:!bg-bg-1"
                             @click="handleIncrementCurrent">
-                            +
+                            <UIcon name="i-lucide-plus" class="size-5" />
                         </UButton>
                     </div>
                 </div>
@@ -200,7 +201,7 @@ const availableSizes = computed(() => {
         seen.add(key);
         result.push({
             key,
-            label: `${item.width}x${item.height} мм`,
+            label: `${item.width} x ${item.height}`,
             width: item.width,
             height: item.height,
         });
