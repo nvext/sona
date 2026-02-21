@@ -14,7 +14,12 @@
             <div class="w-full">
                 <h2 class="text-5xl">{{ product.card.title }} {{ currentColor?.name }}</h2>
 
-                <div class="py-2.5 border-b border-dark-bg">
+                <div class="py-2.5 border-b border-dark-bg flex justify-between">
+                    <p class="text-xl mb-2">Цвет</p>
+                    <ColorSelect v-model="selectedColorId" :colors="product.colors" :size="32" />
+                </div>
+
+                <div class="py-2.5 border-b border-dark-bg flex justify-between">
                     <p class="text-xl mb-2">Размер</p>
                     <div class="flex flex-wrap gap-2">
                         <button
@@ -22,14 +27,18 @@
                             :key="size.key"
                             type="button"
                             class="px-4 py-1.5 rounded-full border text-sm transition-colors"
-                            :class="selectedSizeKey === size.key ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                            :class="
+                                selectedSizeKey === size.key
+                                    ? 'bg-dark-bg text-fg border-dark-bg'
+                                    : 'border-dark-bg/20'
+                            "
                             @click="selectedSizeKey = size.key">
                             {{ size.label }}
                         </button>
                     </div>
                 </div>
 
-                <div class="py-2.5 border-b border-dark-bg">
+                <div class="py-2.5 flex justify-between">
                     <p class="text-xl mb-2">Толщина</p>
                     <div class="flex flex-wrap gap-2">
                         <button
@@ -37,15 +46,15 @@
                             :key="thickness"
                             type="button"
                             class="px-4 py-1.5 rounded-full border text-sm transition-colors"
-                            :class="selectedThickness === thickness ? 'bg-dark-bg text-fg border-dark-bg' : 'border-dark-bg/20'"
+                            :class="
+                                selectedThickness === thickness
+                                    ? 'bg-dark-bg text-fg border-dark-bg'
+                                    : 'border-dark-bg/20'
+                            "
                             @click="selectedThickness = thickness">
                             {{ thickness }} мм
                         </button>
                     </div>
-                </div>
-
-                <div class="py-2.5">
-                    <ColorSelect v-model="selectedColorId" :colors="product.colors" :size="32" />
                 </div>
 
                 <div class="py-2.5 border-b border-dark-bg">
@@ -76,7 +85,11 @@
             <h2 class="text-3xl mb-12">Вам может понравится</h2>
 
             <div class="flex gap-5">
-                <ProductCard v-for="item in relatedProducts" :key="item.cardId" :product="item" class="flex-1" />
+                <ProductCard
+                    v-for="item in relatedProducts"
+                    :key="item.cardId"
+                    :product="item"
+                    class="flex-1" />
             </div>
         </section>
 
@@ -90,18 +103,19 @@
 
 <script setup lang="ts">
 import type { CatalogCardItem, CatalogResponse, ProductDetailsResponse } from "~/types/catalog";
+const { apiFetch } = useApiClient();
 
 const route = useRoute();
 const cardId = computed(() => String(route.params.id ?? ""));
 
 const { data: product } = await useAsyncData(
     () => `product-details-${cardId.value}`,
-    () => $fetch<ProductDetailsResponse>(`/api/products/${cardId.value}`),
+    () => apiFetch<ProductDetailsResponse>(`/api/products/${cardId.value}`),
     { watch: [cardId] },
 );
 
 const { data: relatedCatalog } = await useAsyncData("related-catalog", () =>
-    $fetch<CatalogResponse>("/api/products/catalog", {
+    apiFetch<CatalogResponse>("/api/products/catalog", {
         query: { limit: 3 },
     }),
 );

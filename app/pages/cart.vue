@@ -108,7 +108,8 @@
 
 <script setup lang="ts">
 const { items, cartId, total, removeItem, increment, decrement, refresh } = useCart();
-const { isAuthenticated, user, me, authFetch } = useAuth();
+const { isAuthenticated, user, me } = useAuth();
+const { apiFetch } = useApiClient();
 const checkoutForm = reactive({
     name: "",
     phone: "",
@@ -169,7 +170,7 @@ async function submitOrder() {
 
     checkoutLoading.value = true;
     try {
-        const draft = await authFetch<{
+        const draft = await apiFetch<{
             orderRequest: { id: string };
         }>("/api/checkout/drafts", {
             method: "POST",
@@ -179,7 +180,7 @@ async function submitOrder() {
             },
         });
 
-        await authFetch("/api/checkout/submit", {
+        await apiFetch("/api/checkout/submit", {
             method: "POST",
             body: {
                 orderRequestId: draft.orderRequest.id,

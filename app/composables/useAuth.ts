@@ -20,83 +20,50 @@ type AuthUser = {
 export function useAuth() {
     const isAuthenticated = useState<boolean>("auth-is-authenticated", () => false);
     const user = useState<AuthUser | null>("auth-user", () => null);
-    const refreshInFlight = useState<Promise<boolean> | null>("auth-refresh-in-flight", () => null);
+    const { apiFetch, refreshSession } = useApiClient();
 
     async function login(input: LoginInput) {
-        await $fetch("/api/auth/login", {
+        await apiFetch("/api/auth/login", {
             method: "POST",
             body: input,
-            credentials: "include",
+            skipAuthRefresh: true,
         });
         isAuthenticated.value = true;
         await me();
     }
 
     async function register(input: RegisterInput) {
-        await $fetch("/api/auth/register", {
+        await apiFetch("/api/auth/register", {
             method: "POST",
             body: input,
-            credentials: "include",
+            skipAuthRefresh: true,
         });
         isAuthenticated.value = true;
         await me();
     }
 
     async function refresh(): Promise<boolean> {
-        try {
-            const response = await $fetch<{ ok: boolean }>("/api/auth/refresh", {
-                method: "POST",
-                credentials: "include",
-            });
-            if (response?.ok) {
-                isAuthenticated.value = true;
-                await me();
-                return true;
-            }
-        } catch {
-            // ignore and fall through
-        }
-        isAuthenticated.value = false;
-        user.value = null;
-        return false;
+        const refreshed = await refreshSession();
+        if (!refreshed) return false;
+        await me();
+        return true;
     }
 
     async function logout() {
-        await $fetch("/api/auth/logout", { method: "POST", credentials: "include" }).catch(() => null);
+        await apiFetch("/api/auth/logout", { method: "POST", skipAuthRefresh: true }).catch(() => null);
         isAuthenticated.value = false;
         user.value = null;
     }
 
     async function me() {
-        const response = await $fetch<{ user: AuthUser | null }>("/api/auth/me", {
-            credentials: "include",
-        });
-        isAuthenticated.value = Boolean(response.user);
-        user.value = response.user;
-        return response.user;
-    }
-
-    async function authFetch<T>(url: string, options: Parameters<typeof $fetch<T>>[1] = {}) {
         try {
-            return await $fetch<T>(url, {
-                ...options,
-                credentials: "include",
-            });
-        } catch (error: any) {
-            if (error?.status === 401) {
-                if (!refreshInFlight.value) {
-                    refreshInFlight.value = refresh().finally(() => {
-                        refreshInFlight.value = null;
-                    });
-                }
-                const refreshed = await refreshInFlight.value;
-                if (refreshed) {
-                    return await $fetch<T>(url, {
-                        ...options,
-                        credentials: "include",
-                    });
-                }
-            }
+            const response = await apiFetch<{ user: AuthUser | null }>("/api/auth/me");
+            isAuthenticated.value = Boolean(response.user);
+            user.value = response.user;
+            return response.user;
+        } catch (error) {
+            isAuthenticated.value = false;
+            user.value = null;
             throw error;
         }
     }
@@ -109,6 +76,5 @@ export function useAuth() {
         refresh,
         logout,
         me,
-        authFetch,
     };
 }

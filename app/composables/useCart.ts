@@ -4,7 +4,8 @@ export function useCart() {
     const items = useState<CartItem[]>("cart-items", () => []);
     const cartId = useState<string | null>("cart-id", () => null);
     const loading = useState<boolean>("cart-loading", () => false);
-    const { authFetch, isAuthenticated } = useAuth();
+    const { apiFetch } = useApiClient();
+    const { isAuthenticated } = useAuth();
 
     async function refresh() {
         if (!isAuthenticated.value) {
@@ -14,7 +15,7 @@ export function useCart() {
         }
         loading.value = true;
         try {
-            const response = await authFetch<{ data: CartItem[]; meta: { cartId: string | null } }>(
+            const response = await apiFetch<{ data: CartItem[]; meta: { cartId: string | null } }>(
                 "/api/cart/items",
             );
             items.value = response.data;
@@ -25,7 +26,7 @@ export function useCart() {
     }
 
     async function addItem(input: { productId: string; productColorId: string }) {
-        await authFetch("/api/cart/items", {
+        await apiFetch("/api/cart/items", {
             method: "POST",
             body: input,
         });
@@ -33,7 +34,7 @@ export function useCart() {
     }
 
     async function removeItem(itemId: string) {
-        await authFetch(`/api/cart/items/${itemId}`, {
+        await apiFetch(`/api/cart/items/${itemId}`, {
             method: "DELETE",
         });
         await refresh();

@@ -29,9 +29,10 @@
 
 <script setup lang="ts">
 import type { CatalogCardItem, CatalogResponse } from "~/types/catalog";
+const { apiFetch } = useApiClient();
 
 const { data: response } = await useAsyncData("catalog-page", () =>
-    $fetch<CatalogResponse>("/api/products/catalog", {
+    apiFetch<CatalogResponse>("/api/products/catalog", {
         query: { limit: 100 },
     }),
 );
