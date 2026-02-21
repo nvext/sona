@@ -1,16 +1,71 @@
 <template>
-    <section class="px-25 py-10">
-        <h1 class="text-5xl mb-8">Корзина</h1>
+    <section class="px-6 lg:px-25 py-10">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-5xl mb-8">Корзина</h1>
 
-        <div v-if="!isAuthenticated" class="text-xl text-dark-fg-2">
-            Войдите, чтобы увидеть корзину.
-        </div>
+            <div v-if="!isAuthenticated" class="min-h-[55vh] flex items-center justify-center">
+                <div class="w-full max-w-3xl bg-bg-1 rounded-3xl border border-dark-bg/10 p-8 md:p-10 flex flex-col md:flex-row items-center gap-8">
+                    <div class="size-42 shrink-0 flex-none rounded-full border border-dark-bg/15 bg-bg flex items-center justify-center">
+                        <svg
+                            class="size-20 text-dark-fg -translate-x-px"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true">
+                            <circle cx="9" cy="20" r="1"></circle>
+                            <circle cx="17" cy="20" r="1"></circle>
+                            <path d="M3 4h2l2.6 10.4a1 1 0 0 0 1 .76h8.7a1 1 0 0 0 .97-.77L21 7H7"></path>
+                        </svg>
+                    </div>
+                    <div class="space-y-3 text-center md:text-left">
+                        <p class="text-3xl">Корзина привязана к аккаунту</p>
+                        <p class="text-dark-fg-2">
+                            Войдите, чтобы увидеть сохраненные позиции и оформить заявку в пару кликов.
+                        </p>
+                        <NuxtLink
+                            to="/login?next=/cart"
+                            class="inline-flex mt-2 text-fg bg-dark-bg rounded-[100px] px-6 py-3 cursor-pointer">
+                            Войти в аккаунт
+                        </NuxtLink>
+                    </div>
+                </div>
+            </div>
 
-        <div v-else-if="items.length === 0" class="text-xl text-dark-fg-2">
-            Корзина пуста.
-        </div>
+            <div v-else-if="items.length === 0" class="min-h-[55vh] flex items-center justify-center">
+                <div class="w-full max-w-3xl bg-bg-1 rounded-3xl border border-dark-bg/10 p-8 md:p-10 flex flex-col md:flex-row items-center gap-8">
+                    <div class="size-42 shrink-0 flex-none rounded-full border border-dark-bg/15 bg-bg flex items-center justify-center">
+                        <svg
+                            class="size-20 text-dark-fg -translate-x-px"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true">
+                            <circle cx="9" cy="20" r="1"></circle>
+                            <circle cx="17" cy="20" r="1"></circle>
+                            <path d="M3 4h2l2.6 10.4a1 1 0 0 0 1 .76h8.7a1 1 0 0 0 .97-.77L21 7H7"></path>
+                        </svg>
+                    </div>
+                    <div class="space-y-3 text-center md:text-left">
+                        <p class="text-3xl">Корзина пока пустая</p>
+                        <p class="text-dark-fg-2">
+                            Добавьте панели из каталога, и здесь появится состав вашей заявки.
+                        </p>
+                        <NuxtLink
+                            to="/catalog"
+                            class="inline-flex mt-2 text-fg bg-dark-bg rounded-[100px] px-6 py-3 cursor-pointer">
+                            Перейти в каталог
+                        </NuxtLink>
+                    </div>
+                </div>
+            </div>
 
-        <div v-else class="space-y-10 max-w-6xl mx-auto">
+            <div v-else class="space-y-10">
             <div
                 v-for="item in items"
                 :key="item.id"
@@ -113,6 +168,7 @@
                         <li>После отправки менеджер пишет в Telegram</li>
                     </ul>
                 </aside>
+            </div>
             </div>
         </div>
     </section>
