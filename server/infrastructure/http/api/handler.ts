@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { defineEventHandler, getHeader, H3Event, setHeader, setResponseStatus } from 'h3';
+import { defineEventHandler, getHeader, getRequestURL, H3Event, setHeader, setResponseStatus } from 'h3';
 import { toHttpError } from './errors';
 import { applyCors, enforceRateLimit } from './security';
 import { logError, logInfo } from '~~/server/infrastructure/runtime';
@@ -12,6 +12,8 @@ export function defineApiHandler<T>(handler: (event: H3Event) => Promise<T> | T)
   return defineEventHandler(async (event) => {
     const startedAt = Date.now();
     const requestId = getHeader(event, "x-request-id") ?? randomUUID();
+    const requestUrl = getRequestURL(event);
+    const pathWithQuery = `${requestUrl.pathname}${requestUrl.search}`;
     (event.context as ApiEventContext).requestId = requestId;
     setHeader(event, "x-request-id", requestId);
 
@@ -22,7 +24,7 @@ export function defineApiHandler<T>(handler: (event: H3Event) => Promise<T> | T)
         logInfo("api.options", {
           requestId,
           method: event.method,
-          path: event.path,
+          path: pathWithQuery,
           statusCode: 204,
           durationMs: Date.now() - startedAt,
         });
@@ -34,7 +36,7 @@ export function defineApiHandler<T>(handler: (event: H3Event) => Promise<T> | T)
       logInfo("api.success", {
         requestId,
         method: event.method,
-        path: event.path,
+        path: pathWithQuery,
         statusCode: 200,
         durationMs: Date.now() - startedAt,
       });
@@ -44,7 +46,7 @@ export function defineApiHandler<T>(handler: (event: H3Event) => Promise<T> | T)
       logError("api.error", {
         requestId,
         method: event.method,
-        path: event.path,
+        path: pathWithQuery,
         statusCode: httpError.statusCode ?? 500,
         statusMessage: httpError.statusMessage ?? "Internal Server Error",
         durationMs: Date.now() - startedAt,

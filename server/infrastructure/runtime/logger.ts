@@ -14,8 +14,13 @@ const ANSI = {
     magenta: "\x1b[35m",
     cyan: "\x1b[36m",
     gray: "\x1b[90m",
-    bgGreen: "\x1b[42m",
-    bgRed: "\x1b[41m",
+    bgBrightBlue: "\x1b[104m",
+    bgBrightGreen: "\x1b[102m",
+    bgBrightYellow: "\x1b[103m",
+    bgBrightMagenta: "\x1b[105m",
+    bgBrightRed: "\x1b[101m",
+    bgBrightCyan: "\x1b[106m",
+    bgBrightWhite: "\x1b[107m",
 } as const;
 
 function parseLogLevel(value: string | undefined): RuntimeLogLevel | null {
@@ -218,13 +223,6 @@ function formatFields(entries: Array<[string, unknown]>, colorized: boolean): st
         .join(" ");
 }
 
-function formatLevel(level: LogLevel, colorized: boolean): string {
-    if (level === "error") {
-        return paint(" ERROR ", ANSI.bold + ANSI.black + ANSI.bgRed, colorized);
-    }
-    return paint(" INFO ", ANSI.bold + ANSI.black + ANSI.bgGreen, colorized);
-}
-
 function formatCore(
     level: LogLevel,
     message: string,
@@ -233,19 +231,42 @@ function formatCore(
 ): string {
     const methodRaw = takeEntryValue(entries, "method");
     const pathRaw = takeEntryValue(entries, "path");
-    const levelBadge = formatLevel(level, colorized);
-    const renderedMessage = paint(message, ANSI.bold, colorized);
+    const renderedMessage = paint(
+        message,
+        level === "error" ? ANSI.bold + ANSI.red : ANSI.bold,
+        colorized,
+    );
 
     if (methodRaw === null && pathRaw === null) {
-        return `${levelBadge} ${renderedMessage}`;
+        return renderedMessage;
     }
 
     const method = (methodRaw === null ? "-" : String(methodRaw)).toUpperCase();
     const path = pathRaw === null ? "-" : String(pathRaw);
-    const renderedMethod = paint(method, ANSI.bold + ANSI.magenta, colorized);
+    const renderedMethod = paint(` ${method} `, methodBadgeStyle(method), colorized);
     const renderedPath = paint(path, ANSI.blue, colorized);
 
-    return `${levelBadge} ${renderedMethod} > ${renderedPath} ${renderedMessage}`;
+    return `${renderedMethod} > ${renderedPath} ${renderedMessage}`;
+}
+
+function methodBadgeStyle(method: string): string {
+    const fg = ANSI.bold + ANSI.black;
+    switch (method) {
+        case "GET":
+            return fg + ANSI.bgBrightGreen;
+        case "POST":
+            return fg + ANSI.bgBrightBlue;
+        case "PUT":
+            return fg + ANSI.bgBrightYellow;
+        case "PATCH":
+            return fg + ANSI.bgBrightMagenta;
+        case "DELETE":
+            return fg + ANSI.bgBrightRed;
+        case "OPTIONS":
+            return fg + ANSI.bgBrightCyan;
+        default:
+            return ANSI.bold + ANSI.gray + ANSI.bgBrightWhite;
+    }
 }
 
 function writeLog(level: LogLevel, message: string, fields?: Record<string, unknown>): void {
