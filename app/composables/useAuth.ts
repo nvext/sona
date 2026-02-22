@@ -10,23 +10,47 @@ type RegisterInput = {
     password: string;
 };
 
+type RegisterVerificationResponse = {
+    user: AuthUser;
+    verification: {
+        required: boolean;
+        channel: "email" | "phone";
+        expiresAt: string;
+        retryAfterMs: number;
+    };
+};
+
 type UpdateProfileInput = {
     name?: string | null;
     email?: string | null;
     phone?: string | null;
 };
 
+type VerificationChannel = "email" | "phone";
+
 type AuthUser = {
     id: string;
     name: string | null;
     email: string | null;
     phone: string | null;
+    emailVerified: boolean;
+    phoneVerified: boolean;
     status: string;
+};
+
+type PendingRegistration = {
+    channel: VerificationChannel;
+    nextUrl: string;
+    password: string;
+    email?: string;
+    phone?: string;
+    resendAvailableAt?: number;
 };
 
 export function useAuth() {
     const isAuthenticated = useState<boolean>("auth-is-authenticated", () => false);
     const user = useState<AuthUser | null>("auth-user", () => null);
+    const pendingRegistration = useState<PendingRegistration | null>("auth-pending-registration", () => null);
     const { apiFetch, refreshSession } = useApiClient();
 
     async function login(input: LoginInput) {
@@ -40,13 +64,35 @@ export function useAuth() {
     }
 
     async function register(input: RegisterInput) {
-        await apiFetch("/api/auth/register", {
+        return await apiFetch<RegisterVerificationResponse>("/api/auth/register", {
+            method: "POST",
+            body: input,
+            skipAuthRefresh: true,
+        });
+    }
+
+    async function confirmRegistration(input: { email?: string; phone?: string; password: string; code: string }) {
+        const response = await apiFetch<{ ok: boolean; user: AuthUser }>("/api/auth/register/confirm", {
             method: "POST",
             body: input,
             skipAuthRefresh: true,
         });
         isAuthenticated.value = true;
-        await me();
+        user.value = response.user;
+        return response;
+    }
+
+    async function resendRegistrationVerification(input: { email?: string; phone?: string; password: string }) {
+        return await apiFetch<{
+            ok: boolean;
+            channel: "email" | "phone";
+            expiresAt: string;
+            retryAfterMs: number;
+        }>("/api/auth/register/resend", {
+            method: "POST",
+            body: input,
+            skipAuthRefresh: true,
+        });
     }
 
     async function refresh(): Promise<boolean> {
@@ -60,6 +106,7 @@ export function useAuth() {
         await apiFetch("/api/auth/logout", { method: "POST", skipAuthRefresh: true }).catch(() => null);
         isAuthenticated.value = false;
         user.value = null;
+        pendingRegistration.value = null;
     }
 
     async function me() {
@@ -85,14 +132,58 @@ export function useAuth() {
         return response.user;
     }
 
+    async function requestContactVerification(channel: VerificationChannel) {
+        return await apiFetch<{
+            ok: boolean;
+            channel: VerificationChannel;
+            expiresAt: string;
+            retryAfterMs: number;
+        }>("/api/auth/verification/request", {
+            method: "POST",
+            body: { channel },
+        });
+    }
+
+    async function confirmContactVerification(input: { channel: VerificationChannel; code: string }) {
+        const response = await apiFetch<{
+            ok: boolean;
+            channel: VerificationChannel;
+            verifiedAt: string;
+            user: AuthUser | null;
+        }>("/api/auth/verification/confirm", {
+            method: "POST",
+            body: input,
+        });
+        if (response.user) {
+            user.value = response.user;
+            isAuthenticated.value = true;
+        }
+        return response;
+    }
+
+    function setPendingRegistration(input: PendingRegistration) {
+        pendingRegistration.value = input;
+    }
+
+    function clearPendingRegistration() {
+        pendingRegistration.value = null;
+    }
+
     return {
         isAuthenticated,
         user,
+        pendingRegistration,
         login,
         register,
+        confirmRegistration,
+        resendRegistrationVerification,
+        setPendingRegistration,
+        clearPendingRegistration,
         refresh,
         logout,
         me,
         updateProfile,
+        requestContactVerification,
+        confirmContactVerification,
     };
 }

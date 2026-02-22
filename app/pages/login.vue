@@ -45,7 +45,7 @@
                         size="lg"
                         class="mt-3 text-lg py-3 px-8 !text-fg !bg-dark-bg disabled:opacity-50"
                         :disabled="loading">
-                        {{ mode === 'login' ? 'Войти' : 'Создать аккаунт' }}
+                        {{ mode === "login" ? "Войти" : "Создать аккаунт" }}
                     </UButton>
                 </UForm>
             </div>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
-const { login, register, me, isAuthenticated } = useAuth();
+const { login, register, setPendingRegistration, me, isAuthenticated } = useAuth();
 
 const mode = ref<"login" | "register">("login");
 const formState = reactive({
@@ -109,14 +109,44 @@ async function submit() {
     loading.value = true;
     try {
         if (mode.value === "login") {
-            await login(payload);
-        } else {
-            await register(payload);
+            try {
+                await login(payload);
+            } catch (err: any) {
+                const statusCode = err?.status ?? err?.response?.status;
+                const statusMessage = err?.data?.statusMessage ?? err?.statusMessage;
+                if (
+                    statusCode === 403 &&
+                    typeof statusMessage === "string" &&
+                    statusMessage.toLowerCase().includes("not verified")
+                ) {
+                    setPendingRegistration({
+                        ...payload,
+                        channel: isEmail ? "email" : "phone",
+                        password: formState.password,
+                        nextUrl: nextUrl.value,
+                    });
+                    await router.push("/register/confirm");
+                    return;
+                }
+                throw err;
+            }
+            await me();
+            await router.push(nextUrl.value);
+            return;
         }
-        await me();
-        await router.push(nextUrl.value);
+
+        const response = await register(payload);
+        setPendingRegistration({
+            ...payload,
+            channel: response.verification.channel,
+            password: formState.password,
+            nextUrl: nextUrl.value,
+            resendAvailableAt: Date.now() + response.verification.retryAfterMs,
+        });
+        await router.push("/register/confirm");
     } catch (err: any) {
-        error.value = err?.data?.statusMessage ?? "Ошибка авторизации.";
+        const statusMessage = err?.data?.statusMessage ?? err?.statusMessage;
+        error.value = statusMessage ?? "Ошибка авторизации.";
     } finally {
         loading.value = false;
     }

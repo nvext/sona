@@ -1,5 +1,7 @@
 <template>
-    <section class="px-6 lg:px-25 py-12 min-h-[calc(100dvh-120px)] flex items-center justify-center">
+    <section
+        v-if="isBaseProfileRoute"
+        class="px-6 lg:px-25 py-12 min-h-[calc(100dvh-120px)] flex items-center justify-center">
         <div class="w-full max-w-6xl grid gap-6 lg:grid-cols-[1fr_22rem]">
             <div class="bg-bg-1 rounded-3xl p-8 lg:p-10 border border-dark-bg/10">
                 <h1 class="text-5xl mb-8">Профиль</h1>
@@ -18,23 +20,63 @@
                             placeholder="Иван" />
                     </label>
 
-                    <label class="block space-y-2">
-                        <span class="text-sm">Email</span>
-                        <input
-                            v-model="form.email"
-                            type="email"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="name@example.com" />
-                    </label>
+                    <div class="space-y-3">
+                        <label class="block space-y-2">
+                            <span class="text-sm">Email</span>
+                            <input
+                                v-model="form.email"
+                                type="email"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="name@example.com" />
+                        </label>
+                        <div class="flex flex-wrap items-center gap-2 text-sm">
+                            <span :class="isChannelVerified('email') ? 'text-green-700' : 'text-dark-fg-2'">
+                                {{ isChannelVerified("email") ? "Email подтвержден" : "Email не подтвержден" }}
+                            </span>
+                            <UButton
+                                v-if="!isChannelVerified('email')"
+                                :to="canGoToVerification('email') ? '/profile/verify/email' : undefined"
+                                type="button"
+                                color="neutral"
+                                variant="outline"
+                                size="xs"
+                                :disabled="!canGoToVerification('email')">
+                                Подтвердить
+                            </UButton>
+                        </div>
+                        <p v-if="isChannelDirty('email')" class="text-xs text-dark-fg-2">
+                            Сохраните профиль, чтобы подтвердить новый email.
+                        </p>
+                    </div>
 
-                    <label class="block space-y-2">
-                        <span class="text-sm">Телефон</span>
-                        <input
-                            v-model="form.phone"
-                            type="tel"
-                            class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
-                            placeholder="+7..." />
-                    </label>
+                    <div class="space-y-3">
+                        <label class="block space-y-2">
+                            <span class="text-sm">Телефон</span>
+                            <input
+                                v-model="form.phone"
+                                type="tel"
+                                class="w-full border border-dark-bg/20 rounded-xl px-4 py-3 bg-bg"
+                                placeholder="+7..." />
+                        </label>
+                        <div class="flex flex-wrap items-center gap-2 text-sm">
+                            <span :class="isChannelVerified('phone') ? 'text-green-700' : 'text-dark-fg-2'">
+                                {{ isChannelVerified("phone") ? "Телефон подтвержден" : "Телефон не подтвержден" }}
+                            </span>
+                            <UButton
+                                v-if="!isChannelVerified('phone')"
+                                :to="canGoToVerification('phone') ? '/profile/verify/phone' : undefined"
+                                type="button"
+                                color="neutral"
+                                variant="outline"
+                                size="xs"
+                                :disabled="!canGoToVerification('phone')">
+                                Подтвердить
+                            </UButton>
+                        </div>
+                        <p v-if="isChannelDirty('phone')" class="text-xs text-dark-fg-2">
+                            Сохраните профиль, чтобы подтвердить новый телефон.
+                        </p>
+                    </div>
 
                     <p class="text-sm text-dark-fg-2">Хотя бы одно поле должно быть заполнено.</p>
                     <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
@@ -59,16 +101,19 @@
                 <ul class="space-y-3 text-sm opacity-90">
                     <li>Имя подставляется при оформлении заказа</li>
                     <li>Можно хранить и email, и телефон</li>
-                    <li>Изменения применяются сразу</li>
+                    <li>Контакты подтверждаются одноразовым кодом</li>
                 </ul>
             </aside>
         </div>
     </section>
+    <NuxtPage v-else />
 </template>
 
 <script setup lang="ts">
 const route = useRoute();
 const { isAuthenticated, user, me, updateProfile } = useAuth();
+
+type VerificationChannel = "email" | "phone";
 
 const pageLoading = ref(true);
 const saving = ref(false);
@@ -79,6 +124,7 @@ const form = reactive({
     email: "",
     phone: "",
 });
+const isBaseProfileRoute = computed(() => route.path === "/profile" || route.path === "/profile/");
 
 const canSubmit = computed(() => {
     if (!isAuthenticated.value || !user.value) {
@@ -99,21 +145,50 @@ const canSubmit = computed(() => {
     );
 });
 
-onMounted(async () => {
-    try {
-        await me();
-    } catch {
-        // handled by auth state
-    } finally {
-        pageLoading.value = false;
+async function loadProfilePage() {
+    pageLoading.value = true;
+
+    if (!isAuthenticated.value) {
+        try {
+            await me();
+        } catch {
+            // handled by auth state
+        }
     }
 
     if (!isAuthenticated.value) {
+        pageLoading.value = false;
         await navigateTo(`/login?next=${encodeURIComponent(route.fullPath)}`);
         return;
     }
 
     fillFormFromUser();
+    pageLoading.value = false;
+}
+
+onMounted(async () => {
+    if (!isBaseProfileRoute.value) {
+        return;
+    }
+
+    await loadProfilePage();
+});
+
+watch(isBaseProfileRoute, async (value) => {
+    if (!value) {
+        return;
+    }
+
+    await loadProfilePage();
+});
+
+watch([isAuthenticated, isBaseProfileRoute], async ([isAuth, isBase]) => {
+    if (!isBase) {
+        return;
+    }
+    if (!pageLoading.value && !isAuth) {
+        await navigateTo("/login");
+    }
 });
 
 function fillFormFromUser() {
@@ -147,5 +222,32 @@ async function submit() {
     } finally {
         saving.value = false;
     }
+}
+
+function getStoredContact(channel: VerificationChannel): string {
+    if (channel === "email") {
+        return (user.value?.email ?? "").trim();
+    }
+    return (user.value?.phone ?? "").trim();
+}
+
+function getFormContact(channel: VerificationChannel): string {
+    return (channel === "email" ? form.email : form.phone).trim();
+}
+
+function isChannelDirty(channel: VerificationChannel): boolean {
+    return getFormContact(channel) !== getStoredContact(channel);
+}
+
+function isChannelVerified(channel: VerificationChannel): boolean {
+    if (channel === "email") {
+        return Boolean(user.value?.emailVerified);
+    }
+    return Boolean(user.value?.phoneVerified);
+}
+
+function canGoToVerification(channel: VerificationChannel): boolean {
+    const hasContact = getStoredContact(channel).length > 0;
+    return hasContact && !isChannelVerified(channel) && !isChannelDirty(channel);
 }
 </script>
