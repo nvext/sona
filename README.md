@@ -58,6 +58,9 @@ bun run dev
 - `RATE_LIMIT_WINDOW_MS`
 - `RATE_LIMIT_AUTH_MAX`
 - `RATE_LIMIT_SUBMIT_MAX`
+- `RATE_LIMIT_ADMIN_WRITE_MAX`
+- `ADMIN_UI_ENABLED`
+- `ADMIN_WRITE_CSRF_TOKEN`
 - `ORDER_DELIVERY_RETRY_INTERVAL`
 - `ORDER_DELIVERY_RETRY_BATCH_SIZE`
 - `ORDER_DELIVERY_MAX_ATTEMPTS`
@@ -79,9 +82,23 @@ bun run db:migrate
 bun run admin:catalog:build
 bun run admin:catalog:sync
 bun run admin:catalog:apply
+bun run admin:user:role -- --email user@example.com --admin
 
 bun run test:db
 bun run test:telegram:smoke
+```
+
+### Выдача роли admin
+
+```bash
+# выдать admin по email
+bun run admin:user:role -- --email user@example.com --admin
+
+# снять admin (вернуть customer)
+bun run admin:user:role -- --email user@example.com --customer
+
+# проверить без изменения
+bun run admin:user:role -- --email user@example.com --admin --dry-run
 ```
 
 ## Каталог (admin JSON)

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { defineEventHandler, getHeader, getRequestURL, H3Event, setHeader, setResponseStatus } from 'h3';
 import { toHttpError } from './errors';
-import { applyCors, enforceRateLimit } from './security';
+import { applyCors, enforceAdminSecurity, enforceRateLimit } from './security';
 import { logError, logInfo } from '~~/server/infrastructure/runtime';
 
 type ApiEventContext = {
@@ -31,6 +31,7 @@ export function defineApiHandler<T>(handler: (event: H3Event) => Promise<T> | T)
         return null;
       }
 
+      enforceAdminSecurity(event);
       enforceRateLimit(event);
       const result = await handler(event);
       logInfo("api.success", {

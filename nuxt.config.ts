@@ -19,6 +19,12 @@ export default defineNuxtConfig({
     scanDirs: [infrastructureScanDir],
   },
   modules: ["@nuxt/image", "@nuxt/ui"],
+  runtimeConfig: {
+    public: {
+      adminUiEnabled: process.env.ADMIN_UI_ENABLED !== "false",
+      adminWriteCsrfToken: process.env.ADMIN_WRITE_CSRF_TOKEN ?? "",
+    },
+  },
   ui: {
     colorMode: false,
     fonts: false,

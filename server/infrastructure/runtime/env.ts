@@ -19,6 +19,13 @@ const envSchema = z.object({
     RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
     RATE_LIMIT_AUTH_MAX: z.coerce.number().int().positive().default(30),
     RATE_LIMIT_SUBMIT_MAX: z.coerce.number().int().positive().default(10),
+    RATE_LIMIT_ADMIN_WRITE_MAX: z.coerce.number().int().positive().default(60),
+    ADMIN_UI_ENABLED: z
+        .string()
+        .optional()
+        .default("true")
+        .transform((value) => value.trim().toLowerCase() !== "false"),
+    ADMIN_WRITE_CSRF_TOKEN: z.string().optional(),
     ORDER_DELIVERY_RETRY_INTERVAL: z.coerce.number().int().positive().default(30_000),
     ORDER_DELIVERY_RETRY_BATCH_SIZE: z.coerce.number().int().positive().default(20),
     ORDER_DELIVERY_MAX_ATTEMPTS: z.coerce.number().int().positive().default(5),
@@ -48,6 +55,11 @@ export type RuntimeEnv = {
         windowMs: number;
         authMax: number;
         submitMax: number;
+        adminWriteMax: number;
+    };
+    admin: {
+        uiEnabled: boolean;
+        writeCsrfToken: string | null;
     };
     retry: {
         intervalMs: number;
@@ -128,6 +140,13 @@ export function readRuntimeEnv(): RuntimeEnv {
             windowMs: parsed.RATE_LIMIT_WINDOW_MS,
             authMax: parsed.RATE_LIMIT_AUTH_MAX,
             submitMax: parsed.RATE_LIMIT_SUBMIT_MAX,
+            adminWriteMax: parsed.RATE_LIMIT_ADMIN_WRITE_MAX,
+        },
+        admin: {
+            uiEnabled: parsed.ADMIN_UI_ENABLED,
+            writeCsrfToken: (parsed.ADMIN_WRITE_CSRF_TOKEN?.trim() ?? "").length > 0
+                ? parsed.ADMIN_WRITE_CSRF_TOKEN!.trim()
+                : null,
         },
         retry: {
             intervalMs: parsed.ORDER_DELIVERY_RETRY_INTERVAL,

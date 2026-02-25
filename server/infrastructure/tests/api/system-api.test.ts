@@ -57,5 +57,6 @@ describe("infra system api", () => {
         assert.equal(response.status, 200);
         assert.ok(String(response.body.raw).includes("sona_delivery_submit_attempts_total"));
         assert.ok(String(response.body.raw).includes("sona_delivery_retry_cycles_total"));
+        assert.ok(String(response.body.raw).includes("sona_admin_publish_total"));
     });
 });

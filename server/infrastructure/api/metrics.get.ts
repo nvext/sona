@@ -33,5 +33,14 @@ export default defineApiHandler((event) => {
                 ? Math.floor(metrics.lastRetryCycleAt.getTime() / 1000)
                 : 0
         }`,
+        "# HELP sona_admin_publish_total Total successful admin catalog publish operations.",
+        "# TYPE sona_admin_publish_total counter",
+        `sona_admin_publish_total ${metrics.adminPublishTotal}`,
+        "# HELP sona_admin_publish_failed_total Total failed admin catalog publish operations.",
+        "# TYPE sona_admin_publish_failed_total counter",
+        `sona_admin_publish_failed_total ${metrics.adminPublishFailedTotal}`,
+        "# HELP sona_admin_publish_last_duration_ms Last successful admin publish duration in milliseconds.",
+        "# TYPE sona_admin_publish_last_duration_ms gauge",
+        `sona_admin_publish_last_duration_ms ${metrics.adminPublishLastDurationMs}`,
     ].join("\n");
 });

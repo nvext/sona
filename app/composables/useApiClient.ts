@@ -31,6 +31,7 @@ function shouldSkipRefresh(url: string, skipAuthRefresh: boolean): boolean {
 }
 
 export function useApiClient() {
+    const config = useRuntimeConfig();
     const refreshInFlight = useState<Promise<boolean> | null>("api-refresh-in-flight", () => null);
     const isAuthenticated = useState<boolean>("auth-is-authenticated", () => false);
     const user = useState<unknown | null>("auth-user", () => null);
@@ -57,10 +58,20 @@ export function useApiClient() {
 
     async function apiFetch<T>(url: string, options?: ApiFetchOptions<T>): Promise<ApiFetchResult<T>> {
         const { skipAuthRefresh = false, ...fetchOptions } = options ?? {};
+        const method = String((fetchOptions as any)?.method ?? "GET").toUpperCase();
+        const isAdminWrite =
+            getPathname(url).startsWith("/api/admin/") &&
+            (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE");
+        const adminCsrfToken = String(config.public.adminWriteCsrfToken ?? "").trim();
+        const headers = {
+            ...((fetchOptions as any)?.headers ?? {}),
+            ...(isAdminWrite && adminCsrfToken.length > 0 ? { "x-admin-csrf": adminCsrfToken } : {}),
+        };
 
         try {
             return (await $fetch<T>(url, {
                 ...fetchOptions,
+                headers,
                 credentials: "include",
             })) as ApiFetchResult<T>;
         } catch (error: any) {
@@ -82,6 +93,7 @@ export function useApiClient() {
 
             return (await $fetch<T>(url, {
                 ...fetchOptions,
+                headers,
                 credentials: "include",
             })) as ApiFetchResult<T>;
         }

@@ -25,3 +25,7 @@ logs
 
 # Generated admin artifacts
 server/infrastructure/admin/catalog/expanded.json
+public/uploads/admin/
+
+# Local planning/docs (not for repository)
+.local-docs/
