@@ -3,6 +3,7 @@ export interface User {
 	name: string | null
 	email: string | null
 	phone: string | null
+	role?: 'customer' | 'admin'
 	emailVerifiedAt: Date | null
 	phoneVerifiedAt: Date | null
 	emailVerificationCodeHash: string | null

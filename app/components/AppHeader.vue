@@ -17,6 +17,15 @@
         </nav>
 
         <div class="justify-self-end flex items-center gap-2">
+            <UButton
+                v-if="isAuthenticated && user?.role === 'admin'"
+                to="/admin/catalog"
+                color="neutral"
+                variant="soft"
+                class="h-11 px-4">
+                Admin
+            </UButton>
+
             <NuxtLink
                 to="/cart"
                 class="relative size-11 rounded-full border border-current/25 flex items-center justify-center cursor-pointer hover:bg-current/10 transition-colors"
@@ -114,7 +123,7 @@ import IconsLogo from './icons/Logo.vue';
 
 const route = useRoute();
 const { count: cartCount } = useCart();
-const { isAuthenticated, logout } = useAuth();
+const { isAuthenticated, user, logout } = useAuth();
 const profileMenuOpen = ref(false);
 const profileMenuRef = useTemplateRef("profileMenuRef");
 

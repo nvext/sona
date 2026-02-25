@@ -44,6 +44,7 @@ export class Register {
                 phoneVerificationRequestedAt: null,
                 passwordHash: await this.passwordHasher.hash(input.password),
                 sessionVersion: 0,
+                role: "customer",
                 status: "active",
                 createdAt: new Date(),
                 updatedAt: null,

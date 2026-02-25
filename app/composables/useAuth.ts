@@ -33,6 +33,7 @@ type AuthUser = {
     name: string | null;
     email: string | null;
     phone: string | null;
+    role: "customer" | "admin";
     emailVerified: boolean;
     phoneVerified: boolean;
     status: string;

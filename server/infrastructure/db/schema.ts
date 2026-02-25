@@ -1,4 +1,13 @@
-import { pgTable, text, integer, boolean, timestamp, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+    pgTable,
+    text,
+    integer,
+    boolean,
+    timestamp,
+    jsonb,
+    uniqueIndex,
+    primaryKey,
+} from "drizzle-orm/pg-core";
 import { cartStatuses } from "~~/server/domain/cart/const";
 import { fileStorageProviders } from "~~/server/domain/file/const";
 import { orderRequestStatuses } from "~~/server/domain/order-request/const";
@@ -13,6 +22,7 @@ export const users = pgTable(
         name: text("name"),
         email: text("email"),
         phone: text("phone"),
+        role: text("role").$type<"customer" | "admin">().notNull().default("customer"),
         emailVerifiedAt: timestamp("email_verified_at", { mode: "date" }),
         phoneVerifiedAt: timestamp("phone_verified_at", { mode: "date" }),
         emailVerificationCodeHash: text("email_verification_code_hash"),
@@ -211,3 +221,109 @@ export const productSnapshots = pgTable("product_snapshots", {
     currency: text("currency").$type<(typeof currencies)[number]>().notNull(),
     capturedAt: timestamp("captured_at", { mode: "date" }).notNull(),
 });
+
+export const catalogDrafts = pgTable("catalog_drafts", {
+    id: text("id").primaryKey(),
+    status: text("status").$type<"open" | "published" | "archived">().notNull(),
+    createdBy: text("created_by")
+        .notNull()
+        .references(() => users.id, { onDelete: "restrict" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+    publishedAt: timestamp("published_at", { mode: "date" }),
+});
+
+export const filesStaging = pgTable(
+    "files_staging",
+    {
+        draftId: text("draft_id")
+            .notNull()
+            .references(() => catalogDrafts.id, { onDelete: "cascade" }),
+        id: text("id").notNull(),
+        url: text("url").notNull(),
+        storageProvider: text("storage_provider").$type<(typeof fileStorageProviders)[number]>(),
+        storageBucket: text("storage_bucket"),
+        storageKey: text("storage_key"),
+        originalName: text("original_name").notNull(),
+        mimeType: text("mime_type").notNull(),
+        sizeBytes: integer("size_bytes").notNull(),
+        width: integer("width"),
+        height: integer("height"),
+        op: text("op").$type<"none" | "create" | "update" | "delete">().notNull(),
+        rowVersion: integer("row_version").notNull(),
+        createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+        updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+    },
+    (table) => ({
+        draftEntityPk: primaryKey({ columns: [table.draftId, table.id], name: "files_staging_pk" }),
+    }),
+);
+
+export const productCardsStaging = pgTable(
+    "product_cards_staging",
+    {
+        draftId: text("draft_id")
+            .notNull()
+            .references(() => catalogDrafts.id, { onDelete: "cascade" }),
+        id: text("id").notNull(),
+        type: text("type").$type<(typeof productTypes)[number]>().notNull(),
+        slug: text("slug").notNull(),
+        title: text("title").notNull(),
+        description: text("description").notNull(),
+        isActive: boolean("is_active").notNull(),
+        op: text("op").$type<"none" | "create" | "update" | "delete">().notNull(),
+        rowVersion: integer("row_version").notNull(),
+        createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+        updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+    },
+    (table) => ({
+        draftEntityPk: primaryKey({ columns: [table.draftId, table.id], name: "product_cards_staging_pk" }),
+    }),
+);
+
+export const productColorsStaging = pgTable(
+    "product_colors_staging",
+    {
+        draftId: text("draft_id")
+            .notNull()
+            .references(() => catalogDrafts.id, { onDelete: "cascade" }),
+        id: text("id").notNull(),
+        productCardId: text("product_card_id").notNull(),
+        name: text("name").notNull(),
+        hex: text("hex").notNull(),
+        imageIds: jsonb("image_ids").$type<string[]>().notNull(),
+        isActive: boolean("is_active").notNull(),
+        op: text("op").$type<"none" | "create" | "update" | "delete">().notNull(),
+        rowVersion: integer("row_version").notNull(),
+        createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+        updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+    },
+    (table) => ({
+        draftEntityPk: primaryKey({ columns: [table.draftId, table.id], name: "product_colors_staging_pk" }),
+    }),
+);
+
+export const productsStaging = pgTable(
+    "products_staging",
+    {
+        draftId: text("draft_id")
+            .notNull()
+            .references(() => catalogDrafts.id, { onDelete: "cascade" }),
+        id: text("id").notNull(),
+        cardId: text("card_id").notNull(),
+        productColorId: text("product_color_id").notNull(),
+        width: integer("width").notNull(),
+        height: integer("height").notNull(),
+        thickness: integer("thickness").notNull(),
+        price: integer("price").notNull(),
+        currency: text("currency").$type<(typeof currencies)[number]>().notNull(),
+        isActive: boolean("is_active").notNull(),
+        op: text("op").$type<"none" | "create" | "update" | "delete">().notNull(),
+        rowVersion: integer("row_version").notNull(),
+        createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+        updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
+    },
+    (table) => ({
+        draftEntityPk: primaryKey({ columns: [table.draftId, table.id], name: "products_staging_pk" }),
+    }),
+);

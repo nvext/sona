@@ -6,6 +6,7 @@ export function toAuthUserPayload(user: User) {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        role: user.role ?? "customer",
         emailVerified: user.emailVerifiedAt !== null,
         phoneVerified: user.phoneVerifiedAt !== null,
         status: user.status,

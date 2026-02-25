@@ -10,6 +10,7 @@
     "admin:catalog:build": "bun run server/infrastructure/admin/catalog/build.ts",
     "admin:catalog:sync": "bun run server/infrastructure/admin/catalog/sync.ts",
     "admin:catalog:apply": "bun run admin:catalog:build && bun run admin:catalog:sync",
+    "admin:user:role": "bun run server/infrastructure/admin/users/set-role.ts",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
