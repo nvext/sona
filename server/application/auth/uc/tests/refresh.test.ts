@@ -74,7 +74,11 @@ function makeSut(options: { session: Session | null; updatedSession: Session | n
         accessTokenIssuer,
         tokenHasher,
         fingerprinter,
-        { sessionTtl: 60_000 },
+        {
+            sessionTtl: 60_000,
+            verificationCodeTtlMs: 300_000,
+            verificationResendCooldownMs: 30_000,
+        },
     );
 
     return { uc, getUpdateInput: () => updateInput };

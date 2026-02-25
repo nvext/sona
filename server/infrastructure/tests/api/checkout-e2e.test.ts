@@ -1,7 +1,7 @@
 import { beforeEach, describe, test } from "node:test";
 import assert from "node:assert/strict";
 import registerHandler from "~~/server/infrastructure/api/auth/register.post";
-import loginHandler from "~~/server/infrastructure/api/auth/login.post";
+import registerConfirmHandler from "~~/server/infrastructure/api/auth/register/confirm.post";
 import addItemHandler from "~~/server/infrastructure/api/cart/items.post";
 import createDraftHandler from "~~/server/infrastructure/api/checkout/drafts.post";
 import submitHandler from "~~/server/infrastructure/api/checkout/submit.post";
@@ -85,6 +85,14 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
     const fingerprinter = new Sha256Fingerprinter();
     const idGenerator = new UuidGenerator();
     const refreshTokenGenerator = new CryptoRefreshTokenGenerator();
+    const verificationCodeGenerator = {
+        generate() {
+            return "123456";
+        },
+    };
+    const contactVerificationDeliveryService = {
+        async send() {},
+    };
     const { authConfig, accessTokenConfig } = readAuthConfigFromEnv();
     const accessTokenIssuer = new HmacAccessTokenIssuer(accessTokenConfig);
     const accessTokenVerifier = new HmacAccessTokenVerifier(accessTokenConfig);
@@ -117,6 +125,8 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
             accessTokenVerifier,
             refreshTokenGenerator,
             orderRequestDeliveryService: deliveryService,
+            verificationCodeGenerator,
+            contactVerificationDeliveryService,
         },
         config: {
             authConfig,
@@ -130,6 +140,7 @@ function createRuntimeForE2e(deliveryService: OrderRequestDeliveryService): {
 }
 
 async function registerAndLogin(
+    container: RuntimeContainer,
     useCases: ReturnType<typeof createUseCases>,
     email: string,
     password: string,
@@ -143,15 +154,27 @@ async function registerAndLogin(
     });
     assert.equal(registerResponse.status, 200);
 
-    const loginResponse = await callApi({
-        route: "/auth/login",
+    const confirmResponse = await callApi({
+        route: "/auth/register/confirm",
         method: "POST",
-        handler: loginHandler as any,
+        handler: registerConfirmHandler as any,
         useCases,
-        body: { email, password },
+        container: {
+            repos: {
+                userRepo: {
+                    getByEmail: (params: { email: string }) => container.repos.userRepo.getByEmail(params),
+                },
+            },
+            services: {
+                passwordHasher: {
+                    verify: (hash: string, value: string) => container.services.passwordHasher.verify(hash, value),
+                },
+            },
+        },
+        body: { email, password, code: "123456" },
     });
-    assert.equal(loginResponse.status, 200);
-    const setCookie = loginResponse.headers["set-cookie"];
+    assert.equal(confirmResponse.status, 200);
+    const setCookie = confirmResponse.headers["set-cookie"];
     const cookieHeader = Array.isArray(setCookie)
         ? setCookie.map((value) => value.split(";")[0]).join("; ")
         : typeof setCookie === "string"
@@ -193,7 +216,7 @@ describe("infra checkout e2e", () => {
         const delivery = new ScriptedDeliveryService([true]);
         const { container, useCases } = createRuntimeForE2e(delivery);
 
-        const user = await registerAndLogin(useCases, "user1@example.com", "secret123");
+        const user = await registerAndLogin(container, useCases, "user1@example.com", "secret123");
         await createCartForUser(container, user.userId, "cart-1");
 
         const catalogResponse = await callApi({
@@ -278,7 +301,7 @@ describe("infra checkout e2e", () => {
         const delivery = new ScriptedDeliveryService([false, true]);
         const { container, useCases } = createRuntimeForE2e(delivery);
 
-        const user = await registerAndLogin(useCases, "user2@example.com", "secret123");
+        const user = await registerAndLogin(container, useCases, "user2@example.com", "secret123");
         await createCartForUser(container, user.userId, "cart-2");
 
         await callApi({
@@ -359,6 +382,14 @@ describe("infra checkout e2e", () => {
                 name: "Макс",
                 email: "user-max@example.com",
                 phone: null,
+                emailVerifiedAt: null,
+                phoneVerifiedAt: null,
+                emailVerificationCodeHash: null,
+                emailVerificationExpiresAt: null,
+                emailVerificationRequestedAt: null,
+                phoneVerificationCodeHash: null,
+                phoneVerificationExpiresAt: null,
+                phoneVerificationRequestedAt: null,
                 passwordHash: "hash",
                 createdAt: FIXED_NOW,
                 updatedAt: null,
@@ -418,8 +449,8 @@ describe("infra checkout e2e", () => {
         const delivery = new ScriptedDeliveryService([true]);
         const { container, useCases } = createRuntimeForE2e(delivery);
 
-        const user1 = await registerAndLogin(useCases, "owner@example.com", "secret123");
-        const user2 = await registerAndLogin(useCases, "attacker@example.com", "secret123");
+        const user1 = await registerAndLogin(container, useCases, "owner@example.com", "secret123");
+        const user2 = await registerAndLogin(container, useCases, "attacker@example.com", "secret123");
         await createCartForUser(container, user1.userId, "cart-owner");
 
         await callApi({

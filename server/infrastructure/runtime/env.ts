@@ -10,6 +10,8 @@ const envSchema = z.object({
     AUTH_SESSION_TTL: z.coerce.number().int().positive().default(30 * 24 * 60 * 60 * 1000),
     AUTH_ACCESS_TTL: z.coerce.number().int().positive().default(15 * 60 * 1000),
     AUTH_ACCESS_SECRET: z.string().min(1).default("dev-access-secret-change-me"),
+    AUTH_VERIFICATION_CODE_TTL: z.coerce.number().int().positive().default(10 * 60 * 1000),
+    AUTH_VERIFICATION_RESEND_COOLDOWN: z.coerce.number().int().positive().default(60 * 1000),
     ORDER_DELIVERY_PROVIDER: z.enum(["noop", "telegram"]).default("noop"),
     TELEGRAM_BOT_TOKEN: z.string().optional(),
     TELEGRAM_MANAGER_CHAT_ID: z.string().optional(),
@@ -31,6 +33,8 @@ export type RuntimeEnv = {
         sessionTtl: number;
         accessTtlMs: number;
         accessSecret: string;
+        verificationCodeTtlMs: number;
+        verificationResendCooldownMs: number;
     };
     delivery: {
         provider: "noop" | "telegram";
@@ -107,6 +111,8 @@ export function readRuntimeEnv(): RuntimeEnv {
             sessionTtl: parsed.AUTH_SESSION_TTL,
             accessTtlMs: parsed.AUTH_ACCESS_TTL,
             accessSecret: parsed.AUTH_ACCESS_SECRET,
+            verificationCodeTtlMs: parsed.AUTH_VERIFICATION_CODE_TTL,
+            verificationResendCooldownMs: parsed.AUTH_VERIFICATION_RESEND_COOLDOWN,
         },
         delivery: {
             provider: parsed.ORDER_DELIVERY_PROVIDER,

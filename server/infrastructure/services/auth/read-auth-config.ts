@@ -1,4 +1,4 @@
-import { AuthConfig } from "~~/server/application/auth/config/AuthConfig";
+import type { AuthConfig } from "~~/server/application/auth/config/AuthConfig";
 import { readRuntimeEnv } from "~~/server/infrastructure/runtime/env";
 
 export type AccessTokenConfig = {
@@ -10,7 +10,11 @@ export function readAuthConfigFromEnv(): { authConfig: AuthConfig; accessTokenCo
     const env = readRuntimeEnv();
 
     return {
-        authConfig: { sessionTtl: env.auth.sessionTtl },
+        authConfig: {
+            sessionTtl: env.auth.sessionTtl,
+            verificationCodeTtlMs: env.auth.verificationCodeTtlMs,
+            verificationResendCooldownMs: env.auth.verificationResendCooldownMs,
+        },
         accessTokenConfig: {
             secret: env.auth.accessSecret,
             ttlMs: env.auth.accessTtlMs,

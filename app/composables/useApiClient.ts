@@ -6,6 +6,8 @@ type ApiFetchResult<T> = Awaited<ReturnType<typeof $fetch<T>>>;
 const NO_REFRESH_PATHS = new Set([
     "/api/auth/login",
     "/api/auth/register",
+    "/api/auth/register/confirm",
+    "/api/auth/register/resend",
     "/api/auth/refresh",
     "/api/auth/logout",
 ]);

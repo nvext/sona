@@ -3,6 +3,7 @@ import { resolveUseCases } from "~~/server/infrastructure/http/api/use-cases";
 import { defineApiHandler } from "~~/server/infrastructure/http/api/handler";
 import { requireAuth } from "~~/server/infrastructure/http/api/auth";
 import { readValidatedBody } from "~~/server/infrastructure/http/api/validation";
+import { toAuthUserPayload } from "./user-payload";
 
 const updateProfileSchema = z
     .object({
@@ -23,12 +24,6 @@ export default defineApiHandler(async (event) => {
     });
 
     return {
-        user: {
-            id: result.user.id,
-            name: result.user.name,
-            email: result.user.email,
-            phone: result.user.phone,
-            status: result.user.status,
-        },
+        user: toAuthUserPayload(result.user),
     };
 });

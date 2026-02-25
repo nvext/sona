@@ -43,6 +43,14 @@ export class UpdateProfile {
             name?: string | null;
             email?: string | null;
             phone?: string | null;
+            emailVerifiedAt?: Date | null;
+            phoneVerifiedAt?: Date | null;
+            emailVerificationCodeHash?: string | null;
+            emailVerificationExpiresAt?: Date | null;
+            emailVerificationRequestedAt?: Date | null;
+            phoneVerificationCodeHash?: string | null;
+            phoneVerificationExpiresAt?: Date | null;
+            phoneVerificationRequestedAt?: Date | null;
             updatedAt: Date;
         } = {
             id: currentUser.id,
@@ -54,9 +62,21 @@ export class UpdateProfile {
         }
         if (input.email !== undefined) {
             patch.email = nextEmail;
+            if (nextEmail !== currentUser.email) {
+                patch.emailVerifiedAt = null;
+                patch.emailVerificationCodeHash = null;
+                patch.emailVerificationExpiresAt = null;
+                patch.emailVerificationRequestedAt = null;
+            }
         }
         if (input.phone !== undefined) {
             patch.phone = nextPhone;
+            if (nextPhone !== currentUser.phone) {
+                patch.phoneVerifiedAt = null;
+                patch.phoneVerificationCodeHash = null;
+                patch.phoneVerificationExpiresAt = null;
+                patch.phoneVerificationRequestedAt = null;
+            }
         }
 
         const { data: user } = await this.userRepo.update({ patch });

@@ -10,6 +10,14 @@ const baseUser: User = {
     name: null,
     email: "user@example.com",
     phone: "+10000000000",
+    emailVerifiedAt: new Date("2026-01-01T00:00:00.000Z"),
+    phoneVerifiedAt: new Date("2026-01-01T00:00:00.000Z"),
+    emailVerificationCodeHash: null,
+    emailVerificationExpiresAt: null,
+    emailVerificationRequestedAt: null,
+    phoneVerificationCodeHash: null,
+    phoneVerificationExpiresAt: null,
+    phoneVerificationRequestedAt: null,
     passwordHash: "hash",
     createdAt: new Date("2026-01-01T00:00:00.000Z"),
     updatedAt: null,
@@ -142,6 +150,41 @@ describe("UpdateProfile", () => {
             }),
             (error) => error instanceof ValidationError && error.message === "At least one contact is required",
         );
+    });
+
+    test("resets email verification state when email changes", async () => {
+        let storedUser: User = { ...baseUser };
+        let appliedPatch: any = null;
+
+        const userRepo = {
+            async getById() {
+                return { data: storedUser, meta: undefined };
+            },
+            async getByEmail() {
+                return { data: null, meta: undefined };
+            },
+            async getByPhone() {
+                return { data: null, meta: undefined };
+            },
+            async update(input: any) {
+                appliedPatch = input.patch;
+                storedUser = { ...storedUser, ...input.patch };
+                return { data: storedUser, meta: undefined };
+            },
+        } as unknown as UserRepo;
+
+        const uc = new UpdateProfile(userRepo);
+        const result = await uc.execute({
+            userId: baseUser.id,
+            email: "fresh@example.com",
+        });
+
+        assert.equal(result.user.email, "fresh@example.com");
+        assert.equal(result.user.emailVerifiedAt, null);
+        assert.equal(result.user.emailVerificationCodeHash, null);
+        assert.equal(result.user.emailVerificationExpiresAt, null);
+        assert.equal(result.user.emailVerificationRequestedAt, null);
+        assert.equal(appliedPatch.emailVerifiedAt, null);
     });
 
     test("throws NotFoundError when user does not exist", async () => {

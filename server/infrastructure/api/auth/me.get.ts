@@ -1,6 +1,7 @@
 import { resolveContainer } from '~~/server/infrastructure/http/api/use-cases';
 import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
 import { requireAuth } from '~~/server/infrastructure/http/api/auth';
+import { toAuthUserPayload } from './user-payload';
 
 export default defineApiHandler(async (event) => {
   const auth = await requireAuth(event);
@@ -10,12 +11,6 @@ export default defineApiHandler(async (event) => {
     return { user: null };
   }
   return {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      status: user.status,
-    },
+    user: toAuthUserPayload(user),
   };
 });

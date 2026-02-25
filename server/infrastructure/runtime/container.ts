@@ -25,8 +25,11 @@ import {
     NoopOrderRequestDeliveryService,
     TelegramOrderRequestDeliveryService,
     readTelegramDeliveryConfigFromEnv,
+    RandomVerificationCodeGenerator,
+    LogContactVerificationDeliveryService,
 } from "~~/server/infrastructure/services";
-import { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
+import type { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
+import type { ContactVerificationDeliveryService } from "~~/server/application/auth/services/contact-verification-delivery";
 
 export type RuntimeContainer = {
     repos: {
@@ -56,6 +59,8 @@ export type RuntimeContainer = {
         accessTokenVerifier: HmacAccessTokenVerifier;
         refreshTokenGenerator: CryptoRefreshTokenGenerator;
         orderRequestDeliveryService: OrderRequestDeliveryService;
+        verificationCodeGenerator: RandomVerificationCodeGenerator;
+        contactVerificationDeliveryService: ContactVerificationDeliveryService;
     };
     config: {
         authConfig: ReturnType<typeof readAuthConfigFromEnv>["authConfig"];
@@ -89,6 +94,8 @@ export function getRuntimeContainer(): RuntimeContainer {
     const fingerprinter = new Sha256Fingerprinter();
     const idGenerator = new UuidGenerator();
     const refreshTokenGenerator = new CryptoRefreshTokenGenerator();
+    const verificationCodeGenerator = new RandomVerificationCodeGenerator();
+    const contactVerificationDeliveryService = new LogContactVerificationDeliveryService();
     const { authConfig, accessTokenConfig } = readAuthConfigFromEnv();
     const accessTokenIssuer = new HmacAccessTokenIssuer(accessTokenConfig);
     const accessTokenVerifier = new HmacAccessTokenVerifier(accessTokenConfig);
@@ -125,6 +132,8 @@ export function getRuntimeContainer(): RuntimeContainer {
             accessTokenVerifier,
             refreshTokenGenerator,
             orderRequestDeliveryService,
+            verificationCodeGenerator,
+            contactVerificationDeliveryService,
         },
         config: {
             authConfig,

@@ -1,6 +1,7 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { InvalidCredentialsError } from "~~/server/shared/errors/InvalidCredentialsError";
+import { ContactNotVerifiedError } from "~~/server/shared/errors/ContactNotVerifiedError";
 import { baseUser, makeLoginSut } from "~~/server/tests/mocks/auth";
 
 describe("Login", () => {
@@ -55,6 +56,41 @@ describe("Login", () => {
         await assert.rejects(
             uc.execute({ email: "user@example.com", password: "wrong" }),
             InvalidCredentialsError,
+        );
+        assert.equal(sessionRepo.added.length, 0);
+    });
+
+    test("rejects login by email when email is not verified", async () => {
+        const { uc, sessionRepo } = makeLoginSut({
+            user: {
+                ...baseUser,
+                status: "active",
+                emailVerifiedAt: null,
+            },
+            verifyResult: true,
+        });
+
+        await assert.rejects(
+            uc.execute({ email: "user@example.com", password: "secret" }),
+            ContactNotVerifiedError,
+        );
+        assert.equal(sessionRepo.added.length, 0);
+    });
+
+    test("rejects login by phone when phone is not verified", async () => {
+        const { uc, sessionRepo } = makeLoginSut({
+            user: {
+                ...baseUser,
+                status: "active",
+                phone: "+10000000000",
+                phoneVerifiedAt: null,
+            },
+            verifyResult: true,
+        });
+
+        await assert.rejects(
+            uc.execute({ phone: "+10000000000", password: "secret" }),
+            ContactNotVerifiedError,
         );
         assert.equal(sessionRepo.added.length, 0);
     });

@@ -131,6 +131,9 @@ function closeProfileMenu() {
 async function handleLogout() {
     closeProfileMenu();
     await logout();
+    if (route.path.startsWith("/profile")) {
+        await navigateTo("/login");
+    }
 }
 
 function onDocumentClick(event: MouseEvent) {

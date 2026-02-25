@@ -72,6 +72,7 @@
                             color="neutral"
                             variant="outline"
                             size="lg"
+                            class="text-lg py-3 px-8"
                             :disabled="requestLoading || confirmLoading || resendLocked"
                             :loading="requestLoading"
                             @click="sendCode">
@@ -91,7 +92,7 @@
             </div>
 
             <aside class="bg-dark-bg text-fg rounded-3xl p-8 flex flex-col justify-between">
-                <div>
+                <div class="mb-10">
                     <p class="text-sm uppercase tracking-wide opacity-70">Подтверждение</p>
                     <h2 class="text-3xl mt-2">
                         {{ channel === "phone" ? "Телефон" : "Email" }}

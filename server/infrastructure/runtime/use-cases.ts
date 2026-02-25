@@ -3,6 +3,8 @@ import { Logout } from "~~/server/application/auth/uc/logout";
 import { Refresh } from "~~/server/application/auth/uc/refresh";
 import { Register } from "~~/server/application/auth/uc/register";
 import { UpdateProfile } from "~~/server/application/auth/uc/update-profile";
+import { RequestContactVerification } from "~~/server/application/auth/uc/request-contact-verification";
+import { ConfirmContactVerification } from "~~/server/application/auth/uc/confirm-contact-verification";
 import { AddItemToCart } from "~~/server/application/cart/uc/add-product-to-cart";
 import { GetCartItems } from "~~/server/application/cart/uc/get-cart-items";
 import { RemoveItemFromCart } from "~~/server/application/cart/uc/remove-product-from-cart";
@@ -20,6 +22,8 @@ export type RuntimeUseCases = {
     refresh: Refresh;
     register: Register;
     updateProfile: UpdateProfile;
+    requestContactVerification: RequestContactVerification;
+    confirmContactVerification: ConfirmContactVerification;
     addItemToCart: AddItemToCart;
     getCartItems: GetCartItems;
     removeItemFromCart: RemoveItemFromCart;
@@ -60,6 +64,17 @@ export function createUseCases(container: RuntimeContainer = getRuntimeContainer
             container.services.passwordHasher,
         ),
         updateProfile: new UpdateProfile(container.repos.userRepo),
+        requestContactVerification: new RequestContactVerification(
+            container.repos.userRepo,
+            container.services.tokenHasher,
+            container.services.verificationCodeGenerator,
+            container.services.contactVerificationDeliveryService,
+            container.config.authConfig,
+        ),
+        confirmContactVerification: new ConfirmContactVerification(
+            container.repos.userRepo,
+            container.services.tokenHasher,
+        ),
         addItemToCart: new AddItemToCart(
             container.repos.cartRepo,
             container.repos.cartItemRepo,

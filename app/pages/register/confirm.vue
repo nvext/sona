@@ -51,6 +51,7 @@
                             color="neutral"
                             variant="outline"
                             size="lg"
+                            class="text-lg py-3 px-8"
                             :disabled="loading || resendLoading || resendLocked"
                             :loading="resendLoading"
                             @click="resendCode">

@@ -48,6 +48,10 @@ describe("Register", () => {
         assert.equal(addedUsers[0].name, null);
         assert.equal(addedUsers[0].email, "user@example.com");
         assert.equal(addedUsers[0].phone, null);
+        assert.equal(addedUsers[0].emailVerifiedAt, null);
+        assert.equal(addedUsers[0].phoneVerifiedAt, null);
+        assert.equal(addedUsers[0].emailVerificationCodeHash, null);
+        assert.equal(addedUsers[0].phoneVerificationCodeHash, null);
         assert.equal(addedUsers[0].passwordHash, "hashed:secret");
         assert.equal(result.user.id, "user-1");
     });
@@ -58,6 +62,14 @@ describe("Register", () => {
             name: null,
             email: "user@example.com",
             phone: null,
+            emailVerifiedAt: null,
+            phoneVerifiedAt: null,
+            emailVerificationCodeHash: null,
+            emailVerificationExpiresAt: null,
+            emailVerificationRequestedAt: null,
+            phoneVerificationCodeHash: null,
+            phoneVerificationExpiresAt: null,
+            phoneVerificationRequestedAt: null,
             passwordHash: "hash",
             createdAt: new Date(),
             updatedAt: null,
@@ -100,6 +112,14 @@ describe("Register", () => {
             name: null,
             email: null,
             phone: "+10000000000",
+            emailVerifiedAt: null,
+            phoneVerifiedAt: null,
+            emailVerificationCodeHash: null,
+            emailVerificationExpiresAt: null,
+            emailVerificationRequestedAt: null,
+            phoneVerificationCodeHash: null,
+            phoneVerificationExpiresAt: null,
+            phoneVerificationRequestedAt: null,
             passwordHash: "hash",
             createdAt: new Date(),
             updatedAt: null,

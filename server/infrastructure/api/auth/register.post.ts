@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { resolveUseCases } from '~~/server/infrastructure/http/api/use-cases';
 import { defineApiHandler } from '~~/server/infrastructure/http/api/handler';
 import { readValidatedBody } from '~~/server/infrastructure/http/api/validation';
-import { setAuthCookies } from '~~/server/infrastructure/http/api/auth';
+import { toAuthUserPayload } from './user-payload';
 
 const registerSchema = z.union([
   z.object({
@@ -18,20 +18,19 @@ const registerSchema = z.union([
 export default defineApiHandler(async (event) => {
   const input = await readValidatedBody(event, registerSchema);
   const result = await resolveUseCases(event).register.execute(input as any);
-
-  if ("password" in input) {
-    const loginResult = await resolveUseCases(event).login.execute(input as any);
-    setAuthCookies(event, loginResult.accessToken, loginResult.refreshToken);
-  }
+  const channel = "email" in input ? "email" : "phone";
+  const verification = await resolveUseCases(event).requestContactVerification.execute({
+    userId: result.user.id,
+    channel,
+  });
 
   return {
-    user: {
-      id: result.user.id,
-      name: result.user.name,
-      email: result.user.email,
-      phone: result.user.phone,
-      status: result.user.status,
-      createdAt: result.user.createdAt,
+    user: toAuthUserPayload(result.user),
+    verification: {
+      required: true,
+      channel: verification.channel,
+      expiresAt: verification.expiresAt,
+      retryAfterMs: verification.retryAfterMs,
     },
   };
 });

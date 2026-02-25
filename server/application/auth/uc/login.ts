@@ -5,6 +5,7 @@ import { EntityIdGenerator, UniqueIdGenerator } from "~~/server/shared/id";
 import { AccessTokenIssuer, RefreshTokenGenerator } from "~~/server/shared/token";
 import { AuthConfig } from "../config/AuthConfig";
 import { InvalidCredentialsError } from "~~/server/shared/errors/InvalidCredentialsError";
+import { ContactNotVerifiedError } from "~~/server/shared/errors/ContactNotVerifiedError";
 
 export class Login {
     constructor(
@@ -25,12 +26,20 @@ export class Login {
             "email" in input ? { email: input.email } : { phone: input.phone },
         );
 
-        if (
-            user === null ||
-            user.status !== "active" ||
-            !(await this.passwordHasher.verify(user.passwordHash, input.password))
-        ) {
+        if (user === null || user.status !== "active") {
             throw new InvalidCredentialsError();
+        }
+
+        if (!(await this.passwordHasher.verify(user.passwordHash, input.password))) {
+            throw new InvalidCredentialsError();
+        }
+
+        if ("email" in input && user.emailVerifiedAt === null) {
+            throw new ContactNotVerifiedError("Email is not verified");
+        }
+
+        if ("phone" in input && user.phoneVerifiedAt === null) {
+            throw new ContactNotVerifiedError("Phone is not verified");
         }
 
         const refreshToken = this.refreshTokenGenerator.generate();

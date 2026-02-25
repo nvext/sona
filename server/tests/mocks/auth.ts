@@ -29,7 +29,11 @@ export function makeLoginSut(input: { user: User | null; verifyResult: boolean }
         new StubRefreshTokenGenerator(),
         new StubTokenHasher(),
         new StubFingerprinter(),
-        { sessionTtl: 60_000 },
+        {
+            sessionTtl: 60_000,
+            verificationCodeTtlMs: 300_000,
+            verificationResendCooldownMs: 30_000,
+        },
     );
 
     return { uc, sessionRepo, passwordHasher };
