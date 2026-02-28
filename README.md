@@ -37,6 +37,54 @@ bun run db:migrate
 bun run dev
 ```
 
+## Docker / Podman
+
+### Локальный запуск через compose
+
+```bash
+podman compose up --build
+```
+
+Что поднимется:
+
+- `db` - PostgreSQL
+- `migrate` - одноразовое применение миграций
+- `app` - production-сборка Nuxt/Nitro
+
+Приложение будет доступно на `http://localhost:3000/sona/`.
+
+`compose.yaml` предназначен для локального запуска и задает безопасные локальные значения по умолчанию:
+
+- `AUTH_ACCESS_SECRET=change-me-for-local-compose`
+- `ORDER_DELIVERY_PROVIDER=noop`
+
+Для production эти значения нужно заменить.
+
+Если нужно пересобрать все с нуля:
+
+```bash
+podman compose down -v
+podman compose build --no-cache
+podman compose up
+```
+
+### Отдельная сборка контейнера
+
+```bash
+podman build -t sona:local .
+podman run --rm -p 3000:3000 \
+  -e DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB_NAME \
+  -e AUTH_ACCESS_SECRET=change-me \
+  -e ORDER_DELIVERY_PROVIDER=noop \
+  sona:local
+```
+
+Контейнер запускает Nuxt так, как ожидает preset `node-server`:
+
+```bash
+node .output/server/index.mjs
+```
+
 ## Переменные окружения
 
 Пример см. в `.env.example`.

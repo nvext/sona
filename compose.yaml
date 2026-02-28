@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sona
+      POSTGRES_USER: sona
+      POSTGRES_PASSWORD: sona
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sona -d sona"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tools
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://sona:sona@db:5432/sona
+      AUTH_ACCESS_SECRET: change-me-for-local-compose
+      ORDER_DELIVERY_PROVIDER: noop
+    command: ["bun", "run", "db:migrate"]
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://sona:sona@db:5432/sona
+      AUTH_ACCESS_SECRET: change-me-for-local-compose
+      ORDER_DELIVERY_PROVIDER: noop
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
