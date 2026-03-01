@@ -12,6 +12,26 @@ const envSchema = z.object({
     AUTH_ACCESS_SECRET: z.string().min(1).default("dev-access-secret-change-me"),
     AUTH_VERIFICATION_CODE_TTL: z.coerce.number().int().positive().default(10 * 60 * 1000),
     AUTH_VERIFICATION_RESEND_COOLDOWN: z.coerce.number().int().positive().default(60 * 1000),
+    AUTH_CONTACT_VERIFICATION_PROVIDER: z.enum(["log", "smtp"]).default("log"),
+    AUTH_EMAIL_SMTP_HOST: z.string().optional(),
+    AUTH_EMAIL_SMTP_PORT: z.coerce.number().int().positive().optional(),
+    AUTH_EMAIL_SMTP_SECURE: z
+        .string()
+        .optional()
+        .transform((value) => value?.trim().toLowerCase() === "true"),
+    AUTH_EMAIL_SMTP_USER: z.string().optional(),
+    AUTH_EMAIL_SMTP_PASSWORD: z.string().optional(),
+    AUTH_EMAIL_FROM: z.string().optional(),
+    AUTH_EMAIL_REPLY_TO: z.string().optional(),
+    AUTH_PHONE_VERIFICATION_PROVIDER: z.enum(["log", "sms_ru", "telegram"]).default("log"),
+    AUTH_SMS_RU_API_ID: z.string().optional(),
+    AUTH_SMS_RU_FROM: z.string().optional(),
+    AUTH_SMS_RU_TEST: z
+        .string()
+        .optional()
+        .transform((value) => value?.trim().toLowerCase() === "true"),
+    AUTH_PHONE_TELEGRAM_GATEWAY_ACCESS_TOKEN: z.string().optional(),
+    AUTH_PHONE_TELEGRAM_GATEWAY_SENDER_USERNAME: z.string().optional(),
     ORDER_DELIVERY_PROVIDER: z.enum(["noop", "telegram"]).default("noop"),
     TELEGRAM_BOT_TOKEN: z.string().optional(),
     TELEGRAM_MANAGER_CHAT_ID: z.string().optional(),
@@ -42,6 +62,24 @@ export type RuntimeEnv = {
         accessSecret: string;
         verificationCodeTtlMs: number;
         verificationResendCooldownMs: number;
+        contactVerification: {
+            provider: "log" | "smtp";
+            smtpHost: string | null;
+            smtpPort: number | null;
+            smtpSecure: boolean;
+            smtpUser: string | null;
+            smtpPassword: string | null;
+            emailFrom: string | null;
+            emailReplyTo: string | null;
+            phone: {
+                provider: "log" | "sms_ru" | "telegram";
+                smsRuApiId: string | null;
+                smsRuFrom: string | null;
+                smsRuTestMode: boolean;
+                telegramGatewayAccessToken: string | null;
+                telegramGatewaySenderUsername: string | null;
+            };
+        };
     };
     delivery: {
         provider: "noop" | "telegram";
@@ -103,6 +141,43 @@ export function readRuntimeEnv(): RuntimeEnv {
     }
     const telegramBotToken = parsed.TELEGRAM_BOT_TOKEN?.trim() ?? "";
     const telegramManagerChatId = parsed.TELEGRAM_MANAGER_CHAT_ID?.trim() ?? "";
+    const authEmailSmtpHost = parsed.AUTH_EMAIL_SMTP_HOST?.trim() ?? "";
+    const authEmailSmtpUser = parsed.AUTH_EMAIL_SMTP_USER?.trim() ?? "";
+    const authEmailSmtpPassword = parsed.AUTH_EMAIL_SMTP_PASSWORD ?? "";
+    const authEmailFrom = parsed.AUTH_EMAIL_FROM?.trim() ?? "";
+    const authEmailReplyTo = parsed.AUTH_EMAIL_REPLY_TO?.trim() ?? "";
+    const authSmsRuApiId = parsed.AUTH_SMS_RU_API_ID?.trim() ?? "";
+    const authSmsRuFrom = parsed.AUTH_SMS_RU_FROM?.trim() ?? "";
+    const authPhoneTelegramGatewayAccessToken = parsed.AUTH_PHONE_TELEGRAM_GATEWAY_ACCESS_TOKEN?.trim() ?? "";
+    const authPhoneTelegramGatewaySenderUsername = parsed.AUTH_PHONE_TELEGRAM_GATEWAY_SENDER_USERNAME?.trim() ?? "";
+
+    if (parsed.AUTH_CONTACT_VERIFICATION_PROVIDER === "smtp") {
+        if (
+            authEmailSmtpHost.length === 0 ||
+            parsed.AUTH_EMAIL_SMTP_PORT === undefined ||
+            authEmailFrom.length === 0
+        ) {
+            throw new Error(
+                "AUTH_EMAIL_SMTP_HOST, AUTH_EMAIL_SMTP_PORT and AUTH_EMAIL_FROM are required when AUTH_CONTACT_VERIFICATION_PROVIDER=smtp",
+            );
+        }
+    }
+
+    if (parsed.AUTH_PHONE_VERIFICATION_PROVIDER === "sms_ru") {
+        if (authSmsRuApiId.length === 0) {
+            throw new Error(
+                "AUTH_SMS_RU_API_ID is required when AUTH_PHONE_VERIFICATION_PROVIDER=sms_ru",
+            );
+        }
+    }
+
+    if (parsed.AUTH_PHONE_VERIFICATION_PROVIDER === "telegram") {
+        if (authPhoneTelegramGatewayAccessToken.length === 0) {
+            throw new Error(
+                "AUTH_PHONE_TELEGRAM_GATEWAY_ACCESS_TOKEN is required when AUTH_PHONE_VERIFICATION_PROVIDER=telegram",
+            );
+        }
+    }
 
     if (parsed.ORDER_DELIVERY_PROVIDER === "telegram") {
         if (telegramBotToken.length === 0 || telegramManagerChatId.length === 0) {
@@ -125,6 +200,28 @@ export function readRuntimeEnv(): RuntimeEnv {
             accessSecret: parsed.AUTH_ACCESS_SECRET,
             verificationCodeTtlMs: parsed.AUTH_VERIFICATION_CODE_TTL,
             verificationResendCooldownMs: parsed.AUTH_VERIFICATION_RESEND_COOLDOWN,
+            contactVerification: {
+                provider: parsed.AUTH_CONTACT_VERIFICATION_PROVIDER,
+                smtpHost: authEmailSmtpHost.length > 0 ? authEmailSmtpHost : null,
+                smtpPort: parsed.AUTH_EMAIL_SMTP_PORT ?? null,
+                smtpSecure: parsed.AUTH_EMAIL_SMTP_SECURE,
+                smtpUser: authEmailSmtpUser.length > 0 ? authEmailSmtpUser : null,
+                smtpPassword: authEmailSmtpPassword.length > 0 ? authEmailSmtpPassword : null,
+                emailFrom: authEmailFrom.length > 0 ? authEmailFrom : null,
+                emailReplyTo: authEmailReplyTo.length > 0 ? authEmailReplyTo : null,
+                phone: {
+                    provider: parsed.AUTH_PHONE_VERIFICATION_PROVIDER,
+                    smsRuApiId: authSmsRuApiId.length > 0 ? authSmsRuApiId : null,
+                    smsRuFrom: authSmsRuFrom.length > 0 ? authSmsRuFrom : null,
+                    smsRuTestMode: parsed.AUTH_SMS_RU_TEST,
+                    telegramGatewayAccessToken: authPhoneTelegramGatewayAccessToken.length > 0
+                        ? authPhoneTelegramGatewayAccessToken
+                        : null,
+                    telegramGatewaySenderUsername: authPhoneTelegramGatewaySenderUsername.length > 0
+                        ? authPhoneTelegramGatewaySenderUsername
+                        : null,
+                },
+            },
         },
         delivery: {
             provider: parsed.ORDER_DELIVERY_PROVIDER,

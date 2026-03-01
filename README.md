@@ -117,6 +117,39 @@ node .output/server/index.mjs
 - `LOG_LEVEL` (`info`, `error`, `silent`)
 - `TEST_LOG_LEVEL` (`info`, `error`, `silent`)
 
+Для реальной отправки email-кодов подтверждения:
+
+- `AUTH_CONTACT_VERIFICATION_PROVIDER=smtp`
+- `AUTH_EMAIL_SMTP_HOST`
+- `AUTH_EMAIL_SMTP_PORT`
+- `AUTH_EMAIL_FROM`
+
+Опционально:
+
+- `AUTH_EMAIL_SMTP_SECURE`
+- `AUTH_EMAIL_SMTP_USER`
+- `AUTH_EMAIL_SMTP_PASSWORD`
+- `AUTH_EMAIL_REPLY_TO`
+
+Для реальной отправки SMS-кодов подтверждения:
+
+- `AUTH_PHONE_VERIFICATION_PROVIDER=sms_ru`
+- `AUTH_SMS_RU_API_ID`
+
+Опционально для `sms.ru`:
+
+- `AUTH_SMS_RU_FROM`
+- `AUTH_SMS_RU_TEST`
+
+Для отправки phone-кодов в Telegram-чат:
+
+- `AUTH_PHONE_VERIFICATION_PROVIDER=telegram`
+- `AUTH_PHONE_TELEGRAM_GATEWAY_ACCESS_TOKEN`
+
+Опционально для Telegram Gateway API:
+
+- `AUTH_PHONE_TELEGRAM_GATEWAY_SENDER_USERNAME`
+
 ## Скрипты
 
 ```bash

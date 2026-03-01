@@ -26,7 +26,14 @@ import {
     TelegramOrderRequestDeliveryService,
     readTelegramDeliveryConfigFromEnv,
     RandomVerificationCodeGenerator,
+    ChannelRoutingContactVerificationDeliveryService,
     LogContactVerificationDeliveryService,
+    SmtpContactVerificationDeliveryService,
+    readSmtpContactVerificationConfigFromEnv,
+    SmsRuPhoneContactVerificationDeliveryService,
+    TelegramGatewayPhoneContactVerificationDeliveryService,
+    readSmsRuPhoneVerificationConfigFromEnv,
+    readTelegramPhoneVerificationConfigFromEnv,
 } from "~~/server/infrastructure/services";
 import type { OrderRequestDeliveryService } from "~~/server/application/checkout/services/order-request-delivery";
 import type { ContactVerificationDeliveryService } from "~~/server/application/auth/services/contact-verification-delivery";
@@ -95,10 +102,25 @@ export function getRuntimeContainer(): RuntimeContainer {
     const idGenerator = new UuidGenerator();
     const refreshTokenGenerator = new CryptoRefreshTokenGenerator();
     const verificationCodeGenerator = new RandomVerificationCodeGenerator();
-    const contactVerificationDeliveryService = new LogContactVerificationDeliveryService();
+    const logContactVerificationDeliveryService = new LogContactVerificationDeliveryService();
     const { authConfig, accessTokenConfig } = readAuthConfigFromEnv();
     const accessTokenIssuer = new HmacAccessTokenIssuer(accessTokenConfig);
     const accessTokenVerifier = new HmacAccessTokenVerifier(accessTokenConfig);
+    const smtpContactVerificationConfig = readSmtpContactVerificationConfigFromEnv();
+    const smsRuPhoneVerificationConfig = readSmsRuPhoneVerificationConfigFromEnv();
+    const telegramPhoneVerificationConfig = readTelegramPhoneVerificationConfigFromEnv();
+    const emailContactVerificationDeliveryService = smtpContactVerificationConfig
+        ? new SmtpContactVerificationDeliveryService(smtpContactVerificationConfig)
+        : logContactVerificationDeliveryService;
+    const phoneContactVerificationDeliveryService = smsRuPhoneVerificationConfig
+        ? new SmsRuPhoneContactVerificationDeliveryService(smsRuPhoneVerificationConfig)
+        : telegramPhoneVerificationConfig
+        ? new TelegramGatewayPhoneContactVerificationDeliveryService(telegramPhoneVerificationConfig)
+        : logContactVerificationDeliveryService;
+    const contactVerificationDeliveryService = new ChannelRoutingContactVerificationDeliveryService({
+        email: emailContactVerificationDeliveryService,
+        phone: phoneContactVerificationDeliveryService,
+    });
     const telegramConfig = readTelegramDeliveryConfigFromEnv();
     const orderRequestDeliveryService: OrderRequestDeliveryService = telegramConfig
         ? new TelegramOrderRequestDeliveryService(telegramConfig)
