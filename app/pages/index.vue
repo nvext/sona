@@ -1,12 +1,12 @@
 <template>
-    <section class="h-195 bg-bg-1 relative">
-        <video autoplay muted loop class="w-full h-full object-cover absolute z-0 bottom-0">
+    <section class="relative h-[44dvh] min-h-[22rem] bg-bg-1 md:h-[60rem]">
+        <video autoplay muted loop class="absolute bottom-0 z-0 h-full w-full object-cover">
             <source src="/images/hero.mp4" type="video/mp4" />
         </video>
     </section>
 
     <section class="px-6 lg:px-25">
-        <h2 class="text-5xl my-7">Акустические панели</h2>
+        <h2 class="my-7 text-3xl md:text-4xl lg:text-5xl">Акустические панели</h2>
         <div class="overflow-x-auto hide-scrollbar pb-2">
             <div class="flex gap-5 min-w-max lg:min-w-0">
                 <ProductCard
@@ -21,13 +21,13 @@
         </div>
     </section>
 
-    <section class="bg-dark-bg text-fg px-25 relative">
+    <section class="relative bg-dark-bg px-6 text-fg lg:px-25">
         <NuxtImg
             src="images/tech-white.png"
-            class="w-239.75 h-171.25 absolute z-0 right-25 bottom-0" />
-        <div class="relative z-10 pb-152.5 pt-12.5">
-            <h2 class="text-[4rem] mb-2.5">Технология создания</h2>
-            <p class="max-w-240 font-thin text-xl mb-5">
+            class="absolute right-0 bottom-0 z-0 hidden w-[58rem] max-w-[75vw] lg:block" />
+        <div class="relative z-10 py-12 md:py-16 lg:pb-40 lg:pt-12.5">
+            <h2 class="mb-3 text-3xl md:text-5xl lg:text-[4rem]">Технология создания</h2>
+            <p class="mb-5 max-w-5xl text-base font-thin md:text-xl">
                 Выбор конфигурации / Создание каркаса / Укладка акустического ядра / Крепление
                 мембраны / Обтяжка акустической тканью / Монтаж крепежа или платформы / Отделка
                 дерева / Контроль качества / Упаковка / Доставка.
@@ -36,7 +36,7 @@
                 type="button"
                 color="neutral"
                 variant="solid"
-                class="!bg-bg !text-dark-fg px-28 py-7 text-2xl">
+                class="px-8 py-4 text-base !bg-bg !text-dark-fg md:px-12 md:py-5 md:text-lg lg:px-28 lg:py-7 lg:text-2xl">
                 Подробнее
             </UButton>
         </div>
@@ -46,12 +46,12 @@
         <!-- <NuxtImg
             src="images/panels-showcase.mp4"
             class="w-full top-40 object-cover absolute z-0 bottom-0" /> -->
-        <video autoplay muted loop class="w-full -bottom-40 object-cover absolute z-0">
+        <video autoplay muted loop class="absolute -bottom-20 z-0 w-full object-cover md:-bottom-40">
             <source src="/images/panels-showcase.mp4" type="video/mp4" />
         </video>
-        <div class="relative z-10 pb-95.5 pt-12.5 flex-1 flex flex-col items-center">
-            <h2 class="text-[4rem] mb-2.5">Возможность кастомизации</h2>
-            <p class="max-w-240 font-thin text-xl mb-5 text-center">
+        <div class="relative z-10 flex flex-1 flex-col items-center px-6 py-12 md:py-16 lg:pb-95.5 lg:pt-12.5">
+            <h2 class="mb-3 text-center text-3xl md:text-5xl lg:text-[4rem]">Возможность кастомизации</h2>
+            <p class="mb-5 max-w-5xl text-center text-base font-thin md:text-xl">
                 Выберите готовую конфигурацию SONA или соберите панель под себя: меняйте габариты,
                 форму, материалы, цветовую палитру тканей и отделку дерева. Соберём комплект под
                 задачу и бюджет, согласуем макеты и запустим производство. Готовые вариации тоже
@@ -61,7 +61,7 @@
                 type="button"
                 color="neutral"
                 variant="solid"
-                class="!bg-dark-bg !text-fg px-28 py-7 text-2xl">
+                class="px-8 py-4 text-base !bg-dark-bg !text-fg md:px-12 md:py-5 md:text-lg lg:px-28 lg:py-7 lg:text-2xl">
                 Подробнее
             </UButton>
         </div>

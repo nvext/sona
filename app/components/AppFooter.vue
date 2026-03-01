@@ -1,34 +1,34 @@
 <template>
     <footer
         :class="[
-            'h-168 px-25 pt-13 pb-8 bg-dark-bg text-fg text-[1.25rem]',
+            'bg-dark-bg px-6 py-10 text-base text-fg md:px-8 lg:px-16 xl:px-25 xl:pt-13 xl:pb-8 xl:text-[1.25rem]',
             'flex flex-col justify-between',
         ]">
-        <div class="flex justify-between">
+        <div class="flex flex-col gap-10 md:grid md:grid-cols-3 md:gap-8">
             <nav>
-                <ul class="flex flex-col gap-8">
-                    <li v-for="item in navItems">
+                <ul class="flex flex-col gap-4 md:gap-8">
+                    <li v-for="item in navItems" :key="item.label">
                         <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                     </li>
                 </ul>
             </nav>
 
-            <ul class="flex flex-col gap-8">
-                <li v-for="item in legalItems">
+            <ul class="flex flex-col gap-4 md:gap-8">
+                <li v-for="item in legalItems" :key="item.label">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                 </li>
             </ul>
 
-            <ul class="flex flex-col gap-8">
-                <li v-for="item in socialItems">
+            <ul class="flex flex-col gap-4 md:gap-8">
+                <li v-for="item in socialItems" :key="item.label">
                     <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
                 </li>
             </ul>
         </div>
 
-        <div class="flex gap-5 items-end">
-            <img class="w-1/2" src="/icons/footer-logo-0.svg" alt="">
-            <img class="flex-1" src="/icons/footer-logo-1.svg" alt="">
+        <div class="mt-10 flex flex-col gap-4 md:flex-row md:items-end md:gap-5">
+            <img class="w-full max-w-[16rem] md:w-1/2" src="/icons/footer-logo-0.svg" alt="">
+            <img class="w-full max-w-[20rem] md:flex-1" src="/icons/footer-logo-1.svg" alt="">
         </div>
     </footer>
 </template>

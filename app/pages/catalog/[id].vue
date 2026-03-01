@@ -1,27 +1,27 @@
 <template>
     <div>
-        <section class="px-25 pt-8.75 mb-20 flex gap-5" v-if="product">
+        <section class="mb-20 flex flex-col gap-8 px-6 pt-6 lg:flex-row lg:gap-5 lg:px-25 lg:pt-8.75" v-if="product">
             <div
-                class="w-3/5 aspect-7/9 grid gap-3.5 grid-rows-[4.75fr_1fr] grid-cols-4 *:first:col-span-4">
+                class="grid aspect-[7/9] w-full gap-3 sm:grid-cols-2 lg:w-3/5 lg:grid-cols-4 lg:grid-rows-[4.75fr_1fr] lg:*:first:col-span-4">
                 <div
                     v-for="image in currentImages"
                     :key="image.id"
                     class="size-full bg-bg-1 rounded-[5px] flex items-center justify-center">
-                    <NuxtImg class="object-cover max-h-6/10" :src="image.url" />
+                    <NuxtImg class="max-h-[60%] object-cover" :src="image.url" />
                 </div>
             </div>
 
             <div class="w-full">
-                <h2 class="text-5xl">{{ product.card.title }} {{ currentColor?.name }}</h2>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl">{{ product.card.title }} {{ currentColor?.name }}</h2>
 
-                <div class="py-2.5 border-b border-dark-bg flex justify-between">
-                    <p class="text-xl mb-2">Цвет</p>
+                <div class="flex flex-col gap-3 border-b border-dark-bg py-3 md:flex-row md:items-start md:justify-between">
+                    <p class="mb-1 text-lg md:mb-2 md:text-xl">Цвет</p>
                     <ColorSelect v-model="selectedColorId" :colors="product.colors" :size="32" />
                 </div>
 
-                <div class="py-2.5 border-b border-dark-bg flex justify-between">
-                    <p class="text-xl mb-2">Размер</p>
-                    <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col gap-3 border-b border-dark-bg py-3 md:flex-row md:items-start md:justify-between">
+                    <p class="mb-1 text-lg md:mb-2 md:text-xl">Размер</p>
+                    <div class="flex flex-wrap gap-2 md:justify-end">
                         <UButton
                             v-for="size in availableSizes"
                             :key="size.key"
@@ -40,9 +40,9 @@
                     </div>
                 </div>
 
-                <div class="py-2.5 border-b border-dark-bg flex justify-between">
-                    <p class="text-xl mb-2">Толщина</p>
-                    <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col gap-3 border-b border-dark-bg py-3 md:flex-row md:items-start md:justify-between">
+                    <p class="mb-1 text-lg md:mb-2 md:text-xl">Толщина</p>
+                    <div class="flex flex-wrap gap-2 md:justify-end">
                         <UButton
                             v-for="thickness in availableThicknesses"
                             :key="thickness"
@@ -61,9 +61,9 @@
                     </div>
                 </div>
 
-                <div class="py-2.5 flex justify-between">
-                    <p class="text-xl mb-2">Количество</p>
-                    <div class="flex flex-wrap items-center justify-end gap-2">
+                <div class="flex flex-col gap-3 py-3 md:flex-row md:items-start md:justify-between">
+                    <p class="mb-1 text-lg md:mb-2 md:text-xl">Количество</p>
+                    <div class="flex flex-wrap items-center gap-2 md:justify-end">
                         <UButton
                             v-for="quantity in quantityPresets"
                             :key="quantity"
@@ -84,38 +84,37 @@
                 </div>
 
                 <div class="py-2.5 border-b border-dark-bg">
-                    <h3 class="text-xl">Характеристики</h3>
+                    <h3 class="text-lg md:text-xl">Характеристики</h3>
 
                     <p class="text-[16px] font-thin">{{ product.card.description }}</p>
                 </div>
 
-                <div class="py-2.5 flex items-center gap-8.75">
-                    <p class="text-5xl">{{ currentProduct?.price }} ₽</p>
+                <div class="flex flex-col gap-4 py-4 md:flex-row md:items-center md:gap-6 lg:gap-8.75">
+                    <p class="text-3xl md:text-4xl lg:text-5xl">{{ currentProduct?.price }} ₽</p>
 
                     <UButton
                         v-if="currentCartQuantity === 0"
                         type="button"
                         color="neutral"
                         variant="solid"
-                        class="text-xl h-17.5 !text-fg !bg-dark-bg flex-1 relative !justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="relative h-14 w-full text-base !justify-center !bg-dark-bg !text-fg disabled:cursor-not-allowed disabled:opacity-50 md:h-17.5 md:flex-1 md:text-xl"
                         :disabled="!currentProduct || !currentColor"
                         @click="handleAddToCart">
                         <span class="w-full text-center">Добавить в корзину</span>
                         <div
-                            class="size-12.5 bg-bg absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full flex justify-center items-center">
+                            class="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-bg md:right-2.5 md:size-12.5">
                             <img class="object-cover h-2/5" src="/icons/arrow.svg" alt="" />
                         </div>
                     </UButton>
 
                     <div
                         v-else
-                        class="bg-dark-bg text-fg flex-1 h-17.5
-                         rounded-[100px] relative">
+                        class="relative h-14 w-full rounded-[100px] bg-dark-bg text-fg md:h-17.5 md:flex-1">
                         <UButton
                             type="button"
                             color="neutral"
                             variant="ghost"
-                            class="absolute left-2.5 top-1/2 -translate-y-1/2 size-12.5 !rounded-full !min-w-0 !p-0 !border !border-dark-bg/15 !bg-bg !text-dark-fg flex items-center justify-center hover:!bg-bg-1"
+                            class="absolute left-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center !rounded-full !border !border-dark-bg/15 !bg-bg !p-0 !text-dark-fg hover:!bg-bg-1 md:left-2.5 md:size-12.5"
                             @click="handleDecrementCurrent">
                             <UIcon name="i-lucide-minus" class="size-5" />
                         </UButton>
@@ -127,7 +126,7 @@
                             type="button"
                             color="neutral"
                             variant="ghost"
-                            class="absolute right-2.5 top-1/2 -translate-y-1/2 size-12.5 !rounded-full !min-w-0 !p-0 !border !border-dark-bg/15 !bg-bg !text-dark-fg flex items-center justify-center hover:!bg-bg-1"
+                            class="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center !rounded-full !border !border-dark-bg/15 !bg-bg !p-0 !text-dark-fg hover:!bg-bg-1 md:right-2.5 md:size-12.5"
                             @click="handleIncrementCurrent">
                             <UIcon name="i-lucide-plus" class="size-5" />
                         </UButton>
@@ -151,9 +150,9 @@
         </section>
 
         <section class="px-25 mb-20" v-if="product">
-            <h2 class="text-5xl mb-5">О панели {{ product.card.title }}</h2>
+            <h2 class="mb-5 text-3xl md:text-4xl lg:text-5xl">О панели {{ product.card.title }}</h2>
 
-            <p class="text-2xl font-thin">{{ product.card.description }}</p>
+            <p class="text-lg font-thin md:text-xl lg:text-2xl">{{ product.card.description }}</p>
         </section>
     </div>
 </template>

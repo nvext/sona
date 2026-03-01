@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full flex items-start justify-center gap-3.75 py-8.75">
-        <div class="bg-bg-1 rounded-3xl px-6 py-4 min-w-88">
+    <div class="flex w-full items-start justify-center px-6 py-6 lg:px-25 lg:py-8.75">
+        <div class="min-w-0 w-full max-w-xl rounded-3xl bg-bg-1 px-5 py-4 md:px-6">
             <p class="text-sm mb-2">Цена</p>
             <USlider
                 color="neutral"
@@ -21,7 +21,7 @@
 
     <div
         v-if="filteredProducts.length > 0"
-        class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(25rem,1fr))] px-25 mb-15">
+        class="mb-15 grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-4 px-6 lg:grid-cols-[repeat(auto-fit,minmax(22rem,1fr))] lg:px-25">
         <ProductCard
             v-for="product in filteredProducts"
             :key="product.cardId"

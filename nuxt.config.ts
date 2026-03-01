@@ -14,11 +14,13 @@ export default defineNuxtConfig({
       icons: [
         "lucide:log-in",
         "lucide:log-out",
+        "lucide:menu",
         "lucide:minus",
         "lucide:plus",
         "lucide:shield",
         "lucide:shield-check",
         "lucide:user-plus",
+        "lucide:x",
       ],
     },
   },
