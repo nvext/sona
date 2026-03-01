@@ -16,6 +16,7 @@ export default defineNuxtConfig({
         "lucide:log-out",
         "lucide:minus",
         "lucide:plus",
+        "lucide:shield",
         "lucide:shield-check",
         "lucide:user-plus",
       ],

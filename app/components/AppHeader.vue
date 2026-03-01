@@ -22,6 +22,7 @@
                 to="/admin/catalog"
                 color="neutral"
                 variant="soft"
+                icon="i-lucide-shield"
                 class="h-11 px-4">
                 Admin
             </UButton>
