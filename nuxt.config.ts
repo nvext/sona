@@ -8,9 +8,18 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["./app/assets/css/main.css"],
-
-  app: {
-    baseURL: "/sona/",
+  icon: {
+    clientBundle: {
+      scan: true,
+      icons: [
+        "lucide:log-in",
+        "lucide:log-out",
+        "lucide:minus",
+        "lucide:plus",
+        "lucide:shield-check",
+        "lucide:user-plus",
+      ],
+    },
   },
 
   // vite: { plugins: [tailwindcss()] },
